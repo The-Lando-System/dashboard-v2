@@ -1,0 +1,7 @@
+<div class="main row">
+    <div *ngFor="let widget of widgets" class="widget col-md-4">
+        <widget-shell [title]="widget.name">
+            <div [innerHTML]="sanitizeHtml(widget.html)"></div>
+        </widget-shell>
+    </div>
+</div>

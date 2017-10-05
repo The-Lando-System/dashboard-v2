@@ -1,0 +1,9 @@
+body {
+    background-color: #a9a9ab!important;
+    background-image: url('assets/orange-background.jpg');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
