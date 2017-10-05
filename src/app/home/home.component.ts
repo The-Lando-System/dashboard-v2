@@ -12,6 +12,8 @@ import { JsonPathParser } from '../widget/services/json-path-parser';
 
 import { Globals } from '../globals';
 
+declare var io: any;
+
 @Component({
   moduleId: module.id,
   selector: 'home',
@@ -20,6 +22,8 @@ import { Globals } from '../globals';
   providers: [TokenProcessor,ApiInvoker,JsonPathParser]
 })
 export class HomeComponent implements OnInit {
+
+  socket: any;
 
   private user: User;
   private widgets: Widget[] = [];
@@ -35,10 +39,19 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.initUser();
     this.listenForLogin();
-    this.createTestWidgets()
-    .then((widgets:Widget[]) => {
-      this.widgets = widgets;
-    }); 
+    this.connect();
+  }
+
+  connect(): void {
+    this.socket = io('http://localhost:3000');
+    this.socket.on('connect', function() {
+      console.log('Connected');
+      
+    });
+
+    this.socket.on('value', function(data) {
+      console.log(data);
+    });
   }
 
   private initUser() {
