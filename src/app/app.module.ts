@@ -12,6 +12,9 @@ import { SideMenuComponent } from './side-menu/side-menu.component';
 import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
 
+import { OrchestratorService } from './services/orchestrator.service';
+import { TokenReplacer } from './services/token-replacer';
+
 import { Globals } from './globals';
 
 @NgModule({
@@ -41,7 +44,9 @@ import { Globals } from './globals';
     Globals,
     Broadcaster,
     UserService,
-    CookieService
+    CookieService,
+    OrchestratorService,
+    TokenReplacer
   ],
   bootstrap: [AppComponent]
 })
