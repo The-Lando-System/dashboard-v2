@@ -63,6 +63,7 @@ export class HomeComponent implements OnInit {
       for (let widget of this.widgets) {
         if (message.hasOwnProperty(widget.id)) {
           widget.html = message[widget.id];
+          widget.displayable = true;
         }
       }
     });

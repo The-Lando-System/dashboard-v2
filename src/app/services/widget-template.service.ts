@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 
 import { Globals } from '../globals';
@@ -6,15 +6,25 @@ import { Globals } from '../globals';
 import { Widget, WidgetToken } from '../widget/widget';
 
 @Injectable()
-export class WidgetTemplateService {
+export class WidgetTemplateService implements OnInit {
+
+    private widgets:Widget[] = [];
 
     constructor(
         private globals: Globals,
         private http: Http
     ) {}
 
+    ngOnInit(): void {
+        this.widgets = this.createTestWidgets();
+    }
+
     getWidgets(): Widget[] {
-        return this.createTestWidgets();
+        if (this.widgets.length === 0) {
+            this.widgets = this.createTestWidgets();
+        }
+
+        return this.widgets;
     }
 
     // TEST METHODS
@@ -22,32 +32,45 @@ export class WidgetTemplateService {
     private createTestWidgets(): Widget[] {
         let widgets: Widget[] = [];
 
-        let widget1 = new Widget();
-        widget1.name = 'Widget 1';
-        widget1.id = '1';
-        widget1.html = 
+        widgets.push(this.createTestWidget(
+            'Widget 1',
             '<h4>Dictionary Svc Call 1: [${WORD1}]</h4>' +
-            '<h4>Dictionary Svc Call 2: [${WORD2}]</h4>';
-        widget1.tokens = this.createTokens();
+            '<h4>Dictionary Svc Call 2: [${WORD2}]</h4>',
+            ['WORD1','WORD2'],
+            ['1','2']
+        ));
 
-        console.log(JSON.stringify(widget1,null,2));
-
-        widgets.push(widget1);
+        widgets.push(this.createTestWidget(
+            'Widget 2',
+            '<h4>Dictionary Svc Call 2: <strong>${WORD2}</strong></h4>',
+            ['WORD2'],
+            ['2']
+        ));
 
         return widgets;
     }
 
-    private createTokens(): WidgetToken[] {
-        let tokens: WidgetToken[] = [];
+    private createTestWidget(widgetName:string, html:string, tokenNames:string[], clientIds:string[]): Widget {
+        let widget:Widget = new Widget();
+        widget.id = this.uuidv4();
+        widget.name = widgetName;
+        widget.html = html;
+        widget.clientIds = clientIds;
+        widget.tokens = tokenNames.map(tokenName => this.createTestToken(tokenName));
+        widget.displayable = false;
+        return widget;
+    }
 
-        let token1: WidgetToken = new WidgetToken();
-        token1.name = 'WORD1';
-        tokens.push(token1);
+    private uuidv4():string {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
-        let token2: WidgetToken = new WidgetToken();
-        token2.name = 'WORD2';
-        tokens.push(token2);
-
-        return tokens;
+    private createTestToken(name:string): WidgetToken {
+        let token:WidgetToken = new WidgetToken();
+        token.name = name;
+        return token;
     }
 }

@@ -12,6 +12,8 @@ import { SideMenuComponent } from './side-menu/side-menu.component';
 import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
 
+import { LoadingBarComponent } from './loading-bar/loading-bar.component';
+
 import { OrchestratorService } from './services/orchestrator.service';
 import { TokenReplacer } from './services/token-replacer';
 
@@ -23,7 +25,8 @@ import { Globals } from './globals';
     LoginComponent,
     SideMenuComponent,
     WidgetShellComponent,
-    HomeComponent
+    HomeComponent,
+    LoadingBarComponent
   ],
   imports: [
     BrowserModule,

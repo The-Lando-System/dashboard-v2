@@ -28,6 +28,7 @@ export class OrchestratorService {
     start(): void {
         this.widgets = this.widgetTemplateSvc.getWidgets();
         for (let widget of this.widgets){
+            this.widgetStatus[widget.id] = {};
             this.resetWidgetStatus(this.widgetStatus,widget);
         }
         this.connect();
@@ -42,36 +43,42 @@ export class OrchestratorService {
     }
 
     private subscribe(): void {
-        this.socket.on('value', this.broadcastTemplate.bind(this));
+        this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
     }
 
-    private broadcastTemplate(tokenMessage): void {
-        console.log(tokenMessage);
+    private handleWidgetUpdates(tokenUpdate): void {
+        console.log(tokenUpdate);
         
-        let widget:Widget = this.widgets[0];
+        let widgetsToUpdate:Widget[] = this.widgets.filter(w => 
+            w.clientIds.filter(id => 
+                id === tokenUpdate.client_id
+            ).length > 0
+        );
 
-        for (let token of widget.tokens) {
-            if (tokenMessage.hasOwnProperty(token.name)) {
-                token.value = tokenMessage[token.name];
-                widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
-                this.widgetStatus[token.name] = true;
-                if (this.allTokensReplaced(this.widgetStatus)) {
-                    let message = {};
-                    message[widget.id] = widget.html;
-            
-                    this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
-    
-                    this.resetWidgetStatus(this.widgetStatus, widget);
+        for (let widget of widgetsToUpdate) {
 
-                    this.widgets = this.widgetTemplateSvc.getWidgets();
-                }
-            } 
+            for (let token of widget.tokens) {
+                if (tokenUpdate.token_name === token.name) {
+                    token.value = tokenUpdate.token_value;
+                    widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
+                    this.widgetStatus[widget.id][token.name] = true;
+                    if (this.allTokensReplaced(this.widgetStatus, widget)) {
+                        let message = {};
+                        message[widget.id] = widget.html;
+                
+                        this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
+        
+                        this.resetWidgetStatus(this.widgetStatus, widget);
+                    }
+                } 
+            }
         }
     }
 
-    private allTokensReplaced(widgetStatus:any): boolean {
-        for (let key of Object.keys(widgetStatus)){
-            if (!widgetStatus[key]) {
+
+    private allTokensReplaced(widgetStatus:any, widget:Widget): boolean {
+        for (let key of Object.keys(widgetStatus[widget.id])){
+            if (!widgetStatus[widget.id][key]) {
                 return false;
             }
         }
@@ -80,7 +87,7 @@ export class OrchestratorService {
 
     private resetWidgetStatus(widgetStatus:any, widget:Widget): void {
         for (let token of widget.tokens) {
-            widgetStatus[token.name] = false;
+            widgetStatus[widget.id][token.name] = false;
         }
     }
 }
