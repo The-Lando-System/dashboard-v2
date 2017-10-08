@@ -43,8 +43,9 @@ export class WidgetTemplateService implements OnInit {
             'Colorado Springs Weather',
             '<h4>Current temperature</h4>' + 
             '<h4><strong>${CURRENT_TEMP}</strong></h4>' +
-            '<img src="${CURRENT_TEMP_ICON}" class="img-fluid">',
-            ['CURRENT_TEMP','CURRENT_TEMP_ICON'],
+            '<img src="${CURRENT_TEMP_ICON}" class="img-fluid">' +
+            '<h4>${OBS_TIME}</h4>',
+            ['CURRENT_TEMP','CURRENT_TEMP_ICON','OBS_TIME'],
             ['2']
         ));
 

@@ -3,7 +3,7 @@ import { Broadcaster } from 'sarlacc-angular-client';
 
 import { Globals } from '../globals';
 
-import { Widget } from '../widget/widget';
+import { Widget, WidgetToken } from '../widget/widget';
 
 import { TokenReplacer } from './token-replacer';
 import { WidgetTemplateService } from './widget-template.service';
@@ -27,10 +27,7 @@ export class OrchestratorService {
 
     start(): void {
         this.widgets = this.widgetTemplateSvc.getWidgets();
-        for (let widget of this.widgets){
-            this.widgetStatus[widget.id] = {};
-            this.resetWidgetStatus(this.widgetStatus,widget);
-        }
+        this.initWidgetStatuses();
         this.connect();
         this.subscribe();
     }
@@ -42,55 +39,88 @@ export class OrchestratorService {
         });
     }
 
+    // Subscribe to update messages coming from the server
     private subscribe(): void {
         this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
     }
 
-    private handleWidgetUpdates(tokenUpdate): void {
-        console.log(tokenUpdate);
+    // Handle the message published by the server to update widget tokens
+    private handleWidgetUpdates(updateMessage): void {
+        console.log(updateMessage);
         
-        let widgetsToUpdate:Widget[] = this.widgets.filter(w => 
-            w.clientIds.filter(id => 
-                id === tokenUpdate.client_id
-            ).length > 0
-        );
+        let widgetsToUpdate:Widget[] = this.getWidgetsWithClientId(updateMessage.client_id);
 
         for (let widget of widgetsToUpdate) {
+            this.replaceTokensInWidget(updateMessage.parsed_values,widget);
+        }
+    }
 
-            for (let parsedValue of tokenUpdate.parsed_values) {
-                for (let token of widget.tokens) {
-                    if (parsedValue.token_name === token.name) {
-                        token.value = parsedValue.parsed_value;
-                        widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
-                        this.widgetStatus[widget.id][token.name] = true;
-                        if (this.allTokensReplaced(this.widgetStatus, widget)) {
-                            let message = {};
-                            message[widget.id] = widget.html;
-                    
-                            this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
-            
-                            this.resetWidgetStatus(this.widgetStatus, widget);
-                        }
-                    } 
-                }
+    // Replace all tokens in a widget with values parsed from the server
+    private replaceTokensInWidget(parsedValues:any,widget:Widget): void {
+        for (let parsedValue of parsedValues) {
+            for (let token of widget.tokens) {
+                if (parsedValue.token_name !== token.name)
+                    continue;
 
+                this.replaceToken(token,parsedValue.parsed_value,widget);
+                this.updateBroadcastStatus(widget,token);
             }
         }
     }
 
+    // Set the value on the widget token, and replace the token in the HTML template
+    private replaceToken(token:WidgetToken,value:string,widget:Widget): void {
+        token.value = value;
+        widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
+    }
 
-    private allTokensReplaced(widgetStatus:any, widget:Widget): boolean {
-        for (let key of Object.keys(widgetStatus[widget.id])){
-            if (!widgetStatus[widget.id][key]) {
+    // Mark the token as being replaced, and check if the template needs to be broadcast
+    private updateBroadcastStatus(widget:Widget, token:WidgetToken): void {
+        this.widgetStatus[widget.id][token.name] = true;
+        if (this.allTokensReplaced(widget)) {
+            this.broadcastTemplateUpdate(widget);
+            this.resetWidgetStatus(widget);
+        }
+    }
+
+    // Send a broadcast message with an updated HTML template
+    private broadcastTemplateUpdate(widget:Widget): void {
+        let message = {};
+        message[widget.id] = widget.html;
+        this.broadcaster.broadcast('TEMPLATE_UPDATE', message);        
+    }
+
+    // Retrieve all widgets that contain the given client ID
+    private getWidgetsWithClientId(clientId:string): Widget[] {
+        return this.widgets.filter(w => 
+            w.clientIds.filter(id => 
+                id === clientId
+            ).length > 0
+        );
+    }
+
+    // True if all tokens for a given widget are replaced
+    private allTokensReplaced(widget:Widget): boolean {
+        for (let key of Object.keys(this.widgetStatus[widget.id])){
+            if (!this.widgetStatus[widget.id][key]) {
                 return false;
             }
         }
         return true;
     }
 
-    private resetWidgetStatus(widgetStatus:any, widget:Widget): void {
+    // Reset the replacement statuses for all tokens in a widget
+    private resetWidgetStatus(widget:Widget): void {
         for (let token of widget.tokens) {
-            widgetStatus[widget.id][token.name] = false;
+            this.widgetStatus[widget.id][token.name] = false;
+        }
+    }
+
+    // Initialize widget statuses
+    private initWidgetStatuses(): void {
+        for (let widget of this.widgets){
+            this.widgetStatus[widget.id] = {};
+            this.resetWidgetStatus(widget);
         }
     }
 }
