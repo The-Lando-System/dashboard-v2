@@ -57,20 +57,23 @@ export class OrchestratorService {
 
         for (let widget of widgetsToUpdate) {
 
-            for (let token of widget.tokens) {
-                if (tokenUpdate.token_name === token.name) {
-                    token.value = tokenUpdate.token_value;
-                    widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
-                    this.widgetStatus[widget.id][token.name] = true;
-                    if (this.allTokensReplaced(this.widgetStatus, widget)) {
-                        let message = {};
-                        message[widget.id] = widget.html;
-                
-                        this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
-        
-                        this.resetWidgetStatus(this.widgetStatus, widget);
-                    }
-                } 
+            for (let parsedValue of tokenUpdate.parsed_values) {
+                for (let token of widget.tokens) {
+                    if (parsedValue.token_name === token.name) {
+                        token.value = parsedValue.parsed_value;
+                        widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
+                        this.widgetStatus[widget.id][token.name] = true;
+                        if (this.allTokensReplaced(this.widgetStatus, widget)) {
+                            let message = {};
+                            message[widget.id] = widget.html;
+                    
+                            this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
+            
+                            this.resetWidgetStatus(this.widgetStatus, widget);
+                        }
+                    } 
+                }
+
             }
         }
     }

@@ -34,16 +34,17 @@ export class WidgetTemplateService implements OnInit {
 
         widgets.push(this.createTestWidget(
             'Widget 1',
-            '<h4>Dictionary Svc Call 1: [${WORD1}]</h4>' +
-            '<h4>Dictionary Svc Call 2: [${WORD2}]</h4>',
-            ['WORD1','WORD2'],
-            ['1','2']
+            '<h4>Dictionary Svc Call 1: [${WORD1}]</h4>',
+            ['WORD1'],
+            ['1']
         ));
 
         widgets.push(this.createTestWidget(
-            'Widget 2',
-            '<h4>Dictionary Svc Call 2: <strong>${WORD2}</strong></h4>',
-            ['WORD2'],
+            'Colorado Springs Weather',
+            '<h4>Current temperature</h4>' + 
+            '<h4><strong>${CURRENT_TEMP}</strong></h4>' +
+            '<img src="${CURRENT_TEMP_ICON}" class="img-fluid">',
+            ['CURRENT_TEMP','CURRENT_TEMP_ICON'],
             ['2']
         ));
 
