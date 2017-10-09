@@ -11,11 +11,13 @@ import { LoginComponent } from './login/login.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
+import { EditorComponent } from './editor/editor.component';
 
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
 import { OrchestratorService } from './services/orchestrator.service';
 import { TokenReplacer } from './services/token-replacer';
+import { WidgetTemplateService } from './services/widget-template.service';
 
 import { Globals } from './globals';
 
@@ -26,6 +28,7 @@ import { Globals } from './globals';
     SideMenuComponent,
     WidgetShellComponent,
     HomeComponent,
+    EditorComponent,
     LoadingBarComponent
   ],
   imports: [
@@ -40,6 +43,10 @@ import { Globals } from './globals';
       {
         path: 'login',
         component: LoginComponent
+      },
+      {
+        path: 'editor/:widgetId',
+        component: EditorComponent
       }
     ])
   ],
@@ -49,7 +56,8 @@ import { Globals } from './globals';
     UserService,
     CookieService,
     OrchestratorService,
-    TokenReplacer
+    TokenReplacer,
+    WidgetTemplateService
   ],
   bootstrap: [AppComponent]
 })

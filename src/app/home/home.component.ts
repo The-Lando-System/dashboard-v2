@@ -16,7 +16,7 @@ declare var io: any;
   selector: 'home',
   templateUrl: 'home.component.html',
   styleUrls: [ 'home.component.css' ],
-  providers: [OrchestratorService, WidgetTemplateService]
+  providers: []
 })
 export class HomeComponent implements OnInit {
 

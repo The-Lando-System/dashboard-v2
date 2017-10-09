@@ -1,0 +1,45 @@
+<div class="container" style="margin-left:80px; margin-top: 20px;">
+    
+    <!-- Header Row -->
+    <div class="row">
+        <div class="col-md-4">
+            <h1>Widget Editor</h1>
+        </div>
+        <div class="col-md-8">
+            <div class="input-group" style="margin-top:10px">
+                <input type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name" aria-label="Recipient's username">
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button">Edit</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template Editor Row -->
+    <div class="row" style="margin-top: 20px">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Template Editor</h4>
+                    <p class="card-text">
+                        <textarea [(ngModel)]="widget.html" class="form-control" rows="5">
+                        </textarea>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-block">
+                    <h4 class="card-title">Preview</h4>
+                    <div class="card">
+                        <div class="card-block">
+                            <div [innerHTML]="sanitizeHtml(widget.html)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

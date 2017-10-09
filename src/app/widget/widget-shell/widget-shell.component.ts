@@ -12,6 +12,7 @@ import { Globals } from '../../globals';
 export class WidgetShellComponent implements OnInit {
 
   @Input() title;
+  @Input() id;
 
   private user: User;
 

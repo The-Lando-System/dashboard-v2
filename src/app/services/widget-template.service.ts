@@ -27,6 +27,14 @@ export class WidgetTemplateService implements OnInit {
         return this.widgets;
     }
 
+    getWidgetById(id:string): Widget {
+        for (let widget of this.widgets) {
+            if (widget.id === id)
+                return widget;
+        }
+        return null;
+    }
+
     // TEST METHODS
 
     private createTestWidgets(): Widget[] {
@@ -41,10 +49,11 @@ export class WidgetTemplateService implements OnInit {
 
         widgets.push(this.createTestWidget(
             'Colorado Springs Weather',
-            '<h4>Current temperature</h4>' + 
-            '<h4><strong>${CURRENT_TEMP}</strong></h4>' +
-            '<img src="${CURRENT_TEMP_ICON}" class="img-fluid">' +
-            '<h4>${OBS_TIME}</h4>',
+            '<div class="row">' +
+            '<div style="margin-left:30px"><h4><strong>${CURRENT_TEMP}</strong></h4></div>' +
+            '<div style="margin-left:20px; margin-top:-10px"><img src="${CURRENT_TEMP_ICON}" class="img-fluid"></div>' +
+            '</div>' +
+            '<div class="col-md-12"><h4>${OBS_TIME}</h4></div>',
             ['CURRENT_TEMP','CURRENT_TEMP_ICON','OBS_TIME'],
             ['2']
         ));

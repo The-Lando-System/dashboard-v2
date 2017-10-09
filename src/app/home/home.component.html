@@ -1,6 +1,6 @@
 <div class="main row">
     <div *ngFor="let widget of widgets" class="widget col-md-4">
-        <widget-shell [title]="widget.name">
+        <widget-shell [title]="widget.name" [id]="widget.id">
             <div *ngIf="widget.displayable" [innerHTML]="sanitizeHtml(widget.html)"></div>
             <div *ngIf="!widget.displayable">
                 <h4>Fetching Data...</h4><br/>
