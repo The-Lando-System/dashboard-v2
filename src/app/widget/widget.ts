@@ -3,11 +3,6 @@ export class Widget {
     name: string;
     html: string;
     clientIds: string[];
-    tokens: WidgetToken[];
+    tokens: string[];
     displayable: boolean;
-}
-
-export class WidgetToken {
-    name: string;
-    value: string;
 }

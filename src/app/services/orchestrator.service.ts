@@ -3,7 +3,7 @@ import { Broadcaster } from 'sarlacc-angular-client';
 
 import { Globals } from '../globals';
 
-import { Widget, WidgetToken } from '../widget/widget';
+import { Widget } from '../widget/widget';
 
 import { TokenReplacer } from './token-replacer';
 import { WidgetTemplateService } from './widget-template.service';
@@ -26,10 +26,18 @@ export class OrchestratorService {
     ) {}
 
     start(): void {
-        this.widgets = this.widgetTemplateSvc.getWidgets();
-        this.initWidgetStatuses();
-        this.connect();
-        this.subscribe();
+        this.widgetTemplateSvc.retrieveWidgets()
+        .then((widgets:Widget[]) => {
+            this.widgets = widgets;
+            this.initWidgetStatuses();
+            this.connect();
+            this.subscribe();
+        });
+
+        //this.widgets = this.widgetTemplateSvc.getWidgets();
+        // this.initWidgetStatuses();
+        // this.connect();
+        // this.subscribe();
     }
 
     private connect(): void {
@@ -59,7 +67,7 @@ export class OrchestratorService {
     private replaceTokensInWidget(parsedValues:any,widget:Widget): void {
         for (let parsedValue of parsedValues) {
             for (let token of widget.tokens) {
-                if (parsedValue.token_name !== token.name)
+                if (parsedValue.token_name !== token)
                     continue;
 
                 this.replaceToken(token,parsedValue.parsed_value,widget);
@@ -69,14 +77,13 @@ export class OrchestratorService {
     }
 
     // Set the value on the widget token, and replace the token in the HTML template
-    private replaceToken(token:WidgetToken,value:string,widget:Widget): void {
-        token.value = value;
-        widget.html = this.tokenReplacer.replaceToken(token.name, token.value, widget.html);
+    private replaceToken(token:string,value:string,widget:Widget): void {
+        widget.html = this.tokenReplacer.replaceToken(token, value, widget.html);
     }
 
     // Mark the token as being replaced, and check if the template needs to be broadcast
-    private updateBroadcastStatus(widget:Widget, token:WidgetToken): void {
-        this.widgetStatus[widget.id][token.name] = true;
+    private updateBroadcastStatus(widget:Widget, token:string): void {
+        this.widgetStatus[widget.id][token] = true;
         if (this.allTokensReplaced(widget)) {
             this.broadcastTemplateUpdate(widget);
             this.resetWidgetStatus(widget);
@@ -112,7 +119,7 @@ export class OrchestratorService {
     // Reset the replacement statuses for all tokens in a widget
     private resetWidgetStatus(widget:Widget): void {
         for (let token of widget.tokens) {
-            this.widgetStatus[widget.id][token.name] = false;
+            this.widgetStatus[widget.id][token] = false;
         }
     }
 

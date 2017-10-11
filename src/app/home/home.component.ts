@@ -37,9 +37,17 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.initUser();
     this.listenForLogin();
-    this.widgets = this.widgetTempalateSvc.getWidgets();
-    this.orchestrator.start();
-    this.listenForTemplates();
+
+    this.widgetTempalateSvc.retrieveWidgets()
+    .then((widgets:Widget[]) => {
+      this.widgets = widgets;
+      this.orchestrator.start();
+      this.listenForTemplates();  
+    });
+
+    // this.widgets = this.widgetTempalateSvc.getWidgets();
+    // this.orchestrator.start();
+    // this.listenForTemplates();
   }
 
   private initUser() {
