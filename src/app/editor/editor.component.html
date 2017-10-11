@@ -7,7 +7,7 @@
         </div>
         <div class="col-md-8">
             <div class="input-group" style="margin-top:10px">
-                <input type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name" aria-label="Recipient's username">
+                <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name" aria-label="Recipient's username">
                 <span class="input-group-btn">
                     <button class="btn btn-secondary" type="button">Edit</button>
                 </span>
@@ -22,9 +22,10 @@
                 <div class="card-block">
                     <h4 class="card-title">Template Editor</h4>
                     <p class="card-text">
-                        <textarea [(ngModel)]="widget.html" class="form-control" rows="5">
+                        <textarea *ngIf="widget" [(ngModel)]="widget.html" class="form-control" rows="5">
                         </textarea>
                     </p>
+                    <button (click)="updateWidgetHtml()" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>
@@ -34,7 +35,7 @@
                     <h4 class="card-title">Preview</h4>
                     <div class="card">
                         <div class="card-block">
-                            <div [innerHTML]="sanitizeHtml(widget.html)"></div>
+                            <div *ngIf="widget" [innerHTML]="sanitizeHtml(widget.html)"></div>
                         </div>
                     </div>
                 </div>

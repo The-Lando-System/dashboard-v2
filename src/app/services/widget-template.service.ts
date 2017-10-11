@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 
 import { Globals } from '../globals';
 
@@ -34,5 +34,23 @@ export class WidgetTemplateService implements OnInit {
                 return widget;
         }
         return null;
+    }
+
+    updateWidgetHtml(widget:Widget): Promise<void> {
+
+        let widgetUpdate = {
+            'html': widget.html,
+        };
+
+        return this.http.put(`${this.widgetsUrl}/${widget.id}`, widgetUpdate, {headers:this.jsonHeaders()})
+            .toPromise()
+            .then((res:any) => {
+            }).catch((err:any) => { console.log(err) });
+    }
+
+    private jsonHeaders(): Headers {
+        return new Headers({
+            'Content-Type'   : 'application/json'
+        });
     }
 }

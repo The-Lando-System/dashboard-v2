@@ -28,19 +28,32 @@ export class EditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
-        let widgetId = params['widgetId'];
-
-        if (widgetId) {
-            this.widget = this.widgetTemplateSvc.getWidgetById(widgetId);
-            if (this.widget == null) {
-                this.widget = new Widget();
-                this.widget.name = 'New Widget';
-            }
-        } else {
-            this.widget = new Widget();
-            this.widget.name = 'New Widget';
-        }
+      let widgetId = params['widgetId'];
+      this.initWidgetById(widgetId);
     })
+  }
+
+  initWidgetById(id:string): void {
+    if (id) {
+      this.widgetTemplateSvc.retrieveWidgets()
+      .then((res:any) => {
+        this.widget = this.widgetTemplateSvc.getWidgetById(id);
+        if (this.widget == null) {
+          this.widget = new Widget();
+          this.widget.name = 'New Widget';
+        }
+      });
+    } else {
+        this.widget = new Widget();
+        this.widget.name = 'New Widget';
+    }
+  }
+
+  updateWidgetHtml(): void {
+    this.widgetTemplateSvc.updateWidgetHtml(this.widget)
+    .then((res:any) => {
+      console.log('Widget was updated!');
+    });
   }
 
   sanitizeHtml(html:string): SafeHtml {
