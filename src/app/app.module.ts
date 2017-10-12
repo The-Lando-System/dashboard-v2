@@ -18,6 +18,7 @@ import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 import { OrchestratorService } from './services/orchestrator.service';
 import { TokenReplacer } from './services/token-replacer';
 import { WidgetTemplateService } from './services/widget-template.service';
+import { ClientConfigService } from './services/client-config.service';
 
 import { Globals } from './globals';
 
@@ -57,7 +58,8 @@ import { Globals } from './globals';
     CookieService,
     OrchestratorService,
     TokenReplacer,
-    WidgetTemplateService
+    WidgetTemplateService,
+    ClientConfigService
   ],
   bootstrap: [AppComponent]
 })

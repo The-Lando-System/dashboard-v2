@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 
-import { ClientConfig } from '../client/client-config';
+import { ClientConfig, Token } from '../client/client-config';
 
 import { Globals } from '../globals';
 
@@ -34,5 +34,18 @@ export class ClientConfigService implements OnInit {
                 return clientConfig;
         }
         return null;
+    }
+
+    retrieveAllTokens(): Promise<Token[]> {
+        return this.retrieveClientConfigs()
+        .then((clientConfigs:ClientConfig[]) => {
+            let tokens = [];
+            clientConfigs.forEach(config => 
+                config.tokens.forEach(token => 
+                    tokens.push(token)
+                )
+            );
+            return tokens;
+        })
     }
 }

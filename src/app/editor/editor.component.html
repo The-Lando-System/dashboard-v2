@@ -32,10 +32,29 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-block">
-                    <h4 class="card-title">Preview</h4>
-                    <div class="card">
+
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a [ngClass]="{active:preview}" class="nav-link" href="#" (click)="showPreview()">Preview</a>
+                        </li>
+                        <li class="nav-item">
+                            <a [ngClass]="{active:!preview}" class="nav-link" href="#" (click)="showTokens()">Tokens</a>
+                        </li>
+                    </ul>
+
+                    <br/>
+
+                    <div *ngIf="preview" class="card">
                         <div class="card-block">
                             <div *ngIf="widget" [innerHTML]="sanitizeHtml(widget.html)"></div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!preview" class="card">
+                        <div class="card-block">
+                            <div class="list-group">
+                                <a *ngFor="let token of tokens" href="#" (click)="addTokenToPreview(token)" class="list-group-item list-group-item-action">{{token.name}}</a>
+                            </div>
                         </div>
                     </div>
                 </div>
