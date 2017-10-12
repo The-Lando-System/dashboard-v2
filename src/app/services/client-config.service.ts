@@ -48,4 +48,24 @@ export class ClientConfigService implements OnInit {
             return tokens;
         })
     }
+
+    getAllTokens(): Token[] {
+      let tokens = [];
+      this.clientConfigs.forEach(config => 
+          config.tokens.forEach(token => 
+              tokens.push(token)
+          )
+      );
+      return tokens;
+    }
+
+    getTokensForClients(clients:ClientConfig[]): Token[] {
+      let tokens = [];
+      clients.forEach(client => {
+        client.tokens.forEach(token => {
+          tokens.push(token);
+        });
+      });
+      return tokens;
+    }
 }

@@ -38,19 +38,34 @@ export class WidgetTemplateService implements OnInit {
 
     updateWidgetHtml(widget:Widget): Promise<void> {
 
-        let widgetUpdate = {
-            'html': widget.html,
-        };
+      let widgetUpdate = {
+        'html': widget.html,
+      };
 
-        return this.http.put(`${this.widgetsUrl}/${widget.id}`, widgetUpdate, {headers:this.jsonHeaders()})
-            .toPromise()
-            .then((res:any) => {
-            }).catch((err:any) => { console.log(err) });
+      return this.updateWidget(widgetUpdate,widget.id);
+    }
+
+    addClientToWidget(widget:Widget, clientId:string): Promise<void> {
+      
+      widget.clientIds.push(clientId);
+
+      let widgetUpdate = {
+        'clientIds': widget.clientIds,
+      };
+
+      return this.updateWidget(widgetUpdate,widget.id);
+    }
+
+    updateWidget(widgetUpdate:any, widgetId:string): Promise<void> {
+      return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.jsonHeaders()})
+      .toPromise()
+      .then((res:any) => {
+      }).catch((err:any) => { console.log(err) });
     }
 
     private jsonHeaders(): Headers {
-        return new Headers({
-            'Content-Type'   : 'application/json'
-        });
+      return new Headers({
+        'Content-Type'   : 'application/json'
+      });
     }
 }

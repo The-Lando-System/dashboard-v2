@@ -20,9 +20,11 @@ import { ClientConfig, Token } from '../client/client-config';
 })
 export class EditorComponent implements OnInit {
     
-  private preview: boolean;
+  private activeTab: string = 'preview';
   private widget: Widget;
   private tokens: Token[];
+  private allClients: ClientConfig[];
+  private widgetClients: ClientConfig[];
 
   constructor(
     private broadcaster: Broadcaster,
@@ -37,20 +39,20 @@ export class EditorComponent implements OnInit {
       let widgetId = params['widgetId'];
       this.initWidgetById(widgetId);
     });
-    this.clientConfigService.retrieveAllTokens()
-    .then((tokens:Token[]) => {
-      this.tokens = tokens;
+  }
+
+  initializeWidgetClients(): void {
+    this.clientConfigService.retrieveClientConfigs()
+    .then((clients:ClientConfig[]) => {
+      this.allClients = clients.filter(client => !this.widget.clientIds.includes(client.id));
+      this.widgetClients = clients.filter(client => this.widget.clientIds.includes(client.id));
+      this.tokens = this.clientConfigService.getTokensForClients(this.widgetClients);
     });
   }
 
-  showPreview(): void {
+  setActiveTab(activeTab): void {
     event.preventDefault();
-    this.preview = true;
-  }
-
-  showTokens(): void {
-    event.preventDefault();
-    this.preview = false;
+    this.activeTab = activeTab;
   }
 
   initWidgetById(id:string): void {
@@ -62,10 +64,12 @@ export class EditorComponent implements OnInit {
           this.widget = new Widget();
           this.widget.name = 'New Widget';
         }
+        this.initializeWidgetClients();
       });
     } else {
         this.widget = new Widget();
         this.widget.name = 'New Widget';
+        this.initializeWidgetClients();
     }
   }
 
@@ -82,6 +86,16 @@ export class EditorComponent implements OnInit {
     
     // Add the token into the widget template html
 
+  }
+
+  addClientToWidget(client:ClientConfig): void {
+    event.preventDefault();
+
+    // add this client config id to the widget
+    this.widgetTemplateSvc.addClientToWidget(this.widget,client.id)
+    .then((res:any) => {
+      this.initializeWidgetClients();
+    });
   }
 
   sanitizeHtml(html:string): SafeHtml {

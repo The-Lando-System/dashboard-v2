@@ -1,65 +1,96 @@
 <div class="container" style="margin-left:80px; margin-top: 20px;">
     
-    <!-- Header Row -->
-    <div class="row">
-        <div class="col-md-4">
-            <h1>Widget Editor</h1>
+  <!-- Header Row -->
+  <div class="row">
+    <div class="col-md-4">
+      <h1>Widget Editor</h1>
+    </div>
+    <div class="col-md-8">
+      <div class="input-group" style="margin-top:10px">
+        <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name" aria-label="Recipient's username">
+        <span class="input-group-btn">
+          <button class="btn btn-secondary" type="button">Edit</button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template Editor Row -->
+  <div class="row" style="margin-top: 20px">
+
+    <!-- Template Editor -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-block">
+          <h4 class="card-title">Template Editor</h4>
+          <p class="card-text">
+            <textarea *ngIf="widget" [(ngModel)]="widget.html" class="form-control" rows="5"></textarea>
+          </p>
+          <button (click)="updateWidgetHtml()" class="btn btn-primary">Save</button>
         </div>
-        <div class="col-md-8">
-            <div class="input-group" style="margin-top:10px">
-                <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name" aria-label="Recipient's username">
-                <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="button">Edit</button>
-                </span>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Template Editor Row -->
-    <div class="row" style="margin-top: 20px">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-block">
-                    <h4 class="card-title">Template Editor</h4>
-                    <p class="card-text">
-                        <textarea *ngIf="widget" [(ngModel)]="widget.html" class="form-control" rows="5">
-                        </textarea>
-                    </p>
-                    <button (click)="updateWidgetHtml()" class="btn btn-primary">Save</button>
-                </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-block">
+
+          <!-- Header Tabs -->
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a [ngClass]="{active:activeTab === 'preview'}" class="nav-link" href="#" (click)="setActiveTab('preview')">Preview</a>
+            </li>
+            <li class="nav-item">
+              <a [ngClass]="{active:activeTab === 'tokens'}" class="nav-link" href="#" (click)="setActiveTab('tokens')">Tokens</a>
+            </li>
+            <li class="nav-item">
+              <a [ngClass]="{active:activeTab === 'clients'}" class="nav-link" href="#" (click)="setActiveTab('clients')">Clients</a>
+            </li>
+          </ul>
+
+          <br/>
+
+          <!-- Preview -->
+          <div *ngIf="activeTab === 'preview'" class="card">
+            <div class="card-block">
+              <div *ngIf="widget" [innerHTML]="sanitizeHtml(widget.html)"></div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-block">
+          </div>
 
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a [ngClass]="{active:preview}" class="nav-link" href="#" (click)="showPreview()">Preview</a>
-                        </li>
-                        <li class="nav-item">
-                            <a [ngClass]="{active:!preview}" class="nav-link" href="#" (click)="showTokens()">Tokens</a>
-                        </li>
-                    </ul>
-
-                    <br/>
-
-                    <div *ngIf="preview" class="card">
-                        <div class="card-block">
-                            <div *ngIf="widget" [innerHTML]="sanitizeHtml(widget.html)"></div>
-                        </div>
-                    </div>
-
-                    <div *ngIf="!preview" class="card">
-                        <div class="card-block">
-                            <div class="list-group">
-                                <a *ngFor="let token of tokens" href="#" (click)="addTokenToPreview(token)" class="list-group-item list-group-item-action">{{token.name}}</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <!-- Tokens -->
+          <div *ngIf="activeTab === 'tokens'" class="card">
+            <div class="card-block">
+              <div class="list-group">
+                <a *ngFor="let token of tokens" href="#" (click)="addTokenToPreview(token)" class="list-group-item list-group-item-action">{{token.name}}</a>
+              </div>
             </div>
+          </div>
+
+          <!-- Clients -->
+          <div *ngIf="activeTab === 'clients'" class="card">
+            <div class="card-block">
+              
+              <div class="list-group">
+                <a *ngFor="let client of widgetClients" href="#" class="list-group-item list-group-item-action">{{client.name}}</a>
+              </div>
+
+              <br/>
+
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Add Client
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a *ngFor="let client of allClients" (click)="addClientToWidget(client)" class="dropdown-item" href="#">{{client.name}}</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
+      </div>
     </div>
+  </div>
 
 </div>
