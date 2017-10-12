@@ -56,6 +56,31 @@ export class WidgetTemplateService implements OnInit {
       return this.updateWidget(widgetUpdate,widget.id);
     }
 
+    removeClientFromWidget(widget:Widget, clientId:string): Promise<void> {
+
+      let deleteIndex = -1;
+      for (let i = 0; i<widget.clientIds.length; i++) {
+        if (widget.clientIds[i] === clientId) {
+          deleteIndex = i;
+          break;
+        }
+      }
+
+      if (deleteIndex === -1) {
+        console.log("Failed to remove client ID!");
+        return null;
+      }
+
+      widget.clientIds.splice(deleteIndex, 1);
+
+      let widgetUpdate = {
+        'clientIds': widget.clientIds,
+      };
+
+      return this.updateWidget(widgetUpdate,widget.id);
+
+    }
+
     updateWidget(widgetUpdate:any, widgetId:string): Promise<void> {
       return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.jsonHeaders()})
       .toPromise()

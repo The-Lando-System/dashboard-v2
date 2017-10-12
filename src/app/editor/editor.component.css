@@ -1,0 +1,13 @@
+#client-list a {
+    cursor: default;
+}
+#client-list a:hover {
+    cursor: default;
+}
+
+#client-list a span {
+    cursor: pointer;
+}
+#client-list a span:hover {
+    cursor: pointer;
+}

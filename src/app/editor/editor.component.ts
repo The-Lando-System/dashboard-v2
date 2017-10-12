@@ -80,6 +80,16 @@ export class EditorComponent implements OnInit {
     });
   }
 
+  removeClientFromWidget(client:ClientConfig): void {
+    event.preventDefault();
+
+    this.widgetTemplateSvc.removeClientFromWidget(this.widget, client.id)
+    .then((res:any) => {
+      this.initializeWidgetClients();
+    }); 
+
+  }
+
   addTokenToPreview(token:Token): void {
     event.preventDefault();
     // Add the client to the widget template object and persist

@@ -70,8 +70,13 @@
           <div *ngIf="activeTab === 'clients'" class="card">
             <div class="card-block">
               
-              <div class="list-group">
-                <a *ngFor="let client of widgetClients" href="#" class="list-group-item list-group-item-action">{{client.name}}</a>
+              <div id="client-list" class="list-group">
+                <a on-mouseover="hvCltIdx = i" on-mouseleave="hvCltIdx = -1" *ngFor="let client of widgetClients; let i=index" class="list-group-item list-group-item-action justify-content-between">
+                  {{client.name}}
+                  <span *ngIf="hvCltIdx === i" (click)="removeClientFromWidget(client)" class="badge badge-default badge-pill">
+                      <i class="fa fa-minus" aria-hidden="true"></i>
+                  </span>
+                </a>
               </div>
 
               <br/>
@@ -82,6 +87,8 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a *ngFor="let client of allClients" (click)="addClientToWidget(client)" class="dropdown-item" href="#">{{client.name}}</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Create a new client...</a>
                 </div>
               </div>
 
