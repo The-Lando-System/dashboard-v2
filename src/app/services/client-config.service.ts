@@ -68,4 +68,13 @@ export class ClientConfigService implements OnInit {
       });
       return tokens;
     }
+
+    testClient(client:ClientConfig): Promise<any> {
+      // TODO - Make configurable for different request methods
+      return this.http.get(client.url)
+      .toPromise()
+      .then((res:any) => {
+        return res.json();
+      }).catch((err:any) => { console.log(err); });
+    }
 }

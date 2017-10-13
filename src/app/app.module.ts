@@ -12,6 +12,7 @@ import { SideMenuComponent } from './side-menu/side-menu.component';
 import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
 import { EditorComponent } from './editor/editor.component';
+import { ClientEditorComponent } from './editor/client-editor.component';
 
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
@@ -30,7 +31,8 @@ import { Globals } from './globals';
     WidgetShellComponent,
     HomeComponent,
     EditorComponent,
-    LoadingBarComponent
+    LoadingBarComponent,
+    ClientEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +50,10 @@ import { Globals } from './globals';
       {
         path: 'editor/:widgetId',
         component: EditorComponent
+      },
+      {
+        path: 'client-editor',
+        component: ClientEditorComponent
       }
     ])
   ],

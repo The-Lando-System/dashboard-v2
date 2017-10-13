@@ -1,0 +1,56 @@
+<div class="container" style="margin-left:80px; margin-top: 20px;">
+  <div class="row" style="margin-bottom: 20px;">
+    <h1>Client Editor</h1>
+  </div>
+  <div class="row">
+
+    <!-- List of Clients -->
+    <div class="col-md-4">
+      <div class="list-group">
+        <a class="list-group-item list-group-item-action active" style="color:white">Client Configurations</a>
+        <a href="#" (click)="selectClientForEdit()" class="list-group-item list-group-item-action"><strong>New Client</strong></a>
+        <a *ngFor="let client of clients" href="#" (click)="selectClientForEdit(client)" class="list-group-item list-group-item-action">{{client.name}}</a>
+      </div>
+    </div>
+
+    <!-- Edit/Create Client -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-block">
+          <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
+          <div class="input-group" style="margin-top:20px">
+            <input type="text" [(ngModel)]="editingClient.name" class="form-control" placeholder="Client Name">
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="button">Edit</button>
+            </span>
+          </div>
+          <div class="input-group" style="margin-top:20px">
+            <input type="text" [(ngModel)]="editingClient.url" class="form-control" placeholder="URL">
+            <span class="input-group-btn">
+              <button class="btn btn-secondary" type="button">Edit</button>
+            </span>
+          </div>
+          <div class="dropdown" style="margin-top:20px">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{editingClient.method || 'Request Method'}}
+            </button>
+            <div class="dropdown-menu">
+              <a *ngFor="let requestMethod of requestMethods" (click)="setRequestMethod(requestMethod)" class="dropdown-item" href="#">{{requestMethod}}</a>
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <button class="btn btn-info" (click)="testClient()">Test Client</button>
+          </div>
+          <div class="card" style="margin-top:20px">
+            <div class="card-block">
+              <pre>{{testResponse || 'Results...' }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
