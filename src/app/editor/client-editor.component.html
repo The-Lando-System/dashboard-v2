@@ -17,7 +17,14 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-block">
-          <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
+          <div class="row">
+            <div class="col-md-8">
+              <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
+            </div>
+            <div class="col-md-4">
+              <button style="float:right" class="btn btn-primary" (click)="saveClient()">Save</button>
+            </div>
+          </div>
           <div class="input-group" style="margin-top:20px">
             <input type="text" [(ngModel)]="editingClient.name" class="form-control" placeholder="Client Name">
             <span class="input-group-btn">
@@ -30,12 +37,22 @@
               <button class="btn btn-secondary" type="button">Edit</button>
             </span>
           </div>
-          <div class="dropdown" style="margin-top:20px">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {{editingClient.method || 'Request Method'}}
-            </button>
-            <div class="dropdown-menu">
-              <a *ngFor="let requestMethod of requestMethods" (click)="setRequestMethod(requestMethod)" class="dropdown-item" href="#">{{requestMethod}}</a>
+          <div class="row" style="margin-top:20px">
+            <div class="col-md-6">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{editingClient.method || 'Request Method'}}
+                </button>
+                <div class="dropdown-menu">
+                  <a *ngFor="let requestMethod of requestMethods" (click)="setRequestMethod(requestMethod)" class="dropdown-item" href="#">{{requestMethod}}</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <span style="float:right; margin-right: -20px; margin-top:5px">Interval:</span>
+            </div>
+            <div class="col-md-4">
+              <input type="text" [(ngModel)]="editingClient.interval" class="form-control" placeholder="Interval">
             </div>
           </div>
           <div style="margin-top:20px">

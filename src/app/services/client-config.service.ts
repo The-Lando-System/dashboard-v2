@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 
 import { ClientConfig, Token } from '../client/client-config';
 
@@ -69,6 +69,39 @@ export class ClientConfigService implements OnInit {
       return tokens;
     }
 
+    saveClient(client:ClientConfig): Promise<void> {
+      let editedClient = {
+        'name': client.name,
+        'url': client.url,
+        'method': client.method,
+        'interval': client.interval
+      }
+
+      return this.http.put(`${this.clientConfigUrl}/${client.id}`, editedClient, { headers: this.jsonHeaders()})
+      .toPromise()
+      .then((res:any) => {
+        return res.json();
+      }).catch((err:any) => { console.log(err); });
+    }
+
+
+    createNewClient(client:ClientConfig): Promise<void> {
+      let newClient = {
+        'name': client.name,
+        'tokens': [],
+        'url': client.url,
+        'method': client.method,
+        'interval': client.interval
+      }
+
+      return this.http.post(this.clientConfigUrl, newClient, { headers: this.jsonHeaders()})
+      .toPromise()
+      .then((res:any) => {
+        return res.json();
+      }).catch((err:any) => { console.log(err); });
+
+    }
+
     testClient(client:ClientConfig): Promise<any> {
       // TODO - Make configurable for different request methods
       return this.http.get(client.url)
@@ -76,5 +109,11 @@ export class ClientConfigService implements OnInit {
       .then((res:any) => {
         return res.json();
       }).catch((err:any) => { console.log(err); });
+    }
+
+    private jsonHeaders(): Headers {
+      return new Headers({
+        'Content-Type'   : 'application/json'
+      });
     }
 }

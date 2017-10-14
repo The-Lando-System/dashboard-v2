@@ -58,4 +58,18 @@ export class ClientEditorComponent implements OnInit {
       this.testResponse = JSON.stringify(res, null, 2);
     });
   }
+
+  saveClient(): void {
+    if (!this.editingClient.id) {
+      this.clientConfigService.createNewClient(this.editingClient)
+      .then((res:any) => {
+        this.initClientList();
+      });
+    } else {
+      this.clientConfigService.saveClient(this.editingClient)
+      .then((res:any) => {
+        this.initClientList();
+      });
+    }
+  }
 }
