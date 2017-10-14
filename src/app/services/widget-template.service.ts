@@ -39,7 +39,42 @@ export class WidgetTemplateService implements OnInit {
     updateWidgetHtml(widget:Widget): Promise<void> {
 
       let widgetUpdate = {
-        'html': widget.html,
+        'html': widget.html
+      };
+
+      return this.updateWidget(widgetUpdate,widget.id);
+    }
+
+    addTokenToWidget(widget:Widget, token:string): Promise<void> {
+    
+      widget.tokens.push(token);
+
+      let widgetUpdate = {
+        'tokens': widget.tokens
+      };
+
+      return this.updateWidget(widgetUpdate,widget.id);
+
+    }
+
+    removeTokenFromWidget(widget:Widget, token:string): Promise<void> {
+      let deleteIndex = -1;
+      for (let i = 0; i<widget.tokens.length; i++) {
+        if (widget.tokens[i] === token) {
+          deleteIndex = i;
+          break;
+        }
+      }
+
+      if (deleteIndex === -1) {
+        console.log(`Failed to remove token with name [${token}]`);
+        return null;
+      }
+
+      widget.tokens.splice(deleteIndex, 1);
+
+      let widgetUpdate = {
+        'tokens': widget.tokens
       };
 
       return this.updateWidget(widgetUpdate,widget.id);
@@ -50,7 +85,7 @@ export class WidgetTemplateService implements OnInit {
       widget.clientIds.push(clientId);
 
       let widgetUpdate = {
-        'clientIds': widget.clientIds,
+        'clientIds': widget.clientIds
       };
 
       return this.updateWidget(widgetUpdate,widget.id);
@@ -67,14 +102,14 @@ export class WidgetTemplateService implements OnInit {
       }
 
       if (deleteIndex === -1) {
-        console.log("Failed to remove client ID!");
+        console.log(`Failed to remove client with id [${clientId}]`);
         return null;
       }
 
       widget.clientIds.splice(deleteIndex, 1);
 
       let widgetUpdate = {
-        'clientIds': widget.clientIds,
+        'clientIds': widget.clientIds
       };
 
       return this.updateWidget(widgetUpdate,widget.id);

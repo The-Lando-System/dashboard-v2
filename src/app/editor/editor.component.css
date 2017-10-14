@@ -1,13 +1,7 @@
-#client-list a {
-    cursor: default;
-}
-#client-list a:hover {
-    cursor: default;
+#client-list a, #client-list a:hover {
+  cursor: default;
 }
 
-#client-list a span {
-    cursor: pointer;
-}
-#client-list a span:hover {
-    cursor: pointer;
+#client-list a span, #client-list a span:hover, #widget-token-list a span, #widget-token-list a span:hover{
+  cursor: pointer;
 }

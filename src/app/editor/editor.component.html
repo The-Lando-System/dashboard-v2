@@ -60,8 +60,13 @@
           <!-- Tokens -->
           <div *ngIf="activeTab === 'tokens'" class="card">
             <div class="card-block">
-              <div class="list-group">
-                <a *ngFor="let token of tokens" href="#" (click)="addTokenToPreview(token)" class="list-group-item list-group-item-action">{{token.name}}</a>
+              <div id="widget-token-list" class="list-group">
+                <a on-mouseover="hvTokenIdx = i" on-mouseleave="hvTokenIdx = -1" *ngFor="let token of widget.tokens; let i=index;" class="list-group-item list-group-item-action justify-content-between">
+                  {{token}}
+                  <span *ngIf="hvTokenIdx === i" (click)="removeTokenFromWidget(token)" class="badge badge-default badge-pill">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                  </span>
+                </a>
               </div>
             </div>
           </div>
@@ -71,11 +76,25 @@
             <div class="card-block">
               
               <div id="client-list" class="list-group">
-                <a on-mouseover="hvCltIdx = i" on-mouseleave="hvCltIdx = -1" *ngFor="let client of widgetClients; let i=index" class="list-group-item list-group-item-action justify-content-between">
-                  {{client.name}}
-                  <span *ngIf="hvCltIdx === i" (click)="removeClientFromWidget(client)" class="badge badge-default badge-pill">
+                <a on-mouseover="hvCltIdx = i" on-mouseleave="hvCltIdx = -1" *ngFor="let client of widgetClients; let i=index" class="list-group-item list-group-item-action">
+                  <div class="col-md-5">
+                    {{client.name}}
+                  </div>
+                  <div class="col-md-5">
+                    <div class="dropdown">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add Token
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a *ngFor="let token of client.tokens" (click)="addTokenToWidget(token)" class="dropdown-item" href="#">{{token.name}}</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <span *ngIf="hvCltIdx === i" (click)="removeClientFromWidget(client)" class="badge badge-default badge-pill">
                       <i class="fa fa-minus" aria-hidden="true"></i>
-                  </span>
+                    </span>
+                  </div>
                 </a>
               </div>
 

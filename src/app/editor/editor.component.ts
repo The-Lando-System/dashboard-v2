@@ -47,6 +47,13 @@ export class EditorComponent implements OnInit {
       this.allClients = clients.filter(client => !this.widget.clientIds.includes(client.id));
       this.widgetClients = clients.filter(client => this.widget.clientIds.includes(client.id));
       this.tokens = this.clientConfigService.getTokensForClients(this.widgetClients);
+
+
+      clients.forEach(client => {
+        client.tokens = client.tokens.filter(token => {
+          return !this.widget.tokens.includes(token.name);
+        });
+      });
     });
   }
 
@@ -90,12 +97,22 @@ export class EditorComponent implements OnInit {
 
   }
 
-  addTokenToPreview(token:Token): void {
+  addTokenToWidget(token:Token): void {
     event.preventDefault();
-    // Add the client to the widget template object and persist
     
-    // Add the token into the widget template html
+    this.widgetTemplateSvc.addTokenToWidget(this.widget, token.name)
+    .then((res:any) => {
+      this.ngOnInit();
+    });
 
+  }
+
+  removeTokenFromWidget(token:string): void {
+    event.preventDefault();
+    this.widgetTemplateSvc.removeTokenFromWidget(this.widget, token)
+    .then((res:any) => {
+      this.ngOnInit();
+    })
   }
 
   addClientToWidget(client:ClientConfig): void {
