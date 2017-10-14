@@ -103,12 +103,41 @@ export class ClientConfigService implements OnInit {
     }
 
     testClient(client:ClientConfig): Promise<any> {
-      // TODO - Make configurable for different request methods
-      return this.http.get(client.url)
+    
+      let requestTest = {
+        'url':client.url,
+        'method':client.method
+      }
+
+      return this.http.post(`${this.clientConfigUrl}/test`,requestTest,{ headers: this.jsonHeaders()})
       .toPromise()
       .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
+        let response;
+        try {
+          response = JSON.parse(res.json());
+        } catch(e) {
+          response = {
+            'error' : 'Response was not in a valid JSON format',
+            'response' : res._body
+          };
+        }
+        return response;
+      }).catch((err:any) => {
+        let error;
+        try {
+          error = {
+            'error' : 'An error occured during the client request',
+            'details' : err._body
+          };
+        } catch(e) {
+          error = {
+            'error' : 'An error occured during the client request',
+            'details' : err
+          };
+        }
+        console.log(error); 
+        return error;
+      });
     }
 
     private jsonHeaders(): Headers {

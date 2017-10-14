@@ -39,6 +39,7 @@ export class ClientEditorComponent implements OnInit {
     event.preventDefault();
     if (client) {
       this.editingClient = client;
+      this.testResponse = '';
     }
     else {
       this.editingClient = new ClientConfig();
