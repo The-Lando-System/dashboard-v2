@@ -13,6 +13,7 @@ import { WidgetShellComponent } from './widget/widget-shell/widget-shell.compone
 import { HomeComponent } from './home/home.component';
 import { EditorComponent } from './editor/editor.component';
 import { ClientEditorComponent } from './editor/client-editor.component';
+import { EditTokenComponent } from './editor/edit-token.component';
 
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
@@ -32,7 +33,8 @@ import { Globals } from './globals';
     HomeComponent,
     EditorComponent,
     LoadingBarComponent,
-    ClientEditorComponent
+    ClientEditorComponent,
+    EditTokenComponent
   ],
   imports: [
     BrowserModule,

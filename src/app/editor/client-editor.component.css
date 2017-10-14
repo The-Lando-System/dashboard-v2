@@ -1,0 +1,9 @@
+#token-list a, #token-list a:hover {
+  cursor: default;
+}
+#token-list a span, #token-list a span:hover {
+  cursor: pointer;
+}
+#add-token-link, #add-token-link:hover, .edit-token-link, .edit-token-link:hover {
+  cursor: pointer!important;
+}

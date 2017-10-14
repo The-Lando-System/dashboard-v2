@@ -69,7 +69,7 @@ export class ClientConfigService implements OnInit {
       return tokens;
     }
 
-    saveClient(client:ClientConfig): Promise<void> {
+    saveClient(client:ClientConfig): Promise<ClientConfig> {
       let editedClient = {
         'name': client.name,
         'url': client.url,
@@ -77,7 +77,11 @@ export class ClientConfigService implements OnInit {
         'interval': client.interval
       }
 
-      return this.http.put(`${this.clientConfigUrl}/${client.id}`, editedClient, { headers: this.jsonHeaders()})
+      return this.updateClient(editedClient,client.id);
+    }
+
+    updateClient(editedClient:any, clientId:string): Promise<ClientConfig> {
+      return this.http.put(`${this.clientConfigUrl}/${clientId}`, editedClient, { headers: this.jsonHeaders()})
       .toPromise()
       .then((res:any) => {
         return res.json();
@@ -108,6 +112,55 @@ export class ClientConfigService implements OnInit {
       .then((res:any) => {
         return res.json();
       }).catch((err:any) => { console.log(err); });
+    }
+
+    addTokenToClient(token:Token, client:ClientConfig): Promise<ClientConfig> {
+      
+      client.tokens.push(token);
+      
+      let editedClient = {
+        "tokens": client.tokens
+      };
+
+      return this.updateClient(editedClient,client.id);
+    }
+
+    updateTokenInClient(token:Token, client:ClientConfig): Promise<ClientConfig> {
+      client.tokens.forEach(t => {
+        if (token.name === t.name) {
+          t = token;
+        }
+      });
+
+      let editedClient = {
+        "tokens": client.tokens
+      };
+
+      return this.updateClient(editedClient,client.id);
+    }
+
+    removeTokenFromClient(token:Token, client:ClientConfig): Promise<ClientConfig> {
+      
+      let deleteIndex = -1;
+      for (let i = 0; i<client.tokens.length; i++) {
+        if (client.tokens[i].name === token.name) {
+          deleteIndex = i;
+          break;
+        }
+      }
+
+      if (deleteIndex === -1) {
+        console.log(`Failed to remove token with name ${token.name}!`);
+        return null;
+      }
+
+      client.tokens.splice(deleteIndex, 1);
+
+      let editedClient = {
+        'tokens': client.tokens,
+      };
+
+      return this.updateClient(editedClient,client.id);
     }
 
     testClient(client:ClientConfig): Promise<any> {

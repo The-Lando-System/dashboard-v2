@@ -17,6 +17,8 @@ export class ClientEditorComponent implements OnInit {
   private editingClient: ClientConfig = new ClientConfig();
   private requestMethods: string[] = ['GET','POST','PUT','DELETE'];
   private testResponse: string;
+  private activeTab: string = 'client';
+  private editingToken: Token;
 
   constructor(
     private broadcaster: Broadcaster,
@@ -26,6 +28,11 @@ export class ClientEditorComponent implements OnInit {
   ngOnInit(): void {
     this.initNewClient();
     this.initClientList();
+  }
+
+  setActiveTab(tab:string): void {
+    event.preventDefault();
+    this.activeTab = tab;
   }
 
   initClientList(): void {
@@ -38,6 +45,9 @@ export class ClientEditorComponent implements OnInit {
 
   selectClientForEdit(client:ClientConfig): void {
     event.preventDefault();
+
+    this.activeTab = 'client';
+
     if (client) {
       this.editingClient = client;
       this.testResponse = '';
@@ -46,7 +56,7 @@ export class ClientEditorComponent implements OnInit {
       this.initNewClient();
     }
   }
-
+  
   initNewClient(): void {
     this.editingClient = new ClientConfig();
     this.editingClient.name = 'New Client';
@@ -90,5 +100,13 @@ export class ClientEditorComponent implements OnInit {
     .then((res:any) => {
       this.initClientList();
     });
+  }
+
+  removeTokenFromClient(token:Token): void {
+    this.clientConfigService.removeTokenFromClient(token, this.editingClient);
+  }
+
+  refreshClient(): void {
+    console.log('Refresh called');
   }
 }

@@ -9,5 +9,5 @@ export class ClientConfig {
 
 export class Token {
     name: string;
-    parseRules: string[];
+    parse_rules: string[];
 }

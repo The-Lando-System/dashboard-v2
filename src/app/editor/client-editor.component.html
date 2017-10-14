@@ -9,68 +9,103 @@
       <div class="list-group">
         <a class="list-group-item list-group-item-action active" style="color:white">Client Configurations</a>
         <a href="#" (click)="selectClientForEdit()" class="list-group-item list-group-item-action"><strong>New Client</strong></a>
-        <a *ngFor="let client of clients" href="#" (click)="selectClientForEdit(client)" class="list-group-item list-group-item-action">{{client.name}}</a>
+        <a *ngFor="let client of clients" href="#" (click)="selectClientForEdit(client)" class="list-group-item list-group-item-action">
+          {{client.name}}
+        </a>
       </div>
     </div>
 
     <!-- Edit/Create Client -->
     <div class="col-md-8">
+
       <div class="card">
         <div class="card-block">
-          <div class="row">
-            <div class="col-md-8">
-              <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
-            </div>
-            <div class="col-md-4">
-              <button style="float:right" class="btn btn-primary" (click)="saveClient()">Save</button>
-            </div>
-          </div>
-          <div class="input-group" style="margin-top:20px">
-            <input type="text" [(ngModel)]="editingClient.name" class="form-control" placeholder="Client Name">
-            <span class="input-group-btn">
-              <button class="btn btn-secondary" type="button">Edit</button>
-            </span>
-          </div>
-          <div class="input-group" style="margin-top:20px">
-            <input type="text" [(ngModel)]="editingClient.url" class="form-control" placeholder="URL">
-            <span class="input-group-btn">
-              <button class="btn btn-secondary" type="button">Edit</button>
-            </span>
-          </div>
-          <div class="row" style="margin-top:20px">
-            <div class="col-md-6">
-              <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{editingClient.method || 'Request Method'}}
-                </button>
-                <div class="dropdown-menu">
-                  <a *ngFor="let requestMethod of requestMethods" (click)="setRequestMethod(requestMethod)" class="dropdown-item" href="#">{{requestMethod}}</a>
+          <!-- Header Tabs -->
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a [ngClass]="{active:activeTab === 'client'}" class="nav-link" href="#" (click)="setActiveTab('client')">Edit Client</a>
+            </li>
+            <li *ngIf="editingClient.id" class="nav-item">
+              <a [ngClass]="{active:activeTab === 'tokens'}" class="nav-link" href="#" (click)="setActiveTab('tokens')">Tokens</a>
+            </li>
+          </ul>
+    
+          <!-- Edit Client Tab -->
+          <div *ngIf="activeTab === 'client'" class="card" style="margin-top:20px;">
+            <div class="card-block">
+              <div class="row">
+                <div class="col-md-8">
+                  <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
+                </div>
+                <div class="col-md-4">
+                  <button style="float:right" class="btn btn-primary" (click)="saveClient()">Save</button>
                 </div>
               </div>
-            </div>
-            <div class="col-md-2">
-              <span style="float:right; margin-right: -20px; margin-top:5px">Interval:</span>
-            </div>
-            <div class="col-md-4">
-              <input type="text" [(ngModel)]="editingClient.interval" class="form-control" placeholder="Interval">
+              <div class="input-group" style="margin-top:20px">
+                <input type="text" [(ngModel)]="editingClient.name" class="form-control" placeholder="Client Name">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button">Edit</button>
+                </span>
+              </div>
+              <div class="input-group" style="margin-top:20px">
+                <input type="text" [(ngModel)]="editingClient.url" class="form-control" placeholder="URL">
+                <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button">Edit</button>
+                </span>
+              </div>
+              <div class="row" style="margin-top:20px">
+                <div class="col-md-6">
+                  <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{editingClient.method || 'Request Method'}}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a *ngFor="let requestMethod of requestMethods" (click)="setRequestMethod(requestMethod)" class="dropdown-item" href="#">{{requestMethod}}</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <span style="float:right; margin-right: -20px; margin-top:5px">Interval:</span>
+                </div>
+                <div class="col-md-4">
+                  <input type="text" [(ngModel)]="editingClient.interval" class="form-control" placeholder="Interval">
+                </div>
+              </div>
+              <div style="margin-top:20px">
+                <button class="btn btn-info" (click)="testClient()">Test</button>
+              </div>
+              <div class="card" style="margin-top:20px">
+                <div class="card-block">
+                  <pre>{{testResponse || 'Results...' }}</pre>
+                </div>
+              </div>
+              <div style="margin-top:20px">
+                <button class="btn btn-danger" (click)="deleteClient()">Delete</button>
+              </div>
             </div>
           </div>
-          <div style="margin-top:20px">
-            <button class="btn btn-info" (click)="testClient()">Test</button>
+    
+          <!-- Tokens Tab -->
+          <div *ngIf="activeTab === 'tokens' && editingClient.id" id="token-list" class="list-group" style="margin-top:20px;">
+            <a on-mouseover="hvTokenIdx = i" on-mouseleave="hvTokenIdx = -1" *ngFor="let token of editingClient.tokens; let i=index" class="list-group-item list-group-item-action justify-content-between">
+              <span class="edit-token-link" (click)="editingToken = token" data-toggle="modal" data-target="#editTokenModal">{{token.name}}</span>
+              <span *ngIf="hvTokenIdx === i" (click)="removeTokenFromClient(token)" class="badge badge-default badge-pill">
+                <i class="fa fa-minus" aria-hidden="true"></i>
+              </span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a id="add-token-link" (click)="editingToken = null;" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#editTokenModal"><strong>Add New Token...</strong></a>
           </div>
-          <div class="card" style="margin-top:20px">
-            <div class="card-block">
-              <pre>{{testResponse || 'Results...' }}</pre>
-            </div>
-          </div>
-          <div style="margin-top:20px">
-            <button class="btn btn-danger" (click)="deleteClient()">Delete</button>
-          </div>
+
+          <!-- Hidden button to refresh client -->
+          <button id="refresh-client" style="display:none" (click)="refreshClient()"></button>
+
         </div>
       </div>
     </div>
 
   </div>
-
-
 </div>
+
+<!-- Uploader Modal -->
+<edit-token [token]="editingToken" [client]="editingClient"></edit-token>
