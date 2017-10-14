@@ -56,12 +56,15 @@
             </div>
           </div>
           <div style="margin-top:20px">
-            <button class="btn btn-info" (click)="testClient()">Test Client</button>
+            <button class="btn btn-info" (click)="testClient()">Test</button>
           </div>
           <div class="card" style="margin-top:20px">
             <div class="card-block">
               <pre>{{testResponse || 'Results...' }}</pre>
             </div>
+          </div>
+          <div style="margin-top:20px">
+            <button class="btn btn-danger" (click)="deleteClient()">Delete</button>
           </div>
         </div>
       </div>

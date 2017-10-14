@@ -24,7 +24,7 @@ export class ClientEditorComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.editingClient.name = 'New Client';
+    this.initNewClient();
     this.initClientList();
   }
 
@@ -32,6 +32,7 @@ export class ClientEditorComponent implements OnInit {
     this.clientConfigService.retrieveClientConfigs()
     .then((clients:ClientConfig[]) => {
       this.clients = clients;
+      this.initNewClient();
     });
   }
 
@@ -42,10 +43,14 @@ export class ClientEditorComponent implements OnInit {
       this.testResponse = '';
     }
     else {
-      this.editingClient = new ClientConfig();
-      this.editingClient.name = 'New Client';
-      this.testResponse = '';
+      this.initNewClient();
     }
+  }
+
+  initNewClient(): void {
+    this.editingClient = new ClientConfig();
+    this.editingClient.name = 'New Client';
+    this.testResponse = '';
   }
 
   setRequestMethod(requestMethod:string): void {
@@ -72,5 +77,18 @@ export class ClientEditorComponent implements OnInit {
         this.initClientList();
       });
     }
+  }
+
+  deleteClient(): void {
+    if (!this.editingClient.id)
+      return;
+
+    if (!confirm('Are you sure you want to delete this client?'))
+      return;
+
+    this.clientConfigService.deleteClient(this.editingClient)
+    .then((res:any) => {
+      this.initClientList();
+    });
   }
 }

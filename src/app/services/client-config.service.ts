@@ -102,6 +102,14 @@ export class ClientConfigService implements OnInit {
 
     }
 
+    deleteClient(client:ClientConfig): Promise<void> {
+      return this.http.delete(`${this.clientConfigUrl}/${client.id}`)
+      .toPromise()
+      .then((res:any) => {
+        return res.json();
+      }).catch((err:any) => { console.log(err); });
+    }
+
     testClient(client:ClientConfig): Promise<any> {
     
       let requestTest = {
