@@ -53,6 +53,28 @@ export class WidgetTemplateService implements OnInit {
       return this.updateWidget(widgetUpdate,widget.id);
     }
 
+    createWidget(widget:Widget): Promise<Widget> {
+
+      let newWidget = {
+        'name': widget.name,
+        'html': widget.html,
+        'clientIds': widget.clientIds,
+        'tokens': widget.tokens
+      };
+
+      return this.http.post(this.widgetsUrl, newWidget, {headers:this.jsonHeaders()})
+      .toPromise()
+      .then((res:any) => {
+        return res.json();
+      }).catch((err:any) => { console.log(err); });
+    }
+
+    deleteWidget(widget:Widget): Promise<void> {
+      return this.http.delete(`${this.widgetsUrl}/${widget.id}`)
+      .toPromise()
+      .then((res:any) => {}).catch((err:any) => { console.log(err) });
+    }
+
     addTokenToWidget(widget:Widget, token:string): Promise<void> {
     
       widget.tokens.push(token);
@@ -127,8 +149,7 @@ export class WidgetTemplateService implements OnInit {
     updateWidget(widgetUpdate:any, widgetId:string): Promise<void> {
       return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.jsonHeaders()})
       .toPromise()
-      .then((res:any) => {
-      }).catch((err:any) => { console.log(err) });
+      .then((res:any) => {}).catch((err:any) => { console.log(err) });
     }
 
     private jsonHeaders(): Headers {

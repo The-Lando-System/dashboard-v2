@@ -30,6 +30,7 @@ export class EditorComponent implements OnInit {
     private broadcaster: Broadcaster,
     private sanitizer: DomSanitizer,
     private route: ActivatedRoute,
+    private router: Router,
     private widgetTemplateSvc: WidgetTemplateService,
     private clientConfigService: ClientConfigService
   ){}
@@ -57,6 +58,25 @@ export class EditorComponent implements OnInit {
     });
   }
 
+  createWidget(): void {
+    this.widgetTemplateSvc.createWidget(this.widget)
+    .then((newWidget:Widget) => {
+      this.widget = newWidget;
+      this.widget.displayable = true;
+    })
+  }
+
+  deleteWidget(): void {
+    if (!confirm('Are you sure want to delete this widget?'))
+      return;
+
+    this.widgetTemplateSvc.deleteWidget(this.widget)
+    .then((res:any) => {
+      let link = ['/'];
+      this.router.navigate(link);
+    });
+  }
+
   updateWidgetName(): void {
     this.widgetTemplateSvc.updateWidgetName(this.widget)
     .then((res:any) => {
@@ -77,12 +97,16 @@ export class EditorComponent implements OnInit {
         if (this.widget == null) {
           this.widget = new Widget();
           this.widget.name = 'New Widget';
+          this.widget.clientIds = [];
+          this.widget.tokens = [];
         }
         this.initializeWidgetClients();
       });
     } else {
         this.widget = new Widget();
         this.widget.name = 'New Widget';
+        this.widget.clientIds = [];
+        this.widget.tokens = [];
         this.initializeWidgetClients();
     }
   }
@@ -109,7 +133,7 @@ export class EditorComponent implements OnInit {
     
     this.widgetTemplateSvc.addTokenToWidget(this.widget, token.name)
     .then((res:any) => {
-      this.ngOnInit();
+      this.initializeWidgetClients();
     });
 
   }
@@ -118,7 +142,7 @@ export class EditorComponent implements OnInit {
     event.preventDefault();
     this.widgetTemplateSvc.removeTokenFromWidget(this.widget, token)
     .then((res:any) => {
-      this.ngOnInit();
+      this.initializeWidgetClients();
     })
   }
 

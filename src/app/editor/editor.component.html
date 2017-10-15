@@ -1,17 +1,21 @@
-<div class="container" style="margin-left:80px; margin-top: 20px;">
+<div *ngIf="widget" class="container" style="margin-left:80px; margin-top: 20px;">
     
   <!-- Header Row -->
   <div class="row">
-    <div class="col-md-4">
-      <h1>Widget Editor</h1>
-    </div>
-    <div class="col-md-8">
-      <div class="input-group" style="margin-top:10px">
+    <h1>Widget Editor</h1>
+  </div>
+  <div class="row" style="margin-top:20px;">
+    <div class="col-md-6" style="margin-top:10px">
+      <div class="input-group">
         <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name">
         <span class="input-group-btn">
-          <button (click)="updateWidgetName()" class="btn btn-secondary" type="button">Edit</button>
+          <button (click)="updateWidgetName()" class="btn btn-secondary" type="button">Update</button>
         </span>
       </div>
+    </div>
+    <div class="col-md-6" style="margin-top:10px; text-align:right;">
+      <button *ngIf="widget.id" (click)="deleteWidget()" class="btn btn-danger">Delete Widget</button>
+      <button *ngIf="!widget.id" (click)="createWidget()" class="btn btn-primary">Create Widget</button>
     </div>
   </div>
 
@@ -40,10 +44,10 @@
             <li class="nav-item">
               <a [ngClass]="{active:activeTab === 'preview'}" class="nav-link" href="#" (click)="setActiveTab('preview')">Preview</a>
             </li>
-            <li class="nav-item">
+            <li *ngIf="widget.id" class="nav-item">
               <a [ngClass]="{active:activeTab === 'tokens'}" class="nav-link" href="#" (click)="setActiveTab('tokens')">Tokens</a>
             </li>
-            <li class="nav-item">
+            <li *ngIf="widget.id" class="nav-item">
               <a [ngClass]="{active:activeTab === 'clients'}" class="nav-link" href="#" (click)="setActiveTab('clients')">Clients</a>
             </li>
           </ul>
@@ -58,7 +62,7 @@
           </div>
 
           <!-- Tokens -->
-          <div *ngIf="activeTab === 'tokens'" class="card">
+          <div *ngIf="activeTab === 'tokens' && widget.id" class="card">
             <div class="card-block">
               <div id="widget-token-list" class="list-group">
                 <a on-mouseover="hvTokenIdx = i" on-mouseleave="hvTokenIdx = -1" *ngFor="let token of widget.tokens; let i=index;" class="list-group-item list-group-item-action justify-content-between">
@@ -72,7 +76,7 @@
           </div>
 
           <!-- Clients -->
-          <div *ngIf="activeTab === 'clients'" class="card">
+          <div *ngIf="activeTab === 'clients' && widget.id" class="card">
             <div class="card-block">
               
               <div id="client-list" class="list-group">
