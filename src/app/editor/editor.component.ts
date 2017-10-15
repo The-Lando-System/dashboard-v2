@@ -57,6 +57,13 @@ export class EditorComponent implements OnInit {
     });
   }
 
+  updateWidgetName(): void {
+    this.widgetTemplateSvc.updateWidgetName(this.widget)
+    .then((res:any) => {
+      console.log('Widget was updated!');
+    });
+  }
+
   setActiveTab(activeTab): void {
     event.preventDefault();
     this.activeTab = activeTab;

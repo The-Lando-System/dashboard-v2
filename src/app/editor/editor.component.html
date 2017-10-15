@@ -9,7 +9,7 @@
       <div class="input-group" style="margin-top:10px">
         <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name">
         <span class="input-group-btn">
-          <button class="btn btn-secondary" type="button">Edit</button>
+          <button (click)="updateWidgetName()" class="btn btn-secondary" type="button">Edit</button>
         </span>
       </div>
     </div>
@@ -107,7 +107,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a *ngFor="let client of allClients" (click)="addClientToWidget(client)" class="dropdown-item" href="#">{{client.name}}</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Create a new client...</a>
+                  <a class="dropdown-item" href="#" routerLink="/client-editor">Create a new client...</a>
                 </div>
               </div>
 

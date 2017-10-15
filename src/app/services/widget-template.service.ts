@@ -45,6 +45,14 @@ export class WidgetTemplateService implements OnInit {
       return this.updateWidget(widgetUpdate,widget.id);
     }
 
+    updateWidgetName(widget:Widget): Promise<void> {
+      let widgetUpdate = {
+        'name': widget.name
+      };
+
+      return this.updateWidget(widgetUpdate,widget.id);
+    }
+
     addTokenToWidget(widget:Widget, token:string): Promise<void> {
     
       widget.tokens.push(token);
