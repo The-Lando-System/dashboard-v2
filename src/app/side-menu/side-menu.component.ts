@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { Globals } from '../globals';
 
@@ -7,12 +8,25 @@ import { Globals } from '../globals';
   moduleId: module.id,
   selector: 'side-menu',
   templateUrl: 'side-menu.component.html',
-  styleUrls: [ 'side-menu.component.css' ]
+  styleUrls: [ 'side-menu.component.css' ],
+  animations: [
+    trigger('slideInOut', [
+      state('in', style({
+        transform: 'translate3d(0, 0, 0)'
+      })),
+      state('out', style({
+        transform: 'translate3d(75%, 0, 0)'
+      })),
+      transition('in => out', animate('200ms ease-in-out')),
+      transition('out => in', animate('200ms ease-in-out'))
+    ]),
+  ]
 })
 export class SideMenuComponent implements OnInit {
 
   private user: User;
   private sarlaccUrl: string;
+  private menuState: string = 'in';
 
   constructor(
     private globals: Globals,
@@ -23,6 +37,11 @@ export class SideMenuComponent implements OnInit {
   ngOnInit(): void {
     this.initUser();
     this.listenForLogin();
+  }
+
+  toggleMenu(): void {
+    event.preventDefault();
+    this.menuState = this.menuState === 'in' ? 'out' : 'in';
   }
 
   private initUser() {

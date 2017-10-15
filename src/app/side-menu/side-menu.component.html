@@ -1,11 +1,23 @@
-<div id="side-bar">
+<div [@slideInOut]="menuState" id="side-bar">
   <div class="small-spacer"></div>
-  <a class="sb-item" href="#">
-    <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+  <a class="hamburger side-menu-item-small" href="#" (click)="toggleMenu()">
+    <i *ngIf="menuState === 'in'" class="fa fa-bars fa-2x" aria-hidden="true"></i>
+    <i *ngIf="menuState === 'out'" class="fa fa-times-circle fa-2x" aria-hidden="true"></i>
+  </a>
+  <a class="home side-menu-item" routerLink="/" (click)="toggleMenu()">
+    <h4>Dashboard</h4>
   </a>
   <div class="spacer"></div>
   <div class="spacer"></div>
-  <a *ngIf="user" class="sb-item" style="margin-left: 11px;" [attr.href]="sarlaccUrl">
-    <i class="fa fa-user fa-2x" aria-hidden="true"></i>
+  <a class="side-menu-item" routerLink="/login" (click)="toggleMenu()">
+    Login
+  </a>
+  <div class="small-spacer"></div>
+  <a class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
+    Create New Widget
+  </a>
+  <div class="small-spacer"></div>
+  <a class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
+    Manage Clients
   </a>
 </div>

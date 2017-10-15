@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserService, Broadcaster } from 'sarlacc-angular-client';
 
 import { AppComponent } from './app.component';
@@ -40,6 +41,7 @@ import { Globals } from './globals';
     BrowserModule,
     FormsModule,
     HttpModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       {
         path: '',
