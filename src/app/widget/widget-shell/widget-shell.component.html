@@ -1,7 +1,7 @@
 <div class="widget card"> 
     <div class="card-header" (mouseenter)="headerHovered = true" (mouseleave)="headerHovered = false">
         <div style="float:left">
-            {{title}}
+            <span id="widget-title">{{title}}</span>
         </div>
         <div *ngIf="headerHovered" style="float:right">
             <a [routerLink]="['editor', id]" style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
