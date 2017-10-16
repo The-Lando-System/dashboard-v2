@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
 
 import { ClientConfigService } from '../services/client-config.service';
-import { ClientConfig, Token } from '../client/client-config';
+import { ClientConfig, Token, Oauth2Config, ClientHeader } from '../client/client-config';
 
 @Component({
   moduleId: module.id,
@@ -19,6 +19,8 @@ export class ClientEditorComponent implements OnInit {
   private testResponse: string;
   private activeTab: string = 'client';
   private editingToken: Token;
+  private authMethods: string[] = ['None','OAuth2'];
+  private selectedAuthMethod: string;
 
   constructor(
     private broadcaster: Broadcaster,
@@ -33,6 +35,16 @@ export class ClientEditorComponent implements OnInit {
   setActiveTab(tab:string): void {
     event.preventDefault();
     this.activeTab = tab;
+  }
+
+  setAuthMethod(authMethod:string): void {
+    event.preventDefault();
+    this.selectedAuthMethod = authMethod;
+    if (this.selectedAuthMethod === 'OAuth2') {
+      this.editingClient.oauth2_config = new Oauth2Config();
+    } else {
+      this.editingClient.oauth2_config = null;
+    }
   }
 
   initClientList(): void {

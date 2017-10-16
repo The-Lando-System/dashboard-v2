@@ -167,7 +167,8 @@ export class ClientConfigService implements OnInit {
     
       let requestTest = {
         'url':client.url,
-        'method':client.method
+        'method':client.method,
+        'oauth2_config':client.oauth2_config ? client.oauth2_config : ''
       }
 
       return this.http.post(`${this.clientConfigUrl}/test`,requestTest,{ headers: this.jsonHeaders()})

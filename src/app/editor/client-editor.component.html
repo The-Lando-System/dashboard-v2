@@ -33,14 +33,18 @@
           <!-- Edit Client Tab -->
           <div *ngIf="activeTab === 'client'" class="card" style="margin-top:20px;">
             <div class="card-block">
+
+              <!-- Header -->
               <div class="row">
                 <div class="col-md-8">
-                  <h4 class="card-title">Editing Client {{editingClient.name}}</h4>
+                  <h4 class="card-title">Editing <strong>{{editingClient.name}}</strong></h4>
                 </div>
                 <div class="col-md-4">
                   <button style="float:right" class="btn btn-primary" (click)="saveClient()">Save</button>
                 </div>
               </div>
+
+              <!-- URL and Name -->
               <div class="input-group" style="margin-top:20px">
                 <input type="text" [(ngModel)]="editingClient.name" class="form-control" placeholder="Client Name">
                 <span class="input-group-btn">
@@ -53,6 +57,8 @@
                   <button class="btn btn-secondary" type="button">Edit</button>
                 </span>
               </div>
+
+              <!-- Request Method and Interval -->
               <div class="row" style="margin-top:20px">
                 <div class="col-md-6">
                   <div class="dropdown">
@@ -71,6 +77,53 @@
                   <input type="text" [(ngModel)]="editingClient.interval" class="form-control" placeholder="Interval">
                 </div>
               </div>
+
+              <!-- Auth Selection -->
+              <div class="row" style="margin-top:20px;">
+                <div class="dropdown">
+                  <div class="col-md-12">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{selectedAuthMethod || 'Auth Method'}}
+                    </button>
+                    <div class="dropdown-menu">
+                      <a *ngFor="let authMethod of authMethods" (click)="setAuthMethod(authMethod)" class="dropdown-item" href="#">{{authMethod}}</a>
+                    </div>  
+                  </div>
+                </div>
+              </div>
+
+              <!-- OAuth2 Inputs -->
+              <div *ngIf="selectedAuthMethod === 'OAuth2'">
+
+                <!-- Auth URL -->
+                <div class="row" style="margin-top:20px;">
+                  <div class="col-md-12">
+                    <div class="input-group">
+                      <span class="input-group-addon">Auth URL</span>
+                      <input [(ngModel)]="editingClient.oauth2_config.auth_url" type="text" class="form-control" placeholder="Auth URL">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- API Key and Secret -->
+                <div class="row" style="margin-top:20px;">
+                  <div class="col-md-6">
+                    <div class="input-group">
+                      <span class="input-group-addon">API Key</span>
+                      <input [(ngModel)]="editingClient.oauth2_config.api_key" type="text" class="form-control" placeholder="API Key">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="input-group">
+                      <span class="input-group-addon">API Secret</span>
+                      <input [(ngModel)]="editingClient.oauth2_config.api_secret" type="text" class="form-control" placeholder="API Secret">
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Test Client -->
               <div style="margin-top:20px">
                 <button class="btn btn-info" (click)="testClient()">Test</button>
               </div>
