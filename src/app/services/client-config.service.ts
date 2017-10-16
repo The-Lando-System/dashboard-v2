@@ -74,7 +74,8 @@ export class ClientConfigService implements OnInit {
         'name': client.name,
         'url': client.url,
         'method': client.method,
-        'interval': client.interval
+        'interval': client.interval,
+        'oauth2_config': client.oauth2_config ? client.oauth2_config : {}
       }
 
       return this.updateClient(editedClient,client.id);
@@ -95,7 +96,8 @@ export class ClientConfigService implements OnInit {
         'tokens': [],
         'url': client.url,
         'method': client.method,
-        'interval': client.interval
+        'interval': client.interval,
+        'oauth2_config': client.oauth2_config ? client.oauth2_config : {}
       }
 
       return this.http.post(this.clientConfigUrl, newClient, { headers: this.jsonHeaders()})

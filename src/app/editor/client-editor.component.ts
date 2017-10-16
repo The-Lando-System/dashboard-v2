@@ -62,6 +62,11 @@ export class ClientEditorComponent implements OnInit {
 
     if (client) {
       this.editingClient = client;
+      if (this.editingClient.oauth2_config){
+        this.selectedAuthMethod = 'OAuth2';
+      } else {
+        this.selectedAuthMethod = 'None';
+      }
       this.testResponse = '';
     }
     else {
@@ -73,6 +78,7 @@ export class ClientEditorComponent implements OnInit {
     this.editingClient = new ClientConfig();
     this.editingClient.name = 'New Client';
     this.testResponse = '';
+    this.selectedAuthMethod = null;
   }
 
   setRequestMethod(requestMethod:string): void {
