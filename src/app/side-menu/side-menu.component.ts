@@ -44,6 +44,10 @@ export class SideMenuComponent implements OnInit {
     this.menuState = this.menuState === 'in' ? 'out' : 'in';
   }
 
+  restartClients(): void {
+    this.broadcaster.broadcast('RESTART_CLIENTS',true);
+  }
+
   private initUser() {
     this.userSvc.returnUser()
     .then((user:User) => {

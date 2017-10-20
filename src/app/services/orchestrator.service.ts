@@ -19,37 +19,36 @@ export class OrchestratorService {
     private widgetStatus: any = {};
 
     constructor(
-        private broadcaster: Broadcaster,
-        private globals: Globals,
-        private tokenReplacer: TokenReplacer,
-        private widgetTemplateSvc: WidgetTemplateService
+      private broadcaster: Broadcaster,
+      private globals: Globals,
+      private tokenReplacer: TokenReplacer,
+      private widgetTemplateSvc: WidgetTemplateService
     ) {}
 
     start(): void {
-        this.widgetTemplateSvc.retrieveWidgets()
-        .then((widgets:Widget[]) => {
-            this.widgets = widgets;
-            this.initWidgetStatuses();
-            this.connect();
-            this.subscribe();
-        });
+      this.widgetTemplateSvc.retrieveWidgets()
+      .then((widgets:Widget[]) => {
+        this.widgets = widgets;
+        this.initWidgetStatuses();
+        this.connect();
+        this.listenForRestart();
+      });
+    }
 
-        //this.widgets = this.widgetTemplateSvc.getWidgets();
-        // this.initWidgetStatuses();
-        // this.connect();
-        // this.subscribe();
+    private listenForRestart(): void {
+      this.broadcaster.on('RESTART_CLIENTS').subscribe(() => {
+        this.connect();
+      });
     }
 
     private connect(): void {
-        this.socket = io(this.globals.service_domain);
-        this.socket.on('connect', function() {
-            console.log('Connected to dashboard-svc websocket!');
-        });
+      this.socket = io(this.globals.service_domain);
+      this.socket.on('connect', this.subscribe.bind(this));
     }
 
-    // Subscribe to update messages coming from the server
     private subscribe(): void {
-        this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
+      console.log('subscribed');
+      this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
     }
 
     // Handle the message published by the server to update widget tokens
