@@ -125,6 +125,6 @@ export class ClientEditorComponent implements OnInit {
   }
 
   refreshClient(): void {
-    console.log('Refresh called');
+    this.editingToken = undefined;
   }
 }
