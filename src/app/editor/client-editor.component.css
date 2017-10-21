@@ -7,3 +7,7 @@
 #add-token-link, #add-token-link:hover, .edit-token-link, .edit-token-link:hover {
   cursor: pointer!important;
 }
+
+.clickable {
+  cursor: pointer;
+}

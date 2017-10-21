@@ -5,7 +5,7 @@ import { Globals } from '../globals';
 
 import { Widget } from '../widget/widget';
 
-import { TokenReplacer } from './token-replacer';
+import { TokenService } from './token.service';
 import { WidgetTemplateService } from './widget-template.service';
 import { ClientConfigService } from './client-config.service';
 
@@ -22,7 +22,7 @@ export class OrchestratorService {
     constructor(
       private broadcaster: Broadcaster,
       private globals: Globals,
-      private tokenReplacer: TokenReplacer,
+      private tokenService: TokenService,
       private widgetTemplateSvc: WidgetTemplateService,
       private clientConfigSvc: ClientConfigService
     ) {}
@@ -49,14 +49,12 @@ export class OrchestratorService {
     }
 
     private subscribe(): void {
-      console.log('subscribed');
       this.clientConfigSvc.activateClients();
       this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
     }
 
     // Handle the message published by the server to update widget tokens
     private handleWidgetUpdates(updateMessage): void {
-        console.log(updateMessage);
         
         let widgetsToUpdate:Widget[] = this.getWidgetsWithClientId(updateMessage.client_id);
 
@@ -80,7 +78,7 @@ export class OrchestratorService {
 
     // Set the value on the widget token, and replace the token in the HTML template
     private replaceToken(token:string,value:string,widget:Widget): void {
-        widget.html = this.tokenReplacer.replaceToken(token, value, widget.html);
+        widget.html = this.tokenService.replaceToken(token, value, widget.html);
     }
 
     // Mark the token as being replaced, and check if the template needs to be broadcast

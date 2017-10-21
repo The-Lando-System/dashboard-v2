@@ -19,7 +19,7 @@ import { EditTokenComponent } from './editor/edit-token.component';
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
 import { OrchestratorService } from './services/orchestrator.service';
-import { TokenReplacer } from './services/token-replacer';
+import { TokenService } from './services/token.service';
 import { WidgetTemplateService } from './services/widget-template.service';
 import { ClientConfigService } from './services/client-config.service';
 
@@ -67,7 +67,7 @@ import { Globals } from './globals';
     UserService,
     CookieService,
     OrchestratorService,
-    TokenReplacer,
+    TokenService,
     WidgetTemplateService,
     ClientConfigService
   ],

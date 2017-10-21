@@ -44,10 +44,6 @@ export class HomeComponent implements OnInit {
       this.orchestrator.start();
       this.listenForTemplates();  
     });
-
-    // this.widgets = this.widgetTempalateSvc.getWidgets();
-    // this.orchestrator.start();
-    // this.listenForTemplates();
   }
 
   private initUser() {
@@ -67,7 +63,6 @@ export class HomeComponent implements OnInit {
   private listenForTemplates(): void {
     this.broadcaster.on<string>('TEMPLATE_UPDATE')
     .subscribe(message => {
-      console.log(message);
       for (let widget of this.widgets) {
         if (message.hasOwnProperty(widget.id)) {
           widget.html = message[widget.id];

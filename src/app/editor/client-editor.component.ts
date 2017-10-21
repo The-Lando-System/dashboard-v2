@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
 
+import { TokenService } from '../services/token.service';
 import { ClientConfigService } from '../services/client-config.service';
 import { ClientConfig, Token, Oauth2Config, ClientHeader } from '../client/client-config';
 
@@ -21,10 +23,13 @@ export class ClientEditorComponent implements OnInit {
   private editingToken: Token;
   private authMethods: string[] = ['None','OAuth2'];
   private selectedAuthMethod: string;
+  private responseTokens: any[] = [];
 
   constructor(
     private broadcaster: Broadcaster,
-    private clientConfigService: ClientConfigService
+    private clientConfigService: ClientConfigService,
+    private sanitizer: DomSanitizer,
+    private tokenService: TokenService
   ){}
 
   ngOnInit(): void {
@@ -90,6 +95,49 @@ export class ClientEditorComponent implements OnInit {
     this.clientConfigService.testClient(this.editingClient)
     .then((res:any) => {
       this.testResponse = JSON.stringify(res, null, 2);
+      var escapedResponse = JSON.stringify(this.testResponse);
+      
+      this.responseTokens = this.tokenService.tokenizeJsonResponse(escapedResponse);
+
+      this.responseTokens = [];
+
+      this.responseTokens.push({
+        'item':'\n',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'{',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'\n',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'  ',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'hello',
+        'isToken':true
+      });
+      this.responseTokens.push({
+        'item':':',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'world',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'\n',
+        'isToken':false
+      });
+      this.responseTokens.push({
+        'item':'}',
+        'isToken':false
+      });
+
     });
   }
 
@@ -127,4 +175,15 @@ export class ClientEditorComponent implements OnInit {
   refreshClient(): void {
     this.editingToken = undefined;
   }
+
+  selectToken(token): void {
+    console.log('');
+    console.log(token.item);
+    console.log(token.isToken);
+  }
+
+  getPointerClass(responseToken): string {
+    return responseToken.isToken ? 'clickable' : '';
+  }
+
 }

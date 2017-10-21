@@ -129,7 +129,10 @@
               </div>
               <div class="card" style="margin-top:20px">
                 <div class="card-block">
-                  <pre>{{testResponse || 'Results...' }}</pre>
+                  <!-- <pre>{{testResponse || 'Results...' }}</pre> -->
+                  <pre>
+                    <span [ngClass]="getPointerClass(responseToken)" *ngFor="let responseToken of responseTokens" (click)="selectToken(responseToken)">{{responseToken.item}}</span>
+                  </pre>
                 </div>
               </div>
               <div style="margin-top:20px">

@@ -91,7 +91,6 @@ export class ClientConfigService implements OnInit {
       }).catch((err:any) => { console.log(err); });
     }
 
-
     createNewClient(client:ClientConfig): Promise<void> {
       let newClient = {
         'name': client.name,
@@ -214,8 +213,6 @@ export class ClientConfigService implements OnInit {
         this.broadcaster.broadcast('REFRESH_COMPLETE',true);
       }).catch((err:any) => { console.log(err); });
     }
-
-
 
     private jsonHeaders(): Headers {
       return new Headers({
