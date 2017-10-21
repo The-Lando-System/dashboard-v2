@@ -15,7 +15,7 @@ import { Globals } from '../globals';
         transform: 'translate3d(0, 0, 0)'
       })),
       state('out', style({
-        transform: 'translate3d(75%, 0, 0)'
+        transform: 'translate3d(80%, 0, 0)'
       })),
       transition('in => out', animate('200ms ease-in-out')),
       transition('out => in', animate('200ms ease-in-out'))
@@ -27,6 +27,7 @@ export class SideMenuComponent implements OnInit {
   private user: User;
   private sarlaccUrl: string;
   private menuState: string = 'in';
+  private refreshing: boolean;
 
   constructor(
     private globals: Globals,
@@ -37,6 +38,7 @@ export class SideMenuComponent implements OnInit {
   ngOnInit(): void {
     this.initUser();
     this.listenForLogin();
+    this.listenForRefreshComplete();
   }
 
   toggleMenu(): void {
@@ -45,7 +47,18 @@ export class SideMenuComponent implements OnInit {
   }
 
   restartClients(): void {
+    this.refreshing = true;
     this.broadcaster.broadcast('RESTART_CLIENTS',true);
+  }
+
+  listenForRefreshComplete(): void {
+    this.broadcaster.on('REFRESH_COMPLETE').subscribe((res:any) => {
+      setTimeout(this.stopRefresh.bind(this), 1000);
+    });
+  }
+
+  private stopRefresh(): void {
+    this.refreshing = false;
   }
 
   private initUser() {

@@ -9,18 +9,21 @@
   </a>
   <div class="spacer"></div>
   <div class="spacer"></div>
-  <a style="color:white" class="side-menu-item-small" (click)="restartClients()">
+  <a *ngIf="menuState === 'in' && !refreshing" style="color:white" class="side-menu-item-small" (click)="restartClients()">
     <i class="fa fa-refresh fa-2x" aria-hidden="true"></i>
   </a>
-  <a class="side-menu-item" routerLink="/login" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'in' && refreshing" style="color:white; margin-right:3px;" class="side-menu-item-small">
+    <i class="fa fa-refresh fa-spin fa-2x fa-fw" aria-hidden="true"></i>
+  </a>
+  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/login" (click)="toggleMenu()">
     Login
   </a>
   <div class="small-spacer"></div>
-  <a class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
     Create New Widget
   </a>
   <div class="small-spacer"></div>
-  <a class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
     Manage Clients
   </a>
 </div>

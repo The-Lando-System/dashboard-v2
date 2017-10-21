@@ -1,5 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { Broadcaster } from 'sarlacc-angular-client';
 
 import { ClientConfig, Token } from '../client/client-config';
 
@@ -14,7 +15,8 @@ export class ClientConfigService implements OnInit {
 
     constructor(
         private globals: Globals,
-        private http: Http
+        private http: Http,
+        private broadcaster: Broadcaster
     ) {}
 
     ngOnInit(): void {}
@@ -203,6 +205,17 @@ export class ClientConfigService implements OnInit {
         return error;
       });
     }
+
+    activateClients(): Promise<void> {
+      return this.http.post(`${this.clientConfigUrl}/restart-clients`, {})
+      .toPromise()
+      .then((res:any) => {
+        console.log(res.json());
+        this.broadcaster.broadcast('REFRESH_COMPLETE',true);
+      }).catch((err:any) => { console.log(err); });
+    }
+
+
 
     private jsonHeaders(): Headers {
       return new Headers({

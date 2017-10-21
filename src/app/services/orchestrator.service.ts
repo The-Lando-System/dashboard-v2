@@ -7,6 +7,7 @@ import { Widget } from '../widget/widget';
 
 import { TokenReplacer } from './token-replacer';
 import { WidgetTemplateService } from './widget-template.service';
+import { ClientConfigService } from './client-config.service';
 
 declare var io: any;
 
@@ -22,7 +23,8 @@ export class OrchestratorService {
       private broadcaster: Broadcaster,
       private globals: Globals,
       private tokenReplacer: TokenReplacer,
-      private widgetTemplateSvc: WidgetTemplateService
+      private widgetTemplateSvc: WidgetTemplateService,
+      private clientConfigSvc: ClientConfigService
     ) {}
 
     start(): void {
@@ -48,6 +50,7 @@ export class OrchestratorService {
 
     private subscribe(): void {
       console.log('subscribed');
+      this.clientConfigSvc.activateClients();
       this.socket.on('TOKEN_UPDATE', this.handleWidgetUpdates.bind(this));
     }
 
