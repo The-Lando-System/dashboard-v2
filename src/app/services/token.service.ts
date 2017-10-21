@@ -19,7 +19,8 @@ export class TokenService {
 
       console.log(response);
 
-
+      // Potential regex
+      // \\"(.+?)\\":\s\\".+?\\"(,|\\n)
 
       return parsedItems;
     }
