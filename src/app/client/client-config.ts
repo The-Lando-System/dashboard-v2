@@ -29,4 +29,5 @@ export class ClientHeader {
 export class Token {
     name: string;
     parse_rules: string[];
+    isNew: boolean;
 }

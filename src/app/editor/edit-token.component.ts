@@ -16,7 +16,6 @@ export class EditTokenComponent implements OnInit {
   @Input() client: ClientConfig;
   @Input() token: Token;
 
-  private isNew: boolean;
   private parseRulesStr: string;
 
   constructor(
@@ -27,16 +26,11 @@ export class EditTokenComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!this.token) {
-      this.token = new Token();
-      this.token.parse_rules = [''];
-      this.isNew = true;
-    } else {
-      this.isNew = false;
+    if (this.token && this.token.parse_rules) {
+      this.parseRulesStr = this.token.parse_rules.reduce(function(acc,rule){
+        return `${acc},${rule}`;
+      });
     }
-    this.parseRulesStr = this.token.parse_rules.reduce(function(acc,rule){
-      return `${acc},${rule}`;
-    });
   }
 
   setParseRules(): void {
@@ -47,16 +41,16 @@ export class EditTokenComponent implements OnInit {
 
     this.setParseRules();
 
-    if (this.isNew) {
+    if (this.token.isNew) {
       this.clientConfigService.addTokenToClient(this.token, this.client)
       .then((res:any) => {
-        this.isNew = false;
+        this.token.isNew = false;
         this.closeModal();
       });
     } else {
       this.clientConfigService.updateTokenInClient(this.token, this.client)
       .then((res:any) => {
-        this.isNew = false;
+        this.token.isNew = false;
         this.closeModal();
       });
     }

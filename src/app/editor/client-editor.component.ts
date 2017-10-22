@@ -18,9 +18,10 @@ export class ClientEditorComponent implements OnInit {
   private clients: ClientConfig[];
   private editingClient: ClientConfig = new ClientConfig();
   private requestMethods: string[] = ['GET','POST','PUT','DELETE'];
-  private testResponse: string;
+  private rawResponse: string;
   private activeTab: string = 'client';
-  private editingToken: Token;
+  private activeResponseTab: string = 'raw';
+  private editingToken: Token = new Token();
   private authMethods: string[] = ['None','OAuth2'];
   private selectedAuthMethod: string;
   private responseTokens: any[] = [];
@@ -40,6 +41,11 @@ export class ClientEditorComponent implements OnInit {
   setActiveTab(tab:string): void {
     event.preventDefault();
     this.activeTab = tab;
+  }
+
+  setActiveResponseTab(tab:string): void {
+    event.preventDefault();
+    this.activeResponseTab = tab;
   }
 
   setAuthMethod(authMethod:string): void {
@@ -72,7 +78,8 @@ export class ClientEditorComponent implements OnInit {
       } else {
         this.selectedAuthMethod = 'None';
       }
-      this.testResponse = '';
+      this.rawResponse = '';
+      this.responseTokens = [];
     }
     else {
       this.initNewClient();
@@ -82,8 +89,22 @@ export class ClientEditorComponent implements OnInit {
   initNewClient(): void {
     this.editingClient = new ClientConfig();
     this.editingClient.name = 'New Client';
-    this.testResponse = '';
+    this.rawResponse = '';
+    this.responseTokens = [];
     this.selectedAuthMethod = null;
+  }
+
+  createToken(token:any): void {
+    this.editingToken = new Token();
+    this.editingToken.name = '';
+    this.editingToken.parse_rules = token ? token.location.split(',') : [''];
+    this.editingToken.isNew = true;
+    this.activeTab = 'tokens';
+  }
+
+  editToken(token:Token): void {
+    this.editingToken = token;
+    this.editingToken.isNew = false;
   }
 
   setRequestMethod(requestMethod:string): void {
@@ -94,8 +115,7 @@ export class ClientEditorComponent implements OnInit {
   testClient(): void {
     this.clientConfigService.testClient(this.editingClient)
     .then((res:any) => {
-      this.testResponse = JSON.stringify(res, null, 2);
-      var escapedResponse = JSON.stringify(this.testResponse);
+      this.rawResponse = JSON.stringify(res, null, 2);
       
       this.responseTokens = [];
 
@@ -175,7 +195,7 @@ export class ClientEditorComponent implements OnInit {
   }
 
   refreshClient(): void {
-    this.editingToken = undefined;
+    this.editingToken = new Token();
   }
 
   selectToken(token): void {
