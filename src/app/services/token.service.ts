@@ -30,20 +30,7 @@ export class TokenService {
       return parsedItems;
     }
 
-
-    /*
-     * [
-     *   {
-     *     
-     *   }
-     * ]
-     * 
-     */
-
-
-    private findAttrLocations(attrLocations:string[], parentLocation:string[], obj:any): void {
-      console.log('Iterating object:');
-      console.log(obj);
+    findAttrLocations(attrLocations:any[], parentLocation:string[], obj:any): void {
 
       var isArray = Array.isArray(obj);
 
@@ -60,10 +47,15 @@ export class TokenService {
             parentLocation.pop();
 
           } else {
-            attrLocations.push(
-              (parentLocation.length > 0 ? parentLocation.join(',') + ',' : '') +
-              `@${attr}` 
-            );
+            
+            let location:string = (parentLocation.length > 0 ? parentLocation.join(',') + ',' : '') + `@${attr}`;
+            
+            let locationObj = {
+              'location': location,
+              'value': obj[attr]
+            };
+            
+            attrLocations.push(locationObj);
           }
         }
       }

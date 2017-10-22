@@ -97,46 +97,48 @@ export class ClientEditorComponent implements OnInit {
       this.testResponse = JSON.stringify(res, null, 2);
       var escapedResponse = JSON.stringify(this.testResponse);
       
-      this.responseTokens = this.tokenService.tokenizeJsonResponse(res);
-
       this.responseTokens = [];
 
-      this.responseTokens.push({
-        'item':'\n',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'{',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'\n',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'  ',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'hello',
-        'isToken':true
-      });
-      this.responseTokens.push({
-        'item':':',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'world',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'\n',
-        'isToken':false
-      });
-      this.responseTokens.push({
-        'item':'}',
-        'isToken':false
-      });
+      this.tokenService.findAttrLocations(this.responseTokens, [], res);
+
+      // this.responseTokens = [];
+
+      // this.responseTokens.push({
+      //   'item':'\n',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'{',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'\n',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'  ',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'hello',
+      //   'isToken':true
+      // });
+      // this.responseTokens.push({
+      //   'item':':',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'world',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'\n',
+      //   'isToken':false
+      // });
+      // this.responseTokens.push({
+      //   'item':'}',
+      //   'isToken':false
+      // });
 
     });
   }

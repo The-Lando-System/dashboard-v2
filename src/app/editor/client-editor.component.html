@@ -129,10 +129,11 @@
               </div>
               <div class="card" style="margin-top:20px">
                 <div class="card-block">
-                  <!-- <pre>{{testResponse || 'Results...' }}</pre> -->
-                  <pre>
-                    <span [ngClass]="getPointerClass(responseToken)" *ngFor="let responseToken of responseTokens" (click)="selectToken(responseToken)">{{responseToken.item}}</span>
-                  </pre>
+                  <div class="list-group" style="margin-top:20px;">
+                    <a *ngFor="let token of responseTokens" class="list-group-item list-group-item-action justify-content-between">
+                      <span (click)="createToken(token)">{{token.location}} : {{token.value}}</span>
+                    </a>
+                  </div>
                 </div>
               </div>
               <div style="margin-top:20px">
