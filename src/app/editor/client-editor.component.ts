@@ -97,7 +97,7 @@ export class ClientEditorComponent implements OnInit {
       this.testResponse = JSON.stringify(res, null, 2);
       var escapedResponse = JSON.stringify(this.testResponse);
       
-      this.responseTokens = this.tokenService.tokenizeJsonResponse(escapedResponse);
+      this.responseTokens = this.tokenService.tokenizeJsonResponse(res);
 
       this.responseTokens = [];
 
