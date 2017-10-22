@@ -31,6 +31,7 @@ export class OrchestratorService {
       this.widgetTemplateSvc.retrieveWidgets()
       .then((widgets:Widget[]) => {
         this.widgets = widgets;
+        this.widgets.forEach(widget => widget.replacedHtml = widget.html);
         this.initWidgetStatuses();
         this.connect();
         this.listenForRestart();
@@ -78,7 +79,7 @@ export class OrchestratorService {
 
     // Set the value on the widget token, and replace the token in the HTML template
     private replaceToken(token:string,value:string,widget:Widget): void {
-        widget.html = this.tokenService.replaceToken(token, value, widget.html);
+        widget.replacedHtml = this.tokenService.replaceToken(token, value, widget.replacedHtml);
     }
 
     // Mark the token as being replaced, and check if the template needs to be broadcast
@@ -93,8 +94,9 @@ export class OrchestratorService {
     // Send a broadcast message with an updated HTML template
     private broadcastTemplateUpdate(widget:Widget): void {
         let message = {};
-        message[widget.id] = widget.html;
-        this.broadcaster.broadcast('TEMPLATE_UPDATE', message);        
+        message[widget.id] = widget.replacedHtml;
+        this.broadcaster.broadcast('TEMPLATE_UPDATE', message);
+        widget.replacedHtml = widget.html;
     }
 
     // Retrieve all widgets that contain the given client ID

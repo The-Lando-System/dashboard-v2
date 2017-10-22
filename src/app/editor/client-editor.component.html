@@ -148,7 +148,7 @@
                   
                   <!-- Token Result List -->
                   <div *ngIf="activeResponseTab === 'tokens'" class="list-group" style="margin-top:20px;">
-                    <a style="cursor:pointer" *ngFor="let token of responseTokens" (click)="createToken(token)" data-toggle="modal" data-target="#editTokenModal" class="list-group-item list-group-item-action justify-content-between">
+                    <a style="cursor:pointer; overflow:auto;" *ngFor="let token of responseTokens" (click)="createToken(token)" data-toggle="modal" data-target="#editTokenModal" class="list-group-item list-group-item-action justify-content-between">
                       <div class="d-flex w-100 justify-content-between">
                         <h5>{{token.location}}</h5>
                       </div>
