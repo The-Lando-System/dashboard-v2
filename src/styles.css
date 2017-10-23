@@ -1,16 +1,16 @@
 body {
-    background-color: #ebebeb!important;
-    background-image: url('assets/orange-background.jpg');
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-attachment: fixed;
-    overflow-x: hidden;
+  background-color: #ebebeb!important;
+  background-image: url('assets/orange-background.jpg');
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .header {

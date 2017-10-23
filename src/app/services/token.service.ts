@@ -12,24 +12,6 @@ export class TokenService {
         return html.replace(re,value);
     }
 
-    tokenizeJsonResponse(response:any): any[] {
-      // "{\n  \"error\": \"An error occured during the client request\",\n  \"details\": \"options.uri is a required argument\"\n}"
-      // { item: <item>, isToken: <true/false> }
-      var parsedItems = [];
-
-      var attrLocations = [];
-
-      this.findAttrLocations(attrLocations, [], response);
-
-      console.log('Final attr locations');
-      console.log(attrLocations);
-
-      // Potential regex
-      // \\"(.+?)\\":\s\\".+?\\"(,|\\n)
-
-      return parsedItems;
-    }
-
     findAttrLocations(attrLocations:any[], parentLocation:string[], obj:any): void {
 
       var isArray = Array.isArray(obj);
