@@ -25,7 +25,6 @@ import { Globals } from '../globals';
 export class SideMenuComponent implements OnInit {
 
   private user: User;
-  private sarlaccUrl: string;
   private menuState: string = 'in';
   private refreshing: boolean;
 
@@ -65,7 +64,6 @@ export class SideMenuComponent implements OnInit {
     this.userSvc.returnUser()
     .then((user:User) => {
       this.user = user;
-      this.sarlaccUrl = `${this.globals.sarlacc_domain}/token/${this.user.token.access_token}`;
     }).catch(err => {});
   }
   

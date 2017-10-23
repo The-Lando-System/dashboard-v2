@@ -1,10 +1,10 @@
-<div *ngIf="widget" class="container" style="margin-left:80px; margin-top: 20px;">
-    
-  <!-- Header Row -->
-  <div class="header row">
-    <h1>Widget Editor</h1>
-  </div>
-  <div class="row" style="margin-top:20px;">
+<!-- Header Row -->
+<div class="header">
+  <h1>Widget Editor</h1>
+</div>
+
+<div *ngIf="widget" class="content"> 
+  <div class="row">
     <div class="col-md-6" style="margin-top:10px">
       <div class="input-group">
         <input *ngIf="widget" type="text" [(ngModel)]="widget.name" class="form-control" placeholder="Widget Name">

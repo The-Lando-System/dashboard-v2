@@ -3,15 +3,18 @@ import { AuthService, AppGlobals } from 'angular2-google-login';
 import { GoogleService } from '../services/google.service';
 
 @Component({
-  selector: module.id,
-  templateUrl: 'login.component.html'
+  moduleId: module.id,
+  selector: 'login',
+  templateUrl: 'login.component.html',
+  styleUrls: [ 'login.component.css' ],
+  providers: []
 })
 export class LoginComponent implements OnInit {
   
-  imageURL: string;
-  email: string;
-  name: string;
-  token: string;
+  private imageURL: string;
+  private email: string;
+  private name: string;
+  private token: string;
 
   constructor(
     private auth: AuthService,

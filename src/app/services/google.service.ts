@@ -7,7 +7,7 @@ import { Globals } from '../globals';
 @Injectable()
 export class GoogleService implements OnInit {
 
-    private googleUrl = this.globals.google_domain + '/google';
+    private googleUrl = this.globals.service_domain + '/google';
 
     constructor(
       private http: Http,
