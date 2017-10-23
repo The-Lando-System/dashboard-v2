@@ -1,62 +1,76 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { AuthService, AppGlobals } from 'angular2-google-login';
+import { GoogleService } from '../services/google.service';
 
 @Component({
-  moduleId: module.id,
-  selector: 'login',
-  templateUrl: 'login.component.html',
-  styleUrls: [ 'login.component.css' ]
+  selector: module.id,
+  templateUrl: 'login.component.html'
 })
 export class LoginComponent implements OnInit {
-  loginLoading = false;
-  creds = {};
-  user: User;
-
-  private errorMessage = '';
+  
+  imageURL: string;
+  email: string;
+  name: string;
+  token: string;
 
   constructor(
-    private userService: UserService,
-    private broadcaster: Broadcaster,
-    private router: Router
-  ){}
+    private auth: AuthService,
+    private zone: NgZone,
+    private googleSvc: GoogleService
+  ) {}
 
-  ngOnInit(): void {
-
-    this.errorMessage = '';
-
-    this.userService.returnUser()
-    .then((user:User) => {
-      this.user = user;
-    }).catch((error:string) => {
-      
-    })
-  }
-
-  login(): void {
-    event.preventDefault();
-    this.loginLoading = true;
-    this.errorMessage = '';
-
-    this.userService.login(this.creds)
-    .then((user:any) => {
-      this.user = user;
-      this.loginLoading = false;
-      this.creds = {};
-      let link = ['/'];
-      this.router.navigate(link);
-    }).catch((error:any) => {
-      console.log(error);
-      this.loginLoading = false;
-      this.errorMessage = error;
+  /**
+   * Ininitalizing Google Authentication API and getting data from localstorage if logged in
+   */
+  ngOnInit() {
+    this.googleSvc.getClientId()
+    .then((id:string) => {
+      //Set your Google Client ID here
+      AppGlobals.GOOGLE_CLIENT_ID = id;
+      this.getData();
+      setTimeout(() => { this.googleAuthenticate() }, 50);
     });
   }
 
-  logout(): void {
-    event.preventDefault();
-    if (confirm('Are you sure you want to logout?')){
-      this.userService.logout();
-      this.user = null;
-    }
+  /**
+   * Calling Google Authentication service
+   */
+  googleAuthenticate() {
+    this.auth.authenticateUser((result) => {
+      //Using Angular2 Zone dependency to manage the scope of variables
+      this.zone.run(() => {
+        this.getData();
+      });
+    });
+  }
+
+  /**
+   * Getting data from browser's local storage
+   */
+  getData() {
+    this.token = localStorage.getItem('token');
+    this.imageURL = localStorage.getItem('image');
+    this.name = localStorage.getItem('name');
+    this.email = localStorage.getItem('email');
+  }
+
+  /**
+   * Logout user and calls function to clear the localstorage
+   */
+  logout() {
+    let scopeReference = this;
+    this.auth.userLogout(function () {
+      scopeReference.clearLocalStorage();
+    });
+  }
+
+  /**
+   * Clearing Localstorage of browser
+   */
+  clearLocalStorage() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('image');
+    localStorage.removeItem('name');
+    localStorage.removeItem('email');
   }
 }
