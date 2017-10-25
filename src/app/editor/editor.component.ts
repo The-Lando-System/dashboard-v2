@@ -3,7 +3,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from 'sarlacc-angular-client';
 
 import { WidgetTemplateService } from '../services/widget-template.service';
 import { Widget } from '../widget/widget';

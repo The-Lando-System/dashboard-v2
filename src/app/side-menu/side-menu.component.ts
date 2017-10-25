@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from 'sarlacc-angular-client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-
-import { Globals } from '../globals';
 
 @Component({
   moduleId: module.id,
@@ -24,19 +22,14 @@ import { Globals } from '../globals';
 })
 export class SideMenuComponent implements OnInit {
 
-  private user: User;
   private menuState: string = 'in';
   private refreshing: boolean;
 
   constructor(
-    private globals: Globals,
-    private userSvc: UserService,
     private broadcaster: Broadcaster
   ){}
 
   ngOnInit(): void {
-    this.initUser();
-    this.listenForLogin();
     this.listenForRefreshComplete();
   }
 
@@ -58,20 +51,6 @@ export class SideMenuComponent implements OnInit {
 
   private stopRefresh(): void {
     this.refreshing = false;
-  }
-
-  private initUser() {
-    this.userSvc.returnUser()
-    .then((user:User) => {
-      this.user = user;
-    }).catch(err => {});
-  }
-  
-  private listenForLogin(): void {
-    this.broadcaster.on<string>(this.userSvc.LOGIN_BCAST)
-    .subscribe(message => {
-      this.initUser();
-    });
   }
 
 }

@@ -21,7 +21,6 @@ export class OrchestratorService {
 
     constructor(
       private broadcaster: Broadcaster,
-      private globals: Globals,
       private tokenService: TokenService,
       private widgetTemplateSvc: WidgetTemplateService,
       private clientConfigSvc: ClientConfigService
@@ -45,7 +44,7 @@ export class OrchestratorService {
     }
 
     private connect(): void {
-      this.socket = io(this.globals.service_domain);
+      this.socket = io(Globals.SVC_DOMAIN);
       this.socket.on('connect', this.subscribe.bind(this));
     }
 

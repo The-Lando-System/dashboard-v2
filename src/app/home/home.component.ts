@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
-import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from 'sarlacc-angular-client';
 import { Widget } from '../widget/widget';
 
 import { OrchestratorService } from '../services/orchestrator.service';
 import { WidgetTemplateService } from '../services/widget-template.service';
-
-import { Globals } from '../globals';
 
 declare var io: any;
 
@@ -22,12 +20,9 @@ export class HomeComponent implements OnInit {
 
   socket: any;
 
-  private user: User;
   private widgets: Widget[] = [];
 
   constructor(
-    private globals: Globals,
-    private userSvc: UserService,
     private broadcaster: Broadcaster,
     private sanitizer: DomSanitizer,
     private orchestrator: OrchestratorService,
@@ -35,8 +30,6 @@ export class HomeComponent implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.initUser();
-    this.listenForLogin();
 
     this.widgetTempalateSvc.retrieveWidgets()
     .then((widgets:Widget[]) => {
@@ -46,19 +39,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private initUser() {
-    this.userSvc.returnUser()
-    .then((user:User) => {
-      this.user = user;
-    }).catch(err => {});
-  }
-  
-  private listenForLogin(): void {
-    this.broadcaster.on<string>(this.userSvc.LOGIN_BCAST)
-    .subscribe(message => {
-      this.initUser();
-    });
-  }
 
   private listenForTemplates(): void {
     this.broadcaster.on<string>('TEMPLATE_UPDATE')

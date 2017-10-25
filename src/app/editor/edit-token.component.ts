@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { UserService, User, Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from 'sarlacc-angular-client';
 
 import { ClientConfigService } from '../services/client-config.service';
 import { ClientConfig, Token } from '../client/client-config';

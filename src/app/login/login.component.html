@@ -8,19 +8,12 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-block" style="overflow:auto">
-          <button *ngIf="!token" id="google-login-button" class="btn btn-primary" (click)="googleAuthenticate()">Google Sign-In</button>
-          <div *ngIf="token">
-              <img src="{{imageURL}}">
-              <br>
-              <b>TOKEN: </b>
-              <p>{{token.substring(0, 20)}}...</p>
-              <b>NAME: </b>
-              <p>{{name}}</p>
-              <b>EMAIL: </b>
-              <p>{{email}}</p>
-          
-              <button class="btn btn-danger" (click)="logout()">Logout</button>
-            </div>
+          <button *ngIf="!user" id="google-login-button" class="btn btn-primary" (click)="login()">Google Sign-In</button>
+          <br/>
+          <div *ngIf="user">
+            <h4>Hello {{user.name}}!</h4>
+            <button class="btn btn-danger" (click)="logout()">Logout</button>
+          </div>
         </div>
       </div>
     </div>

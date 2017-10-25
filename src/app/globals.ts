@@ -1,3 +1,4 @@
-export class Globals {
-    service_domain: string = 'http://localhost:3000';
+export const Globals = {
+  GOOGLE_CLIENT_ID: '',
+  SVC_DOMAIN: 'http://localhost:3000'
 }

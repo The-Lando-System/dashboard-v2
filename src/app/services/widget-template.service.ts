@@ -8,12 +8,11 @@ import { Widget } from '../widget/widget';
 @Injectable()
 export class WidgetTemplateService implements OnInit {
 
-    private widgetsUrl = this.globals.service_domain + '/widget/template';
+    private widgetsUrl = Globals.SVC_DOMAIN + '/widget/template';
 
     private widgets:Widget[] = [];
 
     constructor(
-        private globals: Globals,
         private http: Http
     ) {}
 

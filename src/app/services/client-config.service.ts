@@ -9,12 +9,11 @@ import { Globals } from '../globals';
 @Injectable()
 export class ClientConfigService implements OnInit {
 
-    private clientConfigUrl = this.globals.service_domain + '/client';
+    private clientConfigUrl = Globals.SVC_DOMAIN + '/client';
 
     private clientConfigs:ClientConfig[] = [];
 
     constructor(
-        private globals: Globals,
         private http: Http,
         private broadcaster: Broadcaster
     ) {}
