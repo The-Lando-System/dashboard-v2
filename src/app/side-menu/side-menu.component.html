@@ -7,23 +7,35 @@
   <a class="home side-menu-item" href="#" routerLink="/" (click)="toggleMenu()">
     <h4>Dashboard</h4>
   </a>
+  <a *ngIf="menuState === 'in' && user" class="side-menu-item-small">
+    <img id="profile-pic" [src]="user.profilePic">
+  </a>
   <div class="spacer"></div>
+  <a *ngIf="user" class="side-menu-item" style="color:white">
+    {{user.name}}
+  </a>
+  <a *ngIf="user" class="side-menu-item">
+    <img [src]="user.profilePic">
+  </a>
   <div class="spacer"></div>
-  <a *ngIf="menuState === 'in' && !refreshing" style="color:white" class="side-menu-item-small" (click)="restartClients()">
+  <a *ngIf="menuState === 'in' && !refreshing && user" style="color:white; bottom:100px" class="side-menu-item-small" (click)="restartClients()">
     <i class="fa fa-refresh fa-2x" aria-hidden="true"></i>
   </a>
-  <a *ngIf="menuState === 'in' && refreshing" style="color:white; margin-right:3px;" class="side-menu-item-small">
+  <a *ngIf="menuState === 'in' && refreshing && user" style="color:white; margin-right:3px; bottom:100px" class="side-menu-item-small">
     <i class="fa fa-refresh fa-spin fa-2x fa-fw" aria-hidden="true"></i>
   </a>
-  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/login" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out' && !user" class="side-menu-item" href="#" (click)="login()">
     Login
   </a>
+  <a *ngIf="menuState === 'out' && user" class="side-menu-item" href="#" (click)="logout()">
+    Logout
+  </a>
   <div class="small-spacer"></div>
-  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out' && user" class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
     Create New Widget
   </a>
   <div class="small-spacer"></div>
-  <a *ngIf="menuState === 'out'" class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out' && user" class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
     Manage Clients
   </a>
 </div>

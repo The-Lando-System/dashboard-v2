@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Broadcaster } from 'sarlacc-angular-client';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
@@ -27,7 +26,6 @@ import { AuthService } from './services/auth.service';
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     SideMenuComponent,
     WidgetShellComponent,
     HomeComponent,
@@ -45,10 +43,6 @@ import { AuthService } from './services/auth.service';
       {
         path: '',
         component: HomeComponent
-      },
-      {
-        path: 'login',
-        component: LoginComponent
       },
       {
         path: 'editor/:widgetId',

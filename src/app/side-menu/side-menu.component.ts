@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
+import { User, AuthService } from '../services/auth.service';
+
 @Component({
   moduleId: module.id,
   selector: 'side-menu',
@@ -24,13 +26,31 @@ export class SideMenuComponent implements OnInit {
 
   private menuState: string = 'in';
   private refreshing: boolean;
+  private user: User;
 
   constructor(
-    private broadcaster: Broadcaster
+    private broadcaster: Broadcaster,
+    private authSvc: AuthService
   ){}
 
   ngOnInit(): void {
     this.listenForRefreshComplete();
+    this.user = this.authSvc.getUser();
+  }
+
+  login(): void {
+    event.preventDefault();
+    this.toggleMenu();
+    this.authSvc.login()
+    .then((user:User) => {
+      this.user = user;
+    })
+  }
+
+  logout(): void {
+    event.preventDefault();
+    this.authSvc.logout();
+    this.toggleMenu();
   }
 
   toggleMenu(): void {

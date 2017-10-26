@@ -46,3 +46,10 @@
 .spacer {
     height: 20px;
 }
+
+#profile-pic {
+  width: 35px;
+  border-radius: 20px;
+  margin-right: -4px;
+  cursor: default;
+}
