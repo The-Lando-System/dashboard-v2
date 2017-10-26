@@ -17,7 +17,6 @@ button {
   background-color: rgb(63, 63, 64);
   color: rgb(245, 245, 245);
   padding: 10px;
-  box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.75);
   position: fixed;
   z-index: 666;
   width: 100%;

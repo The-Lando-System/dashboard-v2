@@ -17,7 +17,9 @@ export class LoginComponent implements OnInit {
     private authSvc: AuthService
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.user = this.authSvc.getUser();
+  }
 
   login() {
     event.preventDefault();
