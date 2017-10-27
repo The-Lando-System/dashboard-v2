@@ -1,6 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Broadcaster } from 'sarlacc-angular-client';
+import { AuthService } from './auth.service';
 
 import { ClientConfig, Token } from '../client/client-config';
 
@@ -15,13 +16,14 @@ export class ClientConfigService implements OnInit {
 
     constructor(
         private http: Http,
-        private broadcaster: Broadcaster
+        private broadcaster: Broadcaster,
+        private authSvc: AuthService
     ) {}
 
     ngOnInit(): void {}
 
     retrieveClientConfigs(): Promise<ClientConfig[]> {
-        return this.http.get(this.clientConfigUrl)
+        return this.http.get(this.clientConfigUrl, {headers:this.authSvc.createAuthHeaders()})
         .toPromise()
         .then((res:any) => {
             this.clientConfigs = res.json();
@@ -83,7 +85,7 @@ export class ClientConfigService implements OnInit {
     }
 
     updateClient(editedClient:any, clientId:string): Promise<ClientConfig> {
-      return this.http.put(`${this.clientConfigUrl}/${clientId}`, editedClient, { headers: this.jsonHeaders()})
+      return this.http.put(`${this.clientConfigUrl}/${clientId}`, editedClient, { headers: this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         return res.json();
@@ -100,7 +102,7 @@ export class ClientConfigService implements OnInit {
         'oauth2_config': client.oauth2_config ? client.oauth2_config : {}
       }
 
-      return this.http.post(this.clientConfigUrl, newClient, { headers: this.jsonHeaders()})
+      return this.http.post(this.clientConfigUrl, newClient, { headers: this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         return res.json();
@@ -109,7 +111,7 @@ export class ClientConfigService implements OnInit {
     }
 
     deleteClient(client:ClientConfig): Promise<void> {
-      return this.http.delete(`${this.clientConfigUrl}/${client.id}`)
+      return this.http.delete(`${this.clientConfigUrl}/${client.id}`, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         return res.json();
@@ -173,7 +175,7 @@ export class ClientConfigService implements OnInit {
         'oauth2_config':client.oauth2_config ? client.oauth2_config : ''
       }
 
-      return this.http.post(`${this.clientConfigUrl}/test`,requestTest,{ headers: this.jsonHeaders()})
+      return this.http.post(`${this.clientConfigUrl}/test`,requestTest,{ headers: this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         let response;
@@ -205,7 +207,7 @@ export class ClientConfigService implements OnInit {
     }
 
     activateClients(): Promise<void> {
-      return this.http.post(`${this.clientConfigUrl}/restart-clients`, {})
+      return this.http.post(`${this.clientConfigUrl}/restart-clients`, {}, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         console.log(res.json());
@@ -213,9 +215,4 @@ export class ClientConfigService implements OnInit {
       }).catch((err:any) => { console.log(err); });
     }
 
-    private jsonHeaders(): Headers {
-      return new Headers({
-        'Content-Type'   : 'application/json'
-      });
-    }
 }

@@ -1,6 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 
+import { AuthService } from './auth.service';
+
 import { Globals } from '../globals';
 
 import { Widget } from '../widget/widget';
@@ -13,13 +15,14 @@ export class WidgetTemplateService implements OnInit {
     private widgets:Widget[] = [];
 
     constructor(
-        private http: Http
+        private http: Http,
+        private authSvc: AuthService
     ) {}
 
     ngOnInit(): void {}
 
     retrieveWidgets(): Promise<Widget[]> {
-        return this.http.get(this.widgetsUrl)
+        return this.http.get(this.widgetsUrl, {headers:this.authSvc.createAuthHeaders()})
         .toPromise()
         .then((res:any) => {
             this.widgets = res.json();
@@ -55,13 +58,14 @@ export class WidgetTemplateService implements OnInit {
     createWidget(widget:Widget): Promise<Widget> {
 
       let newWidget = {
+        'userId': widget.userId,
         'name': widget.name,
         'html': widget.html,
         'clientIds': widget.clientIds,
         'tokens': widget.tokens
       };
 
-      return this.http.post(this.widgetsUrl, newWidget, {headers:this.jsonHeaders()})
+      return this.http.post(this.widgetsUrl, newWidget, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {
         return res.json();
@@ -69,7 +73,7 @@ export class WidgetTemplateService implements OnInit {
     }
 
     deleteWidget(widget:Widget): Promise<void> {
-      return this.http.delete(`${this.widgetsUrl}/${widget.id}`)
+      return this.http.delete(`${this.widgetsUrl}/${widget.id}`, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {}).catch((err:any) => { console.log(err) });
     }
@@ -146,14 +150,8 @@ export class WidgetTemplateService implements OnInit {
     }
 
     updateWidget(widgetUpdate:any, widgetId:string): Promise<void> {
-      return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.jsonHeaders()})
+      return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {}).catch((err:any) => { console.log(err) });
-    }
-
-    private jsonHeaders(): Headers {
-      return new Headers({
-        'Content-Type'   : 'application/json'
-      });
     }
 }
