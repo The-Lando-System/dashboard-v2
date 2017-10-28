@@ -38,7 +38,7 @@ export class AuthService {
 
          // Listen for auth response
         gapi.auth2.getAuthInstance().currentUser.listen((userDetails) => {
-          console.log(userDetails);
+ 
           let profile = userDetails.getBasicProfile();
           console.log(profile);
           this.user = new User(
@@ -54,9 +54,24 @@ export class AuthService {
     });
   }
 
-  logout() {
+  logout(): void {
     this.clearUserInfo();
     document.location.href = this.logoutUrl;
+  }
+
+  refreshLogin(): void {
+    // Make auth request
+    gapi.load('auth2', () => {
+      let auth2 = gapi.auth2.init({
+        client_id: Globals.GOOGLE_CLIENT_ID,
+        cookiepolicy: 'single_host_origin',
+        scope: 'profile email'
+      }).then(()=> {
+        gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse().then((authResponse) => {
+          console.log(authResponse);
+        });
+      });
+    });
   }
 
   getUser(): User {
