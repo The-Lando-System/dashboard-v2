@@ -20,7 +20,24 @@ export class AuthService {
       Globals.GOOGLE_CLIENT_ID = id;
       this.user = this.getUser();
       this.user.accessToken = this.getAccessToken();
+      if (this.user) {
+        this.refreshLogin()
+        .then((access_token) => {
+          this.user.accessToken = access_token;
+          this.storeUserInfo();
+        });
+      }
+      setInterval(() => {
+        this.refreshLogin()
+        .then((access_token) => {
+          console.log('Updating the access token');
+          this.user.accessToken = access_token;
+          this.storeUserInfo();
+        });
+      }, 60000);
     });
+
+
   }
 
   login() {
@@ -38,9 +55,8 @@ export class AuthService {
 
          // Listen for auth response
         gapi.auth2.getAuthInstance().currentUser.listen((userDetails) => {
- 
+          console.log(userDetails);
           let profile = userDetails.getBasicProfile();
-          console.log(profile);
           this.user = new User(
             profile.getName(),
             profile.getEmail(),
@@ -59,16 +75,18 @@ export class AuthService {
     document.location.href = this.logoutUrl;
   }
 
-  refreshLogin(): void {
-    // Make auth request
-    gapi.load('auth2', () => {
-      let auth2 = gapi.auth2.init({
-        client_id: Globals.GOOGLE_CLIENT_ID,
-        cookiepolicy: 'single_host_origin',
-        scope: 'profile email'
-      }).then(()=> {
-        gapi.auth2.getAuthInstance().currentUser.get().reloadAuthResponse().then((authResponse) => {
-          console.log(authResponse);
+  refreshLogin(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      gapi.load('auth2', () => {
+        let auth2 = gapi.auth2.init({
+          client_id: Globals.GOOGLE_CLIENT_ID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile email'
+        }).then(()=> {
+          gapi.auth2.getAuthInstance().currentUser.get()
+          .reloadAuthResponse().then((authResponse) => {
+            resolve(authResponse.access_token);
+          });
         });
       });
     });
