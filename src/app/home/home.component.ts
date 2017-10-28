@@ -56,4 +56,19 @@ export class HomeComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
+
+  // Drag and Drop Testing ===================
+  onDragStart(event, data) {
+    console.log(`Drag start for [${data}]`);
+    event.dataTransfer.setData('data', data);
+  }
+  onDrop(event, data) {
+    let dataTransfer = event.dataTransfer.getData('data');
+    console.log(`Dropping [${dataTransfer}] on [${data}]`);
+    event.preventDefault();
+  }
+  allowDrop(event) {
+    event.preventDefault();
+  }
+
 }
