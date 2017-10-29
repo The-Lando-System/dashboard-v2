@@ -39,6 +39,47 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  sanitizeHtml(html:string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  onDragStart(event, widgetId): void {
+    console.log(`Drag start for [${widgetId}]`);
+    event.dataTransfer.setData('widgetId', widgetId);
+  }
+
+  onDrop(event, widgetId): void {
+    let droppedWidgetId = event.dataTransfer.getData('widgetId');
+    console.log(`Dropping [${droppedWidgetId}] on [${widgetId}]`);
+    this.swapWidgetPositions(widgetId, droppedWidgetId);
+    event.preventDefault();
+  }
+
+  allowDrop(event): void {
+    event.preventDefault();
+  }
+
+  private swapWidgetPositions(widget1Id:string, widget2Id:string): void {
+
+    let index1 = this.findWidgetIndexById(widget1Id);
+    let index2 = this.findWidgetIndexById(widget2Id);
+
+    if (index1 === -1 || index2 === -1)
+      return;
+
+    var temp = this.widgets[index1];
+    this.widgets[index1] = this.widgets[index2];
+    this.widgets[index2] = temp;
+  }
+
+  private findWidgetIndexById(id:string): number {
+    for(var i=0; this.widgets.length; i++) {
+      if (this.widgets[i].id === id) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
   private listenForTemplates(): void {
     this.broadcaster.on<string>('TEMPLATE_UPDATE')
@@ -50,25 +91,6 @@ export class HomeComponent implements OnInit {
         }
       }
     });
-  }
-
-  sanitizeHtml(html:string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
-  }
-
-
-  // Drag and Drop Testing ===================
-  onDragStart(event, data) {
-    console.log(`Drag start for [${data}]`);
-    event.dataTransfer.setData('data', data);
-  }
-  onDrop(event, data) {
-    let dataTransfer = event.dataTransfer.getData('data');
-    console.log(`Dropping [${dataTransfer}] on [${data}]`);
-    event.preventDefault();
-  }
-  allowDrop(event) {
-    event.preventDefault();
   }
 
 }
