@@ -2,7 +2,9 @@
   <div *ngFor="let widget of widgets" class="widget col-md-4" draggable="true"
     (dragstart)="onDragStart($event, widget.id)"
     (drop)="onDrop($event, widget.id)"
-    (dragover)="allowDrop($event)">
+    (dragover)="onDragOver($event, widget.id)"
+    (dragleave)="onDragLeave($event)"
+    [ngClass]="{'drag-over':dragOverWidgetId === widget.id}">
     <widget-shell [title]="widget.name" [id]="widget.id">
       <div *ngIf="widget.displayable" [innerHTML]="sanitizeHtml(widget.html)"></div>
       <div *ngIf="!widget.displayable">

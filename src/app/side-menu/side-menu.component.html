@@ -30,9 +30,6 @@
   <a *ngIf="menuState === 'out' && user" class="side-menu-item" href="#" (click)="logout()">
     Logout
   </a>
-  <a *ngIf="menuState === 'out' && user" class="side-menu-item" href="#" (click)="refreshLogin()">
-    Refresh Login
-  </a>
   <div class="small-spacer"></div>
   <a *ngIf="menuState === 'out' && user" class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
     Create New Widget

@@ -1,10 +1,16 @@
 .main {
-    margin-left: 60px;
-    margin-right: 10px;
-    margin-top: -10px;
-    margin-bottom: 50px;
+  margin-left: 60px;
+  margin-right: 10px;
+  margin-top: -10px;
+  margin-bottom: 50px;
 }
 
 .widget {
-    margin-top: 30px;
+  margin-top: 30px;
+}
+
+.drag-over {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 5px;
+  border-radius: 5px;
 }

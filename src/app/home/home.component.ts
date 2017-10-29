@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   socket: any;
 
   private widgets: Widget[] = [];
+  private dragOverWidgetId: string;
 
   constructor(
     private broadcaster: Broadcaster,
@@ -48,14 +49,24 @@ export class HomeComponent implements OnInit {
     event.dataTransfer.setData('widgetId', widgetId);
   }
 
+  onDragOver(event, widgetId): void {
+    event.preventDefault();
+    if (widgetId === this.dragOverWidgetId)
+      return;
+    console.log(`Dragged over widget [${widgetId}]`);
+    this.dragOverWidgetId = widgetId;
+  }
+
+  onDragLeave(event): void {
+    event.preventDefault();
+    this.dragOverWidgetId = '';
+  }
+
   onDrop(event, widgetId): void {
+    this.dragOverWidgetId = '';
     let droppedWidgetId = event.dataTransfer.getData('widgetId');
     console.log(`Dropping [${droppedWidgetId}] on [${widgetId}]`);
     this.swapWidgetPositions(widgetId, droppedWidgetId);
-    event.preventDefault();
-  }
-
-  allowDrop(event): void {
     event.preventDefault();
   }
 
