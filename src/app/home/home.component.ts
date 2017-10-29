@@ -45,7 +45,6 @@ export class HomeComponent implements OnInit {
   }
 
   onDragStart(event, widgetId): void {
-    console.log(`Drag start for [${widgetId}]`);
     event.dataTransfer.setData('widgetId', widgetId);
   }
 
@@ -53,7 +52,6 @@ export class HomeComponent implements OnInit {
     event.preventDefault();
     if (widgetId === this.dragOverWidgetId)
       return;
-    console.log(`Dragged over widget [${widgetId}]`);
     this.dragOverWidgetId = widgetId;
   }
 
@@ -65,7 +63,6 @@ export class HomeComponent implements OnInit {
   onDrop(event, widgetId): void {
     this.dragOverWidgetId = '';
     let droppedWidgetId = event.dataTransfer.getData('widgetId');
-    console.log(`Dropping [${droppedWidgetId}] on [${widgetId}]`);
     this.swapWidgetPositions(widgetId, droppedWidgetId);
     event.preventDefault();
   }

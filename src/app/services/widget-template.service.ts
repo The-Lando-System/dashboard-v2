@@ -154,4 +154,10 @@ export class WidgetTemplateService implements OnInit {
       .toPromise()
       .then((res:any) => {}).catch((err:any) => { console.log(err) });
     }
+
+    private orderWidgetTemplates(widgets:Widget[]): void {
+      widgets.sort((a:Widget, b:Widget) => {
+        return a.position - b.position;
+      });
+    }
 }
