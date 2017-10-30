@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit {
     this.dragOverWidgetId = '';
     let droppedWidgetId = event.dataTransfer.getData('widgetId');
     this.swapWidgetPositions(widgetId, droppedWidgetId);
+    this.widgetTempalateSvc.saveWidgetOrder(this.widgets);
     event.preventDefault();
   }
 

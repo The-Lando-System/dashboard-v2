@@ -26,6 +26,7 @@ export class WidgetTemplateService implements OnInit {
         .toPromise()
         .then((res:any) => {
             this.widgets = res.json();
+            this.orderWidgetTemplates(this.widgets);
             return this.widgets;
         }).catch((err:any) => { console.log(err); return null; });
     }
@@ -155,9 +156,29 @@ export class WidgetTemplateService implements OnInit {
       .then((res:any) => {}).catch((err:any) => { console.log(err) });
     }
 
+    saveWidgetOrder(widgets:Widget[]): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+
+        let count = 0;
+
+        for(var i=0; i<widgets.length; i++) {          
+          let widgetUpdate = {
+            'position': `${i}`
+          }
+          this.updateWidget(widgetUpdate,widgets[i].id)
+          .then((res:any) => {
+            count++;
+            if (count === widgets.length) {
+              resolve();
+            }
+          });
+        }
+      });
+    }
+
     private orderWidgetTemplates(widgets:Widget[]): void {
       widgets.sort((a:Widget, b:Widget) => {
-        return a.position - b.position;
+        return parseInt(a.position) - parseInt(b.position);
       });
     }
 }

@@ -7,5 +7,5 @@ export class Widget {
     clientIds: string[];
     tokens: string[];
     displayable: boolean;
-    position: number;
+    position: string;
 }
