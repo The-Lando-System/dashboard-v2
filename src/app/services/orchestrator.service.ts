@@ -3,10 +3,8 @@ import { Broadcaster } from 'sarlacc-angular-client';
 
 import { Globals } from '../globals';
 
-import { Widget } from '../widget/widget';
-
 import { TokenService } from './token.service';
-import { WidgetTemplateService } from './widget-template.service';
+import { WidgetTemplateService, Widget } from './widget-template.service';
 import { ClientConfigService } from './client-config.service';
 
 declare var io: any;

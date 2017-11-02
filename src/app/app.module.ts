@@ -21,6 +21,7 @@ import { TokenService } from './services/token.service';
 import { WidgetTemplateService } from './services/widget-template.service';
 import { ClientConfigService } from './services/client-config.service';
 import { AuthService } from './services/auth.service';
+import { DashboardService } from './services/dashboard.service';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { AuthService } from './services/auth.service';
     TokenService,
     WidgetTemplateService,
     ClientConfigService,
-    AuthService
+    AuthService,
+    DashboardService
   ],
   bootstrap: [AppComponent]
 })

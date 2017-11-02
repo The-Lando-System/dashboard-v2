@@ -5,11 +5,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Broadcaster } from 'sarlacc-angular-client';
 
-import { WidgetTemplateService } from '../services/widget-template.service';
-import { Widget } from '../widget/widget';
-
-import { ClientConfigService } from '../services/client-config.service';
-import { ClientConfig, Token } from '../client/client-config';
+import { WidgetTemplateService, Widget } from '../services/widget-template.service';
+import { ClientConfigService, ClientConfig, Token } from '../services/client-config.service';
 
 @Component({
   moduleId: module.id,

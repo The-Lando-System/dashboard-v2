@@ -5,8 +5,6 @@ import { AuthService } from './auth.service';
 
 import { Globals } from '../globals';
 
-import { Widget } from '../widget/widget';
-
 @Injectable()
 export class WidgetTemplateService implements OnInit {
 
@@ -181,4 +179,16 @@ export class WidgetTemplateService implements OnInit {
         return parseInt(a.position) - parseInt(b.position);
       });
     }
+}
+
+export class Widget {
+  id: string;
+  userId: string;
+  name: string;
+  html: string;
+  replacedHtml: string;
+  clientIds: string[];
+  tokens: string[];
+  displayable: boolean;
+  position: string;
 }

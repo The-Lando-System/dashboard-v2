@@ -2,10 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { Broadcaster } from 'sarlacc-angular-client';
-import { Widget } from '../widget/widget';
 
 import { OrchestratorService } from '../services/orchestrator.service';
-import { WidgetTemplateService } from '../services/widget-template.service';
+import { WidgetTemplateService, Widget } from '../services/widget-template.service';
 
 declare var io: any;
 
