@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { WidgetEditorComponent } from './editor/widget-editor.component';
 import { ClientEditorComponent } from './editor/client-editor.component';
 import { EditTokenComponent } from './editor/edit-token.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
@@ -31,7 +32,8 @@ import { DashboardService } from './services/dashboard.service';
     WidgetEditorComponent,
     LoadingBarComponent,
     ClientEditorComponent,
-    EditTokenComponent
+    EditTokenComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +52,10 @@ import { DashboardService } from './services/dashboard.service';
       {
         path: 'client-editor',
         component: ClientEditorComponent
+      },
+      {
+        path: 'dashboard/:dashboardId',
+        component: DashboardComponent
       }
     ])
   ],
