@@ -9,7 +9,6 @@ import { Broadcaster } from 'sarlacc-angular-client';
 
 import { AppComponent } from './app.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
-import { WidgetShellComponent } from './widget/widget-shell/widget-shell.component';
 import { HomeComponent } from './home/home.component';
 import { EditorComponent } from './editor/editor.component';
 import { ClientEditorComponent } from './editor/client-editor.component';
@@ -27,7 +26,6 @@ import { AuthService } from './services/auth.service';
   declarations: [
     AppComponent,
     SideMenuComponent,
-    WidgetShellComponent,
     HomeComponent,
     EditorComponent,
     LoadingBarComponent,

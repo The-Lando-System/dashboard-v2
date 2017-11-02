@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
 
   private widgets: Widget[] = [];
   private dragOverWidgetId: string;
+  private updatesPaused: boolean = false;
 
   constructor(
     private broadcaster: Broadcaster,
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit {
 
   onDragStart(event, widgetId): void {
     event.dataTransfer.setData('widgetId', widgetId);
+    this.updatesPaused = true;
   }
 
   onDragOver(event, widgetId): void {
@@ -65,6 +67,7 @@ export class HomeComponent implements OnInit {
     let droppedWidgetId = event.dataTransfer.getData('widgetId');
     this.swapWidgetPositions(widgetId, droppedWidgetId);
     this.widgetTempalateSvc.saveWidgetOrder(this.widgets);
+    this.updatesPaused = false;
     event.preventDefault();
   }
 
@@ -93,10 +96,12 @@ export class HomeComponent implements OnInit {
   private listenForTemplates(): void {
     this.broadcaster.on<string>('TEMPLATE_UPDATE')
     .subscribe(message => {
-      for (let widget of this.widgets) {
-        if (message.hasOwnProperty(widget.id)) {
-          widget.html = message[widget.id];
-          widget.displayable = true;
+      if (!this.updatesPaused) {
+        for (let widget of this.widgets) {
+          if (message.hasOwnProperty(widget.id)) {
+            widget.html = message[widget.id];
+            widget.displayable = true;
+          }
         }
       }
     });
