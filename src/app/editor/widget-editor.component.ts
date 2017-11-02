@@ -10,12 +10,12 @@ import { ClientConfigService, ClientConfig, Token } from '../services/client-con
 
 @Component({
   moduleId: module.id,
-  selector: 'editor',
-  templateUrl: 'editor.component.html',
-  styleUrls: [ 'editor.component.css' ],
+  selector: 'widget-editor',
+  templateUrl: 'widget-editor.component.html',
+  styleUrls: [ 'widget-editor.component.css' ],
   providers: []
 })
-export class EditorComponent implements OnInit {
+export class WidgetEditorComponent implements OnInit {
     
   private activeTab: string = 'preview';
   private widget: Widget;

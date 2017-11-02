@@ -11,7 +11,7 @@
           <span id="widget-title">{{widget.name}}</span>
         </div>
         <div *ngIf="hvIdx === i" style="float:right">
-          <a [routerLink]="['editor', widget.id]" style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+          <a [routerLink]="['widget-editor', widget.id]" style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         </div>
       </div>
       <div class="card-block" style="overflow: auto;">

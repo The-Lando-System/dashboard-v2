@@ -10,7 +10,7 @@ import { Broadcaster } from 'sarlacc-angular-client';
 import { AppComponent } from './app.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { HomeComponent } from './home/home.component';
-import { EditorComponent } from './editor/editor.component';
+import { WidgetEditorComponent } from './editor/widget-editor.component';
 import { ClientEditorComponent } from './editor/client-editor.component';
 import { EditTokenComponent } from './editor/edit-token.component';
 
@@ -28,7 +28,7 @@ import { DashboardService } from './services/dashboard.service';
     AppComponent,
     SideMenuComponent,
     HomeComponent,
-    EditorComponent,
+    WidgetEditorComponent,
     LoadingBarComponent,
     ClientEditorComponent,
     EditTokenComponent
@@ -44,8 +44,8 @@ import { DashboardService } from './services/dashboard.service';
         component: HomeComponent
       },
       {
-        path: 'editor/:widgetId',
-        component: EditorComponent
+        path: 'widget-editor/:widgetId',
+        component: WidgetEditorComponent
       },
       {
         path: 'client-editor',
