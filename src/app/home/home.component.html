@@ -1,26 +1,11 @@
-<div class="main row">
-  <div *ngFor="let widget of widgets; let i = index;" class="col-md-4" style="margin-top:30px;" [ngClass]="{'drag-over':dragOverWidgetId === widget.id}">
-    <div class="card widget"> 
-      <div class="card-header" on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1"
-        draggable="true"
-        (dragstart)="onDragStart($event, widget.id)"
-        (drop)="onDrop($event, widget.id)"
-        (dragover)="onDragOver($event, widget.id)"
-        (dragleave)="onDragLeave($event)">
-        <div style="float:left">
-          <span id="widget-title">{{widget.name}}</span>
-        </div>
-        <div *ngIf="hvIdx === i" style="float:right">
-          <a [routerLink]="['widget-editor', widget.id]" style="cursor:pointer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-        </div>
-      </div>
-      <div class="card-block" style="overflow: auto;">
-        <div *ngIf="widget.displayable" [innerHTML]="sanitizeHtml(widget.html)"></div>
-        <div *ngIf="!widget.displayable">
-          <h4>Fetching Data...</h4><br/>
-          <loading-bar></loading-bar>
-        </div>
-      </div>
-    </div>
+<div class="header">
+  <h1>Dashboards</h1>
+</div>
+  
+<div class="content"> 
+  <div class="list-group">
+    <a *ngFor="let dashboard of dashboards" [routerLink]="['dashboard', dashboard.id]" class="list-group-item list-group-item-action">
+      {{dashboard.name}}
+    </a>
   </div>
 </div>

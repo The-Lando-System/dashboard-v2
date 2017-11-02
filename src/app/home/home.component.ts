@@ -1,12 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-
-import { Broadcaster } from 'sarlacc-angular-client';
-
-import { OrchestratorService } from '../services/orchestrator.service';
-import { WidgetTemplateService, Widget } from '../services/widget-template.service';
-
-declare var io: any;
+import { DashboardService, Dashboard } from '../services/dashboard.service';
 
 @Component({
   moduleId: module.id,
@@ -17,92 +10,16 @@ declare var io: any;
 })
 export class HomeComponent implements OnInit {
 
-  socket: any;
-
-  private widgets: Widget[] = [];
-  private dragOverWidgetId: string;
-  private updatesPaused: boolean = false;
+  private dashboards: Dashboard[] = [];
 
   constructor(
-    private broadcaster: Broadcaster,
-    private sanitizer: DomSanitizer,
-    private orchestrator: OrchestratorService,
-    private widgetTempalateSvc: WidgetTemplateService
+    private dashboardSvc: DashboardService
   ){}
 
   ngOnInit(): void {
-
-    this.widgetTempalateSvc.retrieveWidgets()
-    .then((widgets:Widget[]) => {
-      this.widgets = widgets;
-      this.orchestrator.start();
-      this.listenForTemplates();  
-    });
-  }
-
-  sanitizeHtml(html:string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(html);
-  }
-
-  onDragStart(event, widgetId): void {
-    event.dataTransfer.setData('widgetId', widgetId);
-    this.updatesPaused = true;
-  }
-
-  onDragOver(event, widgetId): void {
-    event.preventDefault();
-    if (widgetId === this.dragOverWidgetId)
-      return;
-    this.dragOverWidgetId = widgetId;
-  }
-
-  onDragLeave(event): void {
-    event.preventDefault();
-    this.dragOverWidgetId = '';
-  }
-
-  onDrop(event, widgetId): void {
-    this.dragOverWidgetId = '';
-    let droppedWidgetId = event.dataTransfer.getData('widgetId');
-    this.swapWidgetPositions(widgetId, droppedWidgetId);
-    this.widgetTempalateSvc.saveWidgetOrder(this.widgets);
-    this.updatesPaused = false;
-    event.preventDefault();
-  }
-
-  private swapWidgetPositions(widget1Id:string, widget2Id:string): void {
-
-    let index1 = this.findWidgetIndexById(widget1Id);
-    let index2 = this.findWidgetIndexById(widget2Id);
-
-    if (index1 === -1 || index2 === -1)
-      return;
-
-    var temp = this.widgets[index1];
-    this.widgets[index1] = this.widgets[index2];
-    this.widgets[index2] = temp;
-  }
-
-  private findWidgetIndexById(id:string): number {
-    for(var i=0; this.widgets.length; i++) {
-      if (this.widgets[i].id === id) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  private listenForTemplates(): void {
-    this.broadcaster.on<string>('TEMPLATE_UPDATE')
-    .subscribe(message => {
-      if (!this.updatesPaused) {
-        for (let widget of this.widgets) {
-          if (message.hasOwnProperty(widget.id)) {
-            widget.html = message[widget.id];
-            widget.displayable = true;
-          }
-        }
-      }
+    this.dashboardSvc.getDashboards()
+    .then((dashboards:Dashboard[]) => {
+      this.dashboards = dashboards;
     });
   }
 

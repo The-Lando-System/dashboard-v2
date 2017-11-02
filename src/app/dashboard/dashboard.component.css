@@ -1,0 +1,25 @@
+.drag-over {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.widget {
+  min-height: 300px;
+  max-height: 300px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  border: black;
+}
+.card-header {
+  background-color: rgb(39, 82, 161);
+  color: white;
+  border: black;
+}
+
+#widget-title {
+  font-size: large;
+}
+
+a {
+    color: white;
+}

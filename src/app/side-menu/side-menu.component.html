@@ -5,7 +5,7 @@
     <i *ngIf="menuState === 'out'" class="fa fa-times-circle fa-2x" aria-hidden="true"></i>
   </a>
   <a class="home side-menu-item" href="#" routerLink="/" (click)="toggleMenu()">
-    <h4>Dashboard</h4>
+    <h4>Home</h4>
   </a>
   <a *ngIf="menuState === 'in' && user" class="side-menu-item-small">
     <img id="profile-pic" [src]="user.profilePic">
