@@ -99,6 +99,7 @@ export class SideMenuComponent implements OnInit {
       this.dashboardSvc.deleteDashboard(this.dashboard)
       .then((res:any) => {
         this.router.navigate(['/']);
+        this.toggleMenu();
       });
     }
   }

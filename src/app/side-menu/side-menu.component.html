@@ -35,11 +35,11 @@
     Manage Clients
   </a>
   <div class="small-spacer"></div>
-  <a *ngIf="menuState === 'out' && user && dashboard.id" class="side-menu-item" [routerLink]="['/widget-editor', dashboard.id, 'new']" (click)="toggleMenu()">
+  <a *ngIf="menuState === 'out' && user && dashboard" class="side-menu-item" [routerLink]="['/widget-editor', dashboard.id, 'new']" (click)="toggleMenu()">
     Create New Widget
   </a>
   <div class="small-spacer"></div>
-  <a *ngIf="menuState === 'out' && user && dashboard.id" class="side-menu-item" href="" (click)="deleteDashboard()">
+  <a *ngIf="menuState === 'out' && user && dashboard" class="side-menu-item" href="" (click)="deleteDashboard()">
     Delete Dashboard
   </a>
 </div>
