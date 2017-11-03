@@ -8,6 +8,8 @@ import { Broadcaster } from 'sarlacc-angular-client';
 import { WidgetTemplateService, Widget } from '../services/widget-template.service';
 import { ClientConfigService, ClientConfig, Token } from '../services/client-config.service';
 
+import { DashboardService, Dashboard } from '../services/dashboard.service';
+
 @Component({
   moduleId: module.id,
   selector: 'widget-editor',
@@ -16,7 +18,8 @@ import { ClientConfigService, ClientConfig, Token } from '../services/client-con
   providers: []
 })
 export class WidgetEditorComponent implements OnInit {
-    
+  
+  private dashboard: Dashboard;
   private activeTab: string = 'preview';
   private widget: Widget;
   private tokens: Token[];
@@ -29,13 +32,25 @@ export class WidgetEditorComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private widgetTemplateSvc: WidgetTemplateService,
-    private clientConfigService: ClientConfigService
+    private clientConfigService: ClientConfigService,
+    private dashboardSvc: DashboardService
   ){}
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
-      let widgetId = params['widgetId'];
-      this.initWidgetById(widgetId);
+      let dashboardId = params['dashboardId'];
+
+      this.dashboardSvc.getDashboardById(dashboardId)
+      .then((dashboard:Dashboard) => {
+        this.dashboard = dashboard;
+
+        let widgetId = params['widgetId'];
+        this.initWidgetById(widgetId);
+
+      }).catch((err:any) => {
+        this.router.navigate(['/']);
+      });
+
     });
   }
 
@@ -60,6 +75,11 @@ export class WidgetEditorComponent implements OnInit {
     .then((newWidget:Widget) => {
       this.widget = newWidget;
       this.widget.displayable = true;
+
+      this.dashboardSvc.addWidgetToDashboard(this.widget.id,this.dashboard)
+      .then((res:any) => {
+        console.log('Successfully created widget');
+      });
     })
   }
 
@@ -69,8 +89,12 @@ export class WidgetEditorComponent implements OnInit {
 
     this.widgetTemplateSvc.deleteWidget(this.widget)
     .then((res:any) => {
-      let link = ['/'];
-      this.router.navigate(link);
+      this.dashboardSvc.removeWidgetFromDashboard(this.widget.id,this.dashboard)
+      .then((res:any) => {
+        console.log('Successfully removed widget');
+        let link = ['/'];
+        this.router.navigate(link);
+      });
     });
   }
 

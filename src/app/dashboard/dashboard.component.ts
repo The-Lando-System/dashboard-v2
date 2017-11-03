@@ -44,6 +44,9 @@ export class DashboardComponent implements OnInit {
         this.dashboardSvc.getDashboardById(dashboardId)
         .then((dashboard:Dashboard) => {
           this.dashboard = dashboard;
+
+          this.broadcaster.broadcast('DASHBOARD_SELECTED', this.dashboard.id);
+
           this.widgetTemplateSvc.retrieveWidgets()
           .then((widgets:Widget[]) => {
             this.widgets = widgets;

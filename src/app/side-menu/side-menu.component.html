@@ -31,11 +31,11 @@
     Logout
   </a>
   <div class="small-spacer"></div>
-  <a *ngIf="menuState === 'out' && user" class="side-menu-item" routerLink="/editor/new" (click)="toggleMenu()">
-    Create New Widget
-  </a>
-  <div class="small-spacer"></div>
   <a *ngIf="menuState === 'out' && user" class="side-menu-item" routerLink="/client-editor" (click)="toggleMenu()">
     Manage Clients
+  </a>
+  <div class="small-spacer"></div>
+  <a *ngIf="menuState === 'out' && user && dashboardId" class="side-menu-item" [routerLink]="['/widget-editor', dashboardId, 'new']" (click)="toggleMenu()">
+    Create New Widget
   </a>
 </div>

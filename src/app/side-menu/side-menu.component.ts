@@ -27,6 +27,7 @@ export class SideMenuComponent implements OnInit {
   private menuState: string = 'in';
   private refreshing: boolean;
   private user: User;
+  private dashboardId: string;
 
   constructor(
     private broadcaster: Broadcaster,
@@ -36,6 +37,7 @@ export class SideMenuComponent implements OnInit {
   ngOnInit(): void {
     this.listenForRefreshComplete();
     this.user = this.authSvc.getUser();
+    this.listenForDashboard();
   }
 
   login(): void {
@@ -71,6 +73,12 @@ export class SideMenuComponent implements OnInit {
   listenForRefreshComplete(): void {
     this.broadcaster.on('REFRESH_COMPLETE').subscribe((res:any) => {
       setTimeout(this.stopRefresh.bind(this), 1000);
+    });
+  }
+
+  listenForDashboard(): void {
+    this.broadcaster.on('DASHBOARD_SELECTED').subscribe((dashboardId:string) => {
+      this.dashboardId = dashboardId;
     });
   }
 

@@ -46,7 +46,7 @@ import { DashboardService } from './services/dashboard.service';
         component: HomeComponent
       },
       {
-        path: 'widget-editor/:widgetId',
+        path: 'widget-editor/:dashboardId/:widgetId',
         component: WidgetEditorComponent
       },
       {

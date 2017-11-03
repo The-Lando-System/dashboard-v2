@@ -35,6 +35,7 @@ export class ClientEditorComponent implements OnInit {
   ngOnInit(): void {
     this.initNewClient();
     this.initClientList();
+    this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
   }
 
   setActiveTab(tab:string): void {
