@@ -29,6 +29,15 @@ export class WidgetTemplateService implements OnInit {
         }).catch((err:any) => { console.log(err); return null; });
     }
 
+    getWidgetsByIds(ids:string[]): Widget[] {
+      let widgets:Widget[] = [];
+      for (let widget of this.widgets) {
+        if (ids.includes(widget.id))
+          widgets.push(widget);
+      }
+      return widgets;
+    }
+
     getWidgetById(id:string): Widget {
         for (let widget of this.widgets) {
             if (widget.id === id)

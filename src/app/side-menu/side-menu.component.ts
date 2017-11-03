@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
 import { User, AuthService } from '../services/auth.service';
+
+import { DashboardService, Dashboard } from '../services/dashboard.service';
 
 @Component({
   moduleId: module.id,
@@ -27,11 +31,13 @@ export class SideMenuComponent implements OnInit {
   private menuState: string = 'in';
   private refreshing: boolean;
   private user: User;
-  private dashboardId: string;
+  private dashboard: Dashboard;
 
   constructor(
     private broadcaster: Broadcaster,
-    private authSvc: AuthService
+    private authSvc: AuthService,
+    private dashboardSvc: DashboardService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
@@ -78,8 +84,23 @@ export class SideMenuComponent implements OnInit {
 
   listenForDashboard(): void {
     this.broadcaster.on('DASHBOARD_SELECTED').subscribe((dashboardId:string) => {
-      this.dashboardId = dashboardId;
+      this.dashboardSvc.getDashboardById(dashboardId)
+      .then((dashboard:Dashboard) => {
+        this.dashboard = dashboard;
+      }).catch((err:any) => {
+        this.dashboard = null;
+      });
     });
+  }
+
+  deleteDashboard(): void {
+    event.preventDefault();
+    if (confirm('Are you sure you want to delete this dashboard?')) {
+      this.dashboardSvc.deleteDashboard(this.dashboard)
+      .then((res:any) => {
+        this.router.navigate(['/']);
+      });
+    }
   }
 
   private stopRefresh(): void {

@@ -49,7 +49,7 @@ export class DashboardComponent implements OnInit {
 
           this.widgetTemplateSvc.retrieveWidgets()
           .then((widgets:Widget[]) => {
-            this.widgets = widgets;
+            this.widgets = this.widgetTemplateSvc.getWidgetsByIds(this.dashboard.widgetIds);
             this.orchestratorSvc.start();
             this.listenForTemplates();  
           });
