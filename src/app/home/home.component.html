@@ -3,32 +3,44 @@
 </div>
   
 <div class="content"> 
-  <div class="row">
-
-    <!-- Not Logged In -->
-    <div *ngIf="!user" class="col-md-6">
+  <div class="row" style="margin-bottom:20px">
+    
+    <div *ngIf="!user" class="col-md-12">
       <h2>Welcome to Dashboards!</h2>
-      <br/><br/>
+      <br/>
       <button class="btn btn-primary" (click)="login()">Login</button>
     </div>
 
-    <!-- User Dashboards -->
-    <div *ngIf="user" class="col-md-6">
-      <h4>Welcome to your dashboards, {{user.name}}</h4>
-      <br/><br/>
+    <div *ngIf="user" class="col-md-12">
+      <h2>Welcome to your dashboards, {{user.name}}!</h2>
+    </div>
+
+  </div>
+
+  <div *ngIf="user" class="row">
+    <div class="col-md-6">
       <button class="btn btn-primary" (click)="createDashboard()">Create Dashboard</button>
       <br/><br/>
-      <div class="list-group">
-        <a *ngFor="let dashboard of dashboards" [routerLink]="['dashboard', dashboard.id]" class="list-group-item list-group-item-action">
-          {{dashboard.name}}
-        </a>
-      </div>
+      <ul class="list-group">
+        <li on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1" *ngFor="let dashboard of dashboards; let i=index" class="list-group-item justify-content-between" (click)="selectDashboard(dashboard)">
+          <span class="select-dashboard-text">{{dashboard.name}}</span>
+          <span *ngIf="hvIdx === i" [routerLink]="['/dashboard-editor', dashboard.id]" class="edit-dashboard-icon">
+            <i class="fa fa-wrench" aria-hidden="true"></i>
+          </span>
+        </li>
+      </ul>
       <br/>
       <a routerLink="/client-editor" style="margin-left:10px">Manage Clients</a>
     </div>
-    <div *ngIf="user" class="col-md-6">
-      <h4>Dashboard Preview</h4>
+    <div *ngIf="selectedDashboard" class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h4>{{selectedDashboard.name}}</h4>
+        </div>
+        <div class="card-block">
+          <a class="btn btn-primary" [routerLink]="['/dashboard', selectedDashboard.id]">Go To Dashboard</a>
+        </div>
+      </div>
     </div>
-
   </div>
 </div>

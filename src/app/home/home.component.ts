@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
 
   private user: User;
   private dashboards: Dashboard[] = [];
+  private selectedDashboard: Dashboard;
 
   constructor(
     private dashboardSvc: DashboardService,
@@ -29,6 +30,9 @@ export class HomeComponent implements OnInit {
       this.dashboardSvc.getDashboards()
       .then((dashboards:Dashboard[]) => {
         this.dashboards = dashboards;
+        if (this.dashboards[0]) {
+          this.selectedDashboard = dashboards[0];
+        }
         this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
       });
     }
@@ -41,9 +45,16 @@ export class HomeComponent implements OnInit {
       this.dashboardSvc.getDashboards()
       .then((dashboards:Dashboard[]) => {
         this.dashboards = dashboards;
+        if (this.dashboards[0]) {
+          this.selectedDashboard = dashboards[0];
+        }
         this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
       });
     });
+  }
+
+  selectDashboard(dashboard:Dashboard): void {
+    this.selectedDashboard = dashboard;
   }
 
   createDashboard(): void {
