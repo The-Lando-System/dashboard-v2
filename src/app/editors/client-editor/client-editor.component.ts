@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Broadcaster } from 'sarlacc-angular-client';
 
-import { TokenService } from '../services/token.service';
-import { ClientConfigService, ClientConfig, Token, Oauth2Config, ClientHeader } from '../services/client-config.service';
+import { TokenService } from '../../services/token.service';
+import { ClientConfigService, ClientConfig, Token, Oauth2Config, ClientHeader } from '../../services/client-config.service';
 
 @Component({
   moduleId: module.id,

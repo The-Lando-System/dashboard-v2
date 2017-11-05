@@ -10,9 +10,10 @@ import { Broadcaster } from 'sarlacc-angular-client';
 import { AppComponent } from './app.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
 import { HomeComponent } from './home/home.component';
-import { WidgetEditorComponent } from './editor/widget-editor.component';
-import { ClientEditorComponent } from './editor/client-editor.component';
-import { EditTokenComponent } from './editor/edit-token.component';
+import { WidgetEditorComponent } from './editors/widget-editor/widget-editor.component';
+import { ClientEditorComponent } from './editors/client-editor/client-editor.component';
+import { DashboardEditorComponent } from './editors/dashboard-editor/dashboard-editor.component';
+import { EditTokenComponent } from './editors/client-editor/edit-token.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
@@ -33,7 +34,8 @@ import { DashboardService } from './services/dashboard.service';
     LoadingBarComponent,
     ClientEditorComponent,
     EditTokenComponent,
-    DashboardComponent
+    DashboardComponent,
+    DashboardEditorComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +58,10 @@ import { DashboardService } from './services/dashboard.service';
       {
         path: 'dashboard/:dashboardId',
         component: DashboardComponent
+      },
+      {
+        path: 'dashboard-editor/:dashboardId',
+        component: DashboardEditorComponent
       }
     ])
   ],

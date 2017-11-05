@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-
+import { Broadcaster } from 'sarlacc-angular-client';
 import { Globals } from '../globals';
 
 declare const gapi: any;
@@ -14,7 +14,10 @@ export class AuthService {
     'https://www.google.com/accounts/Logout' + 
     '?continue=https://appengine.google.com/_ah/logout?continue=' + Globals.THIS_DOMAIN;
 
-  constructor(private http: Http){
+  constructor(
+    private http: Http,
+    private broadcaster: Broadcaster
+  ){
     this.getClientId()
     .then((id) => {
       Globals.GOOGLE_CLIENT_ID = id;
@@ -64,6 +67,7 @@ export class AuthService {
             userDetails.getAuthResponse().access_token
           );
           this.storeUserInfo();
+          this.broadcaster.broadcast('USER_LOGIN');
           resolve(this.user);
         });
       });
@@ -77,6 +81,11 @@ export class AuthService {
 
   refreshLogin(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
+
+      if (!gapi) {
+        reject('');
+      }
+
       gapi.load('auth2', () => {
         let auth2 = gapi.auth2.init({
           client_id: Globals.GOOGLE_CLIENT_ID,
@@ -85,6 +94,7 @@ export class AuthService {
         }).then(()=> {
           gapi.auth2.getAuthInstance().currentUser.get()
           .reloadAuthResponse().then((authResponse) => {
+            this.broadcaster.broadcast('USER_LOGIN');
             resolve(authResponse.access_token);
           });
         });

@@ -5,10 +5,10 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Broadcaster } from 'sarlacc-angular-client';
 
-import { WidgetTemplateService, Widget } from '../services/widget-template.service';
-import { ClientConfigService, ClientConfig, Token } from '../services/client-config.service';
+import { WidgetTemplateService, Widget } from '../../services/widget-template.service';
+import { ClientConfigService, ClientConfig, Token } from '../../services/client-config.service';
 
-import { DashboardService, Dashboard } from '../services/dashboard.service';
+import { DashboardService, Dashboard } from '../../services/dashboard.service';
 
 @Component({
   moduleId: module.id,
