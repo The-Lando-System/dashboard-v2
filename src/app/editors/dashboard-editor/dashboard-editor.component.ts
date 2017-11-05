@@ -31,4 +31,22 @@ export class DashboardEditorComponent implements OnInit {
     });
   }
 
+  saveDashboard(): void {
+    this.dashboardSvc.editDashboard(this.dashboard)
+    .then(() => {
+      console.log('Dashboard Updated!');
+    });
+  }
+
+  deleteDashboard(): void {
+    if (!confirm('Are you sure you want to delete this dashboard?')){
+      return;
+    }
+    this.dashboardSvc.deleteDashboard(this.dashboard)
+    .then(() => {
+      console.log('Dashboard Deleted!');
+      this.router.navigate(['/']);
+    });
+  }
+
 }

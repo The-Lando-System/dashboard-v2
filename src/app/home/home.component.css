@@ -2,3 +2,8 @@
 .select-dashboard-text {
   cursor: pointer;
 }
+
+.card-img-top {
+  height: 200px;
+  overflow: hidden;
+}

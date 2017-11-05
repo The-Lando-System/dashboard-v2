@@ -44,6 +44,7 @@ export class SideMenuComponent implements OnInit {
     this.listenForRefreshComplete();
     this.user = this.authSvc.getUser();
     this.listenForDashboard();
+    this.listenForLogin();
   }
 
   login(): void {
@@ -74,6 +75,12 @@ export class SideMenuComponent implements OnInit {
   restartClients(): void {
     this.refreshing = true;
     this.broadcaster.broadcast('RESTART_CLIENTS',true);
+  }
+
+  listenForLogin(): void {
+    this.broadcaster.on('USER_LOGIN').subscribe(() => {
+      this.user = this.authSvc.getUser();
+    });
   }
 
   listenForRefreshComplete(): void {

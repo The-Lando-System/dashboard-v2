@@ -104,7 +104,20 @@ export class DashboardService implements OnInit {
 
     }
 
-    updateDashboard(dashboardUpdate:any, dashboardId:string): Promise<void> {
+    editDashboard(dashboard:Dashboard): Promise<void> {
+      
+      let dashboardUpdate = {
+        'name': dashboard.name,
+        'previewImage': dashboard.previewImage,
+        'backgroundImage': dashboard.backgroundImage,
+        'isPrimary': dashboard.isPrimary
+      };
+
+      return this.updateDashboard(dashboardUpdate, dashboard.id);
+
+    }
+
+    private updateDashboard(dashboardUpdate:any, dashboardId:string): Promise<void> {
       return this.http.put(`${this.dashboardUrl}/${dashboardId}`, dashboardUpdate, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
       .then((res:any) => {}).catch((err:any) => { console.log(err) });
@@ -116,5 +129,8 @@ export class Dashboard {
   id: string;
   userId: string;
   name: string;
+  previewImage: string;
+  isPrimary: boolean;
+  backgroundImage: string;
   widgetIds: string[];
 }

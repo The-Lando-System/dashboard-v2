@@ -34,10 +34,11 @@
     </div>
     <div *ngIf="selectedDashboard" class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h4>{{selectedDashboard.name}}</h4>
+        <div class="card-img-top">
+          <img [src]="selectedDashboard.previewImage" style="width: 100%">
         </div>
         <div class="card-block">
+          <h4 class="card-title">{{selectedDashboard.name}}</h4>
           <a class="btn btn-primary" [routerLink]="['/dashboard', selectedDashboard.id]">Go To Dashboard</a>
         </div>
       </div>

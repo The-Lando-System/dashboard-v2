@@ -5,6 +5,60 @@
   
 <div *ngIf="dashboard" class="content"> 
   <div class="row">
-    <h4>Editing Dashboard: {{dashboard.name}}</h4>
+    <div class="container">
+      
+      <div class="card" style="margin-left: 20px;">
+        <div class="card-header">
+          <h4>Editing Dashboard: {{dashboard.name}}</h4>
+        </div>
+        <div class="card-block">
+
+          <!-- Name -->
+          <div class="col-md-12 block">
+            <div class="input-group">
+              <span class="input-group-addon">Name</span>
+              <input [(ngModel)]="dashboard.name" type="text" class="form-control" placeholder="Name">
+            </div>
+          </div>
+
+          <!-- Layout -->
+          <div class="col-md-12 block">
+            <h4>Layout...TBD</h4>
+          </div>
+
+          <!-- Preview -->
+          <div class="col-md-12 block">
+            <div class="input-group">
+              <span class="input-group-addon">Preview Image</span>
+              <input [(ngModel)]="dashboard.previewImage" type="text" class="form-control" placeholder="Preview Image URL">
+            </div>
+          </div>
+
+          <!-- Background -->
+          <div class="col-md-12 block">
+            <div class="input-group">
+              <span class="input-group-addon">Background</span>
+              <input [(ngModel)]="dashboard.backgroundImage" type="text" class="form-control" placeholder="Background Image URL">
+            </div>
+          </div>
+
+          <!-- Is Primary -->
+          <div class="col-md-12 block">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="dashboard.isPrimary">
+                Primary Dashboard
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-12 block">
+            <button (click)="saveDashboard()" class="btn btn-primary" style="float:left">Save</button>
+            <button (click)="deleteDashboard()" class="btn btn-danger" style="float:right">Delete</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </div>
 </div>
