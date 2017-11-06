@@ -25,7 +25,8 @@ import { WidgetTemplateService } from './services/widget-template.service';
 import { ClientConfigService } from './services/client-config.service';
 import { AuthService } from './services/auth.service';
 import { DashboardService } from './services/dashboard.service';
-import { NotificationService } from './notification/notification.service';
+import { NotificationService } from './services/notification.service';
+import { RequestService } from './services/request.service';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { NotificationService } from './notification/notification.service';
     ClientConfigService,
     AuthService,
     DashboardService,
-    NotificationService
+    NotificationService,
+    RequestService
   ],
   bootstrap: [AppComponent]
 })

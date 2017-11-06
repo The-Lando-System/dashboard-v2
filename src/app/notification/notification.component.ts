@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Broadcaster } from 'sarlacc-angular-client';
-import { Notification } from './notification.service';
+import { Notification } from '../services/notification.service';
 
 declare var $: any;
 

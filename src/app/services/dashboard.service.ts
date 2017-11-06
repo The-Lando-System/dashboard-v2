@@ -1,8 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http, Headers } from '@angular/http';
-import { NotificationService } from '../notification/notification.service';
+import { Headers } from '@angular/http';
+import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
-
+import { RequestService } from './request.service';
 import { Globals } from '../globals';
 
 @Injectable()
@@ -13,39 +13,42 @@ export class DashboardService implements OnInit {
     private dashboards:Dashboard[] = [];
 
     constructor(
-        private http: Http,
         private authSvc: AuthService,
-        private notificationSvc: NotificationService
+        private notificationSvc: NotificationService,
+        private requestService: RequestService
     ) {}
 
     ngOnInit(): void {}
 
     getDashboards(): Promise<Dashboard[]> {
-      return this.http.get(this.dashboardUrl, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); return null; });
+      return new Promise<Dashboard[]>((resolve,reject) => {
+        this.requestService.get(this.dashboardUrl, this.authSvc.createAuthHeaders())
+        .then((dashboards:Dashboard[]) => {
+          resolve(dashboards);
+        }).catch((error:string) => {
+          this.notificationSvc.fail(error);
+          reject();
+        });
+      }); 
     }
 
     getDashboardById(id:string): Promise<Dashboard> {
-      return this.getDashboards()
-      .then((dashboards:Dashboard[]) => {
-        for (let dashboard of dashboards) {
-          if (dashboard.id === id)
-            return dashboard;
-        }
-        return null;
+      return new Promise<Dashboard>((resolve,reject) => {
+        this.getDashboards()
+        .then((dashboards:Dashboard[]) => {
+          for (let dashboard of dashboards) {
+            if (dashboard.id === id) {
+              resolve(dashboard);
+              return;
+            }
+          }
+          this.notificationSvc.fail(`Could not find dashboard with ID [${id}]`);
+          reject();
+        }).catch((error:string) => {
+          this.notificationSvc.fail(error);
+          reject();
+        });
       });
-    }
-
-    updateDashboardName(name:string, dashboardId:string): Promise<void> {
-
-      let dashboardUpdate = {
-        'name': name
-      };
-
-      return this.updateDashboard(dashboardUpdate,dashboardId);
     }
 
     createDashboard(dashboard:Dashboard): Promise<Dashboard> {
@@ -56,17 +59,29 @@ export class DashboardService implements OnInit {
         'widgetIds': dashboard.widgetIds
       };
 
-      return this.http.post(this.dashboardUrl, newDashboard, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
+      return new Promise<Dashboard>((resolve,reject) => {
+        this.requestService.post(this.dashboardUrl, newDashboard, this.authSvc.createAuthHeaders())
+        .then((dashboard:Dashboard) => {
+          this.notificationSvc.success('Successfully created new dashboard!');
+          resolve(dashboard);
+        }).catch((error:string) => {
+          this.notificationSvc.fail(error);
+          reject();
+        });
+      });
     }
 
     deleteDashboard(dashboard:Dashboard): Promise<void> {
-      return this.http.delete(`${this.dashboardUrl}/${dashboard.id}`, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {}).catch((err:any) => { console.log(err) });
+      return new Promise<void>((resolve,reject) => {
+        this.requestService.delete(`${this.dashboardUrl}/${dashboard.id}`, this.authSvc.createAuthHeaders())
+        .then((dashboard:Dashboard) => {
+          this.notificationSvc.success('Successfully deleted dashboard!');
+          resolve();
+        }).catch((error:string) => {
+          this.notificationSvc.fail(error);
+          reject();
+        });
+      });
     }
 
     addWidgetToDashboard(widgetId:string, dashboard:Dashboard): Promise<void> {
@@ -106,29 +121,25 @@ export class DashboardService implements OnInit {
     }
 
     editDashboard(dashboard:Dashboard): Promise<void> {
-      
       let dashboardUpdate = {
         'name': dashboard.name,
         'previewImage': dashboard.previewImage,
         'backgroundImage': dashboard.backgroundImage,
         'isPrimary': dashboard.isPrimary
       };
-
       return this.updateDashboard(dashboardUpdate, dashboard.id);
-
     }
 
     private updateDashboard(dashboardUpdate:any, dashboardId:string): Promise<void> {
-      return this.http.put(`${this.dashboardUrl}/${dashboardId}`, dashboardUpdate, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        this.notificationSvc.success('Dashboard successfully updated!');
-      }).catch((err:Response) => { 
-        this.notificationSvc.warn('Failed to update dashboard!');
-        console.log(err);
-        console.log(err.status);
-        console.log(err.statusText);
-        console.log(err.body);
+      return new Promise<void>((resolve,reject) => {
+        this.requestService.put(`${this.dashboardUrl}/${dashboardId}`, dashboardUpdate, this.authSvc.createAuthHeaders())
+        .then((dashboard:Dashboard) => {
+          this.notificationSvc.success('Successfully updated dashboard!');
+          resolve();
+        }).catch((error:string) => {
+          this.notificationSvc.fail('Failed to update dashboard!');
+          reject();
+        });
       });
     }
 

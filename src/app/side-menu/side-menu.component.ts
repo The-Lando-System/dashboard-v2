@@ -91,12 +91,16 @@ export class SideMenuComponent implements OnInit {
 
   listenForDashboard(): void {
     this.broadcaster.on('DASHBOARD_SELECTED').subscribe((dashboardId:string) => {
-      this.dashboardSvc.getDashboardById(dashboardId)
-      .then((dashboard:Dashboard) => {
-        this.dashboard = dashboard;
-      }).catch((err:any) => {
+      if (!dashboardId) {
         this.dashboard = null;
-      });
+      } else {
+        this.dashboardSvc.getDashboardById(dashboardId)
+        .then((dashboard:Dashboard) => {
+          this.dashboard = dashboard;
+        }).catch((err:any) => {
+          this.dashboard = null;
+        });
+      }
     });
   }
 
