@@ -1,18 +1,20 @@
 <div class="header">
-  <h1>Dashboards</h1>
+  <h1 *ngIf="!user">Custom Dashboards</h1>
+  <h1 *ngIf="user">Your Dashboards</h1>
 </div>
   
 <div class="content"> 
   <div class="row" style="margin-bottom:20px">
     
     <div *ngIf="!user" class="col-md-12">
-      <h2>Welcome to Dashboards!</h2>
+      <h2>Login to begin creating your custom dashboard!</h2>
       <br/>
-      <button class="btn btn-primary" (click)="login()">Login</button>
+      <button class="btn btn-primary" (click)="login()">Sign in with Google</button>
     </div>
 
     <div *ngIf="user" class="col-md-12">
-      <h2>Welcome to your dashboards, {{user.name}}!</h2>
+      <h2>Manage your dashboards</h2>
+      <hr/>
     </div>
 
   </div>
@@ -34,12 +36,11 @@
     </div>
     <div *ngIf="selectedDashboard" class="col-md-6">
       <div class="card">
-        <div class="card-img-top">
-          <img [src]="selectedDashboard.previewImage" style="width: 100%">
+        <div class="card-img-top" style="cursor:pointer" [routerLink]="['/dashboard', selectedDashboard.id]">
+          <img [src]="selectedDashboard.previewImage" style="width: 100%;">
         </div>
         <div class="card-block">
           <h4 class="card-title">{{selectedDashboard.name}}</h4>
-          <a class="btn btn-primary" [routerLink]="['/dashboard', selectedDashboard.id]">Go To Dashboard</a>
         </div>
       </div>
     </div>
