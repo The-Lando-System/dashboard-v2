@@ -1,6 +1,6 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-
+import { NotificationService } from '../notification/notification.service';
 import { AuthService } from './auth.service';
 
 import { Globals } from '../globals';
@@ -14,7 +14,8 @@ export class DashboardService implements OnInit {
 
     constructor(
         private http: Http,
-        private authSvc: AuthService
+        private authSvc: AuthService,
+        private notificationSvc: NotificationService
     ) {}
 
     ngOnInit(): void {}
@@ -120,7 +121,15 @@ export class DashboardService implements OnInit {
     private updateDashboard(dashboardUpdate:any, dashboardId:string): Promise<void> {
       return this.http.put(`${this.dashboardUrl}/${dashboardId}`, dashboardUpdate, {headers:this.authSvc.createAuthHeaders()})
       .toPromise()
-      .then((res:any) => {}).catch((err:any) => { console.log(err) });
+      .then((res:any) => {
+        this.notificationSvc.success('Dashboard successfully updated!');
+      }).catch((err:Response) => { 
+        this.notificationSvc.warn('Failed to update dashboard!');
+        console.log(err);
+        console.log(err.status);
+        console.log(err.statusText);
+        console.log(err.body);
+      });
     }
 
 }

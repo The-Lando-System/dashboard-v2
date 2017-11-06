@@ -1,0 +1,23 @@
+<!-- Success -->
+<div *ngIf="type === 'success'" class="notification alert alert-success alert-dismissible fade show" role="alert">
+  <button type="button" class="close" (click)="reset()">
+    <span>&times;</span>
+  </button>
+  {{message}}
+</div>
+
+<!-- Warn -->
+<div *ngIf="type === 'warn'" class="notification alert alert-warning alert-dismissible fade show" role="alert">
+  <button type="button" class="close" (click)="reset()">
+    <span>&times;</span>
+  </button>
+  {{message}}
+</div>
+
+<!-- Fail -->
+<div *ngIf="type === 'fail'" class="notification alert alert-danger alert-dismissible fade show" role="alert">
+  <button type="button" class="close" (click)="reset()">
+    <span>&times;</span>
+  </button>
+  {{message}}
+</div>

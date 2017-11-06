@@ -32,10 +32,7 @@ export class DashboardEditorComponent implements OnInit {
   }
 
   saveDashboard(): void {
-    this.dashboardSvc.editDashboard(this.dashboard)
-    .then(() => {
-      console.log('Dashboard Updated!');
-    });
+    this.dashboardSvc.editDashboard(this.dashboard).then(() => {});
   }
 
   deleteDashboard(): void {

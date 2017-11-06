@@ -16,6 +16,7 @@ import { DashboardEditorComponent } from './editors/dashboard-editor/dashboard-e
 import { EditTokenComponent } from './editors/client-editor/edit-token.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import { NotificationComponent } from './notification/notification.component';
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
 import { OrchestratorService } from './services/orchestrator.service';
@@ -24,6 +25,7 @@ import { WidgetTemplateService } from './services/widget-template.service';
 import { ClientConfigService } from './services/client-config.service';
 import { AuthService } from './services/auth.service';
 import { DashboardService } from './services/dashboard.service';
+import { NotificationService } from './notification/notification.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { DashboardService } from './services/dashboard.service';
     ClientEditorComponent,
     EditTokenComponent,
     DashboardComponent,
-    DashboardEditorComponent
+    DashboardEditorComponent,
+    NotificationComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +76,8 @@ import { DashboardService } from './services/dashboard.service';
     WidgetTemplateService,
     ClientConfigService,
     AuthService,
-    DashboardService
+    DashboardService,
+    NotificationService
   ],
   bootstrap: [AppComponent]
 })
