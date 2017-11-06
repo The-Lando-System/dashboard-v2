@@ -1,16 +1,20 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { NotificationService } from './notification.service';
 
 @Injectable()
 export class RequestService implements OnInit {
 
   constructor(
-    private http: Http
+    private http: Http,
+    private notificationSvc: NotificationService
   ) {}
 
   ngOnInit(): void {}
 
   get(url:string, headers:Headers): Promise<any> {
+
+    this.notificationSvc.loading(true);
 
     let options = {};
     if (headers) {
@@ -21,9 +25,11 @@ export class RequestService implements OnInit {
       this.http.get(url, options)
       .toPromise()
       .then((res:any) => {
+        this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
         this.logErrorResponse(err);
+        this.notificationSvc.loading(false);
         reject(err.body);
       });
     });
@@ -31,6 +37,8 @@ export class RequestService implements OnInit {
 
   post(url:string, body:any, headers:Headers): Promise<any> {
     
+    this.notificationSvc.loading(true);
+
     let options = {};
     if (headers) {
       options['headers'] = headers;
@@ -40,9 +48,11 @@ export class RequestService implements OnInit {
       this.http.post(url, body, options)
       .toPromise()
       .then((res:any) => {
+        this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
         this.logErrorResponse(err);
+        this.notificationSvc.loading(false);
         reject(err.body);
       });
     });
@@ -50,6 +60,8 @@ export class RequestService implements OnInit {
 
   put(url:string, body:any, headers:Headers): Promise<any> {
     
+    this.notificationSvc.loading(true);
+
     let options = {};
     if (headers) {
       options['headers'] = headers;
@@ -59,9 +71,11 @@ export class RequestService implements OnInit {
       this.http.put(url, body, options)
       .toPromise()
       .then((res:any) => {
+        this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
         this.logErrorResponse(err);
+        this.notificationSvc.loading(false);
         reject(err.body);
       });
     });
@@ -69,6 +83,8 @@ export class RequestService implements OnInit {
 
   delete(url:string, headers:Headers): Promise<any> {
     
+    this.notificationSvc.loading(true);
+
     let options = {};
     if (headers) {
       options['headers'] = headers;
@@ -78,8 +94,10 @@ export class RequestService implements OnInit {
       this.http.delete(url, options)
       .toPromise()
       .then((res:any) => {
+        this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
+        this.notificationSvc.loading(false);
         this.logErrorResponse(err);
         reject(err.body);
       });

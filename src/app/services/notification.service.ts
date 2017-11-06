@@ -22,10 +22,14 @@ export class NotificationService implements OnInit {
     this.broadcaster.broadcast(Notification.FAIL, message);
   }
 
+  loading(isLoading:boolean): void {
+    this.broadcaster.broadcast(Notification.LOADING, isLoading);
+  }
 }
 
 export const Notification = {
   SUCCESS: 'NOTIFICATION_SUCCESS',
   WARN: 'NOTIFICATION_WARN',
-  FAIL: 'NOTIFICATION_FAIL'
+  FAIL: 'NOTIFICATION_FAIL',
+  LOADING: 'LOADING'
 }

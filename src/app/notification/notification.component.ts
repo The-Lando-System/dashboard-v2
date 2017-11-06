@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { Notification } from '../services/notification.service';
 
-declare var $: any;
-
 @Component({
   moduleId: module.id,
   selector: 'notification',
@@ -14,6 +12,7 @@ export class NotificationComponent implements OnInit {
 
   private type: string;
   private message: string;
+  private loading: boolean;
 
   constructor(
     private broadcaster: Broadcaster
@@ -23,6 +22,7 @@ export class NotificationComponent implements OnInit {
     this.listenForSuccessNotification();
     this.listenForWarnNotification();
     this.listenForFailNotification();
+    this.listenForLoading();
   }
 
   listenForSuccessNotification(): void {
@@ -52,6 +52,12 @@ export class NotificationComponent implements OnInit {
       setTimeout(() => {
         this.reset();
       },3000);
+    });
+  }
+
+  listenForLoading(): void {
+    this.broadcaster.on(Notification.LOADING).subscribe((isLoading:boolean) => {
+      this.loading = isLoading;
     });
   }
 

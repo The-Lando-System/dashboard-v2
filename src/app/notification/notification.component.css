@@ -5,3 +5,10 @@
   z-index: 999;
   max-width: 75vw;
 }
+
+#loading-bar {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 999;
+}
