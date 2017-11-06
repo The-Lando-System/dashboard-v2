@@ -12,3 +12,9 @@
   top: 20px;
   z-index: 999;
 }
+
+#loading-text {
+  color:white;
+  position: relative;
+  top: -5px;
+}
