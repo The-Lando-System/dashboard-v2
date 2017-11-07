@@ -120,46 +120,6 @@ export class ClientEditorComponent implements OnInit {
       this.responseTokens = [];
 
       this.tokenService.findAttrLocations(this.responseTokens, [], res);
-
-      // this.responseTokens = [];
-
-      // this.responseTokens.push({
-      //   'item':'\n',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'{',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'\n',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'  ',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'hello',
-      //   'isToken':true
-      // });
-      // this.responseTokens.push({
-      //   'item':':',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'world',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'\n',
-      //   'isToken':false
-      // });
-      // this.responseTokens.push({
-      //   'item':'}',
-      //   'isToken':false
-      // });
-
     });
   }
 

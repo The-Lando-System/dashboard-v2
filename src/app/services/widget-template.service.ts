@@ -1,7 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http, Headers } from '@angular/http';
 
 import { AuthService } from './auth.service';
+import { RequestService } from './request.service';
+import { NotificationService } from './notification.service';
 
 import { Globals } from '../globals';
 
@@ -13,20 +14,25 @@ export class WidgetTemplateService implements OnInit {
     private widgets:Widget[] = [];
 
     constructor(
-        private http: Http,
-        private authSvc: AuthService
+        private authSvc: AuthService,
+        private requestSvc: RequestService,
+        private notificationSvc: NotificationService
     ) {}
 
     ngOnInit(): void {}
 
     retrieveWidgets(): Promise<Widget[]> {
-        return this.http.get(this.widgetsUrl, {headers:this.authSvc.createAuthHeaders()})
-        .toPromise()
-        .then((res:any) => {
-            this.widgets = res.json();
-            this.orderWidgetTemplates(this.widgets);
-            return this.widgets;
-        }).catch((err:any) => { console.log(err); return null; });
+      return new Promise<Widget[]>((resolve,reject) => {
+        this.requestSvc.get(this.widgetsUrl, this.authSvc.createAuthHeaders())
+        .then((widgets:Widget[]) => {
+          this.widgets = widgets;
+          this.orderWidgetTemplates(this.widgets);
+          resolve(widgets);
+        }).catch((err:Response) => {
+          this.notificationSvc.fail('Failed to retrieve widgets!');
+          reject();
+        });
+      });
     }
 
     getWidgetsByIds(ids:string[]): Widget[] {
@@ -73,17 +79,29 @@ export class WidgetTemplateService implements OnInit {
         'tokens': widget.tokens
       };
 
-      return this.http.post(this.widgetsUrl, newWidget, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
+      return new Promise<Widget>((resolve,reject) => {
+        this.requestSvc.post(this.widgetsUrl, newWidget, this.authSvc.createAuthHeaders())
+        .then((widget:Widget) => {
+          this.notificationSvc.success('Successfully created new widget!');
+          resolve(widget);
+        }).catch((err:Response) => {
+          this.notificationSvc.fail('Failed to create new widget!');
+          reject();
+        });
+      });
     }
 
     deleteWidget(widget:Widget): Promise<void> {
-      return this.http.delete(`${this.widgetsUrl}/${widget.id}`, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {}).catch((err:any) => { console.log(err) });
+      return new Promise<void>((resolve,reject) => {
+        this.requestSvc.delete(`${this.widgetsUrl}/${widget.id}`, this.authSvc.createAuthHeaders())
+        .then(() => {
+          this.notificationSvc.success('Successfully deleted widget!');
+          resolve();
+        }).catch((err:Response) => {
+          this.notificationSvc.fail('Failed to delete widget!');
+          reject();
+        });
+      });
     }
 
     addTokenToWidget(widget:Widget, token:string): Promise<void> {
@@ -154,13 +172,19 @@ export class WidgetTemplateService implements OnInit {
       };
 
       return this.updateWidget(widgetUpdate,widget.id);
-
     }
 
     updateWidget(widgetUpdate:any, widgetId:string): Promise<void> {
-      return this.http.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {}).catch((err:any) => { console.log(err) });
+      return new Promise<void>((resolve,reject) => {
+        this.requestSvc.put(`${this.widgetsUrl}/${widgetId}`, widgetUpdate, this.authSvc.createAuthHeaders())
+        .then(() => {
+          this.notificationSvc.success('Successfully updated widget!');
+          resolve();
+        }).catch((err:Response) => {
+          this.notificationSvc.fail('Failed to update widget!');
+          reject();
+        });
+      });
     }
 
     saveWidgetOrder(widgets:Widget[]): Promise<void> {

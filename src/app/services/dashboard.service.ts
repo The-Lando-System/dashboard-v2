@@ -1,5 +1,4 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Headers } from '@angular/http';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
 import { RequestService } from './request.service';

@@ -1,8 +1,8 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Http, Headers } from '@angular/http';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { AuthService } from './auth.service';
-
+import { RequestService } from './request.service';
+import { NotificationService } from './notification.service';
 import { Globals } from '../globals';
 
 @Injectable()
@@ -13,49 +13,46 @@ export class ClientConfigService implements OnInit {
     private clientConfigs:ClientConfig[] = [];
 
     constructor(
-        private http: Http,
         private broadcaster: Broadcaster,
-        private authSvc: AuthService
+        private authSvc: AuthService,
+        private requestSvc: RequestService,
+        private notificationSvc: NotificationService
     ) {}
 
     ngOnInit(): void {}
 
     retrieveClientConfigs(): Promise<ClientConfig[]> {
-        return this.http.get(this.clientConfigUrl, {headers:this.authSvc.createAuthHeaders()})
-        .toPromise()
-        .then((res:any) => {
-            this.clientConfigs = res.json();
-            return this.clientConfigs;
-        }).catch((err:any) => { console.log(err); return null; });
-    }
-
-    getWidgetById(id:string): ClientConfig {
-        for (let clientConfig of this.clientConfigs) {
-            if (clientConfig.id === id)
-                return clientConfig;
-        }
-        return null;
+      return new Promise<ClientConfig[]>((resolve,reject) => {
+        this.requestSvc.get(this.clientConfigUrl, this.authSvc.createAuthHeaders())
+        .then((clientConfigs:ClientConfig[]) => {
+          this.clientConfigs = clientConfigs;
+          resolve(this.clientConfigs);
+        }).catch((err:Response) => {
+          this.notificationSvc.fail('Failed to retrieve client configs!');
+          reject();
+        });
+      });
     }
 
     retrieveAllTokens(): Promise<Token[]> {
-        return this.retrieveClientConfigs()
-        .then((clientConfigs:ClientConfig[]) => {
-            let tokens = [];
-            clientConfigs.forEach(config => 
-                config.tokens.forEach(token => 
-                    tokens.push(token)
-                )
-            );
-            return tokens;
-        })
+      return this.retrieveClientConfigs()
+      .then((clientConfigs:ClientConfig[]) => {
+        let tokens = [];
+        clientConfigs.forEach(config => 
+          config.tokens.forEach(token => 
+            tokens.push(token)
+          )
+        );
+        return tokens;
+      })
     }
 
     getAllTokens(): Token[] {
       let tokens = [];
       this.clientConfigs.forEach(config => 
-          config.tokens.forEach(token => 
-              tokens.push(token)
-          )
+        config.tokens.forEach(token => 
+          tokens.push(token)
+        )
       );
       return tokens;
     }
@@ -83,14 +80,19 @@ export class ClientConfigService implements OnInit {
     }
 
     updateClient(editedClient:any, clientId:string): Promise<ClientConfig> {
-      return this.http.put(`${this.clientConfigUrl}/${clientId}`, editedClient, { headers: this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
+      return new Promise<ClientConfig>((resolve,reject) => {
+        this.requestSvc.put(`${this.clientConfigUrl}/${clientId}`, editedClient, this.authSvc.createAuthHeaders())
+        .then((clientConfig:ClientConfig) => {
+          this.notificationSvc.success('Successfully updated client!');
+          resolve(clientConfig);
+        }).catch((err:string) => {
+          this.notificationSvc.fail('Failed to update client!');
+          reject();
+        });
+      });
     }
 
-    createNewClient(client:ClientConfig): Promise<void> {
+    createNewClient(client:ClientConfig): Promise<ClientConfig> {
       let newClient = {
         'name': client.name,
         'tokens': [],
@@ -100,20 +102,29 @@ export class ClientConfigService implements OnInit {
         'oauth2_config': client.oauth2_config ? client.oauth2_config : {}
       }
 
-      return this.http.post(this.clientConfigUrl, newClient, { headers: this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
-
+      return new Promise<ClientConfig>((resolve,reject) => {
+        this.requestSvc.post(this.clientConfigUrl, newClient, this.authSvc.createAuthHeaders())
+        .then((clientConfig:ClientConfig) => {
+          this.notificationSvc.success('Successfully created new client!');
+          resolve(clientConfig);
+        }).catch((err:string) => {
+          this.notificationSvc.fail('Failed to create new client!');
+          reject();
+        });
+      });
     }
 
     deleteClient(client:ClientConfig): Promise<void> {
-      return this.http.delete(`${this.clientConfigUrl}/${client.id}`, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        return res.json();
-      }).catch((err:any) => { console.log(err); });
+      return new Promise<void>((resolve,reject) => {
+        this.requestSvc.delete(`${this.clientConfigUrl}/${client.id}`,this.authSvc.createAuthHeaders())
+        .then(() => {
+          this.notificationSvc.success('Successfully deleted client!');
+          resolve();
+        }).catch((err:string) => {
+          this.notificationSvc.fail('Failed to delete client!');
+          reject();
+        });
+      });
     }
 
     addTokenToClient(token:Token, client:ClientConfig): Promise<ClientConfig> {
@@ -173,44 +184,40 @@ export class ClientConfigService implements OnInit {
         'oauth2_config':client.oauth2_config ? client.oauth2_config : ''
       }
 
-      return this.http.post(`${this.clientConfigUrl}/test`,requestTest,{ headers: this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        let response;
-        try {
-          response = JSON.parse(res.json());
-        } catch(e) {
-          response = {
-            'error' : 'Response was not in a valid JSON format',
-            'response' : res._body
-          };
-        }
-        return response;
-      }).catch((err:any) => {
-        let error;
-        try {
-          error = {
-            'error' : 'An error occured during the client request',
-            'details' : err._body
-          };
-        } catch(e) {
-          error = {
-            'error' : 'An error occured during the client request',
-            'details' : err
-          };
-        }
-        console.log(error); 
-        return error;
+      return new Promise<any>((resolve,reject) => {
+        this.requestSvc.post(`${this.clientConfigUrl}/test`,requestTest,this.authSvc.createAuthHeaders())
+        .then((response:any) => {
+          let res;
+          try {
+            res = JSON.parse(response);
+            this.notificationSvc.success('Client test was successful!');
+            resolve(res);
+          } catch(e) {
+            res = {
+              'error' : 'Response was not in a valid JSON format',
+              'response' : response
+            };
+            this.notificationSvc.fail('Client test failed!');
+            reject(res);
+          }
+        }).catch((err:string) => {
+          this.notificationSvc.fail('Client test failed!');
+          reject(err);
+        });
       });
     }
 
     activateClients(): Promise<void> {
-      return this.http.post(`${this.clientConfigUrl}/restart-clients`, {}, {headers:this.authSvc.createAuthHeaders()})
-      .toPromise()
-      .then((res:any) => {
-        console.log(res.json());
-        this.broadcaster.broadcast('REFRESH_COMPLETE',true);
-      }).catch((err:any) => { console.log(err); });
+      return new Promise<void>((resolve,reject) => {
+        this.requestSvc.post(`${this.clientConfigUrl}/restart-clients`, {}, this.authSvc.createAuthHeaders())
+        .then(() => {
+          this.broadcaster.broadcast('REFRESH_COMPLETE',true);
+          resolve();
+        }).catch((err:string) => {
+          this.notificationSvc.fail('Failed to restart clients!');
+          reject();
+        });
+      });
     }
 
 }
