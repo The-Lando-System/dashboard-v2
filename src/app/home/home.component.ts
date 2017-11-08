@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
           this.selectedDashboard = dashboards[0];
         }
         this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
-      });
+      }).catch(()=>{});
     }
   }
 

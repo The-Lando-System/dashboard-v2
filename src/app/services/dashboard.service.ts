@@ -24,8 +24,8 @@ export class DashboardService implements OnInit {
         this.requestService.get(this.dashboardUrl, this.authSvc.createAuthHeaders())
         .then((dashboards:Dashboard[]) => {
           resolve(dashboards);
-        }).catch((error:string) => {
-          this.notificationSvc.fail(error);
+        }).catch((error:any) => {
+          this.notificationSvc.fail('Failed to get dashboards!');
           reject();
         });
       }); 

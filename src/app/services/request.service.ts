@@ -30,7 +30,7 @@ export class RequestService implements OnInit {
       }).catch((err:Response) => {
         this.logErrorResponse(err);
         this.notificationSvc.loading(false);
-        reject(err.body);
+        reject(err.json());
       });
     });
   }
@@ -53,7 +53,7 @@ export class RequestService implements OnInit {
       }).catch((err:Response) => {
         this.logErrorResponse(err);
         this.notificationSvc.loading(false);
-        reject(err.body);
+        reject(err.json());
       });
     });
   }
@@ -76,7 +76,7 @@ export class RequestService implements OnInit {
       }).catch((err:Response) => {
         this.logErrorResponse(err);
         this.notificationSvc.loading(false);
-        reject(err.body);
+        reject(err.json());
       });
     });
   }
@@ -99,15 +99,13 @@ export class RequestService implements OnInit {
       }).catch((err:Response) => {
         this.notificationSvc.loading(false);
         this.logErrorResponse(err);
-        reject(err.body);
+        reject(err.json());
       });
     });
   }
 
   private logErrorResponse(err:Response): void {
-    console.error('Request error');
-    console.error(`Status: ${err.status}, ${err.statusText}`);
-    console.error(err.body);
+    console.error(err.json());
   }
 
 }

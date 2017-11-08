@@ -22,25 +22,8 @@ export class AuthService {
     .then((id) => {
       Globals.GOOGLE_CLIENT_ID = id;
       this.user = this.getUser();
-      this.user.accessToken = this.getAccessToken();
-      if (this.user) {
-        this.refreshLogin()
-        .then((access_token) => {
-          this.user.accessToken = access_token;
-          this.storeUserInfo();
-        });
-      }
-      setInterval(() => {
-        this.refreshLogin()
-        .then((access_token) => {
-          console.log('Updating the access token');
-          this.user.accessToken = access_token;
-          this.storeUserInfo();
-        });
-      }, 60000);
+      if (this.user) { this.user.accessToken = this.getAccessToken() };
     });
-
-
   }
 
   login() {
@@ -94,8 +77,8 @@ export class AuthService {
         }).then(()=> {
           gapi.auth2.getAuthInstance().currentUser.get()
           .reloadAuthResponse().then((authResponse) => {
-            this.broadcaster.broadcast('USER_LOGIN');
-            resolve(authResponse.access_token);
+            this.user.accessToken = authResponse.access_token;
+            this.storeUserInfo();
           });
         });
       });
