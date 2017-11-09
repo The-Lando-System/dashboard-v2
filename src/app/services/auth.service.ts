@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { Globals } from '../globals';
+import { RequestService } from './request.service';
 
 declare const gapi: any;
 
@@ -13,10 +14,12 @@ export class AuthService {
   private logoutUrl =
     'https://www.google.com/accounts/Logout' + 
     '?continue=https://appengine.google.com/_ah/logout?continue=' + Globals.THIS_DOMAIN;
+  private verifyTokenUrl = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
 
   constructor(
     private http: Http,
-    private broadcaster: Broadcaster
+    private broadcaster: Broadcaster,
+    private requestSvc: RequestService
   ){
     this.getClientId()
     .then((id) => {
@@ -26,8 +29,37 @@ export class AuthService {
     });
   }
 
-  login() {
-    return new Promise<{}>((resolve, reject) => {
+  initUser(): Promise<User> {
+    return new Promise<User>((resolve,reject) => {
+      let accessToken = this.getAccessToken();
+      let user = this.getUser();
+      if (accessToken && user) {
+        this.requestSvc.post(this.verifyTokenUrl + accessToken, {}, null)
+        .then((tokenInfo:any) => {
+    
+          if (!tokenInfo || !tokenInfo.email) {
+            console.log('No email in the token info response... rejecting');
+            reject();
+          }
+
+          if (user.email === tokenInfo.email) {
+            resolve(user);
+            return;
+          }
+
+          console.log('Unknown error verifying the token...');
+          reject();
+
+        }).catch((err:any) => {
+          this.refreshOnInvalidToken(err)
+          .then(() => { resolve(user); }).catch(() => { reject(); });
+        });
+      }
+    });
+  }
+
+  login(): Promise<User> {
+    return new Promise<User>((resolve, reject) => {
 
       // Make auth request
       gapi.load('auth2', () => {
@@ -62,11 +94,11 @@ export class AuthService {
     document.location.href = this.logoutUrl;
   }
 
-  refreshLogin(): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
+  refreshLogin(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
 
       if (!gapi) {
-        reject('');
+        reject();
       }
 
       gapi.load('auth2', () => {
@@ -79,6 +111,7 @@ export class AuthService {
           .reloadAuthResponse().then((authResponse) => {
             this.user.accessToken = authResponse.access_token;
             this.storeUserInfo();
+            resolve();
           });
         });
       });
@@ -99,6 +132,23 @@ export class AuthService {
     return new Headers ({
       'Content-Type'   : 'application/json',
       'x-access-token' : this.getAccessToken()
+    });
+  }
+
+  private refreshOnInvalidToken(err:any): Promise<void> {
+    return new Promise<void>((resolve,reject) => {
+      if (!err.hasOwnProperty('error') || err.error !== 'invalid_token') {
+        reject();
+        return;
+      }
+      this.refreshLogin()
+      .then(() => {
+        resolve();
+        return;
+      }).catch(() => {
+        console.log('Unknown error occurred during request.. rejecting');
+        reject();
+      });
     });
   }
 

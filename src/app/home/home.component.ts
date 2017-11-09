@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { DashboardService, Dashboard } from '../services/dashboard.service';
 import { AuthService, User } from '../services/auth.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute, Params, ParamMap } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -26,16 +26,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authSvc.getUser();
-    if (this.user) {
-      this.dashboardSvc.getDashboards()
-      .then((dashboards:Dashboard[]) => {
-        this.dashboards = dashboards;
-        if (this.dashboards[0]) {
-          this.selectedDashboard = dashboards[0];
-        }
-        this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
-      }).catch(()=>{});
-    }
+    this.dashboardSvc.getDashboards()
+    .then((dashboards:Dashboard[]) => {
+      this.dashboards = dashboards;
+      if (this.dashboards[0]) {
+        this.selectedDashboard = dashboards[0];
+      }
+      this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
+    }).catch(()=>{});
   }
 
   login(): void {

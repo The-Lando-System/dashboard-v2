@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule }   from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -27,6 +27,12 @@ import { AuthService } from './services/auth.service';
 import { DashboardService } from './services/dashboard.service';
 import { NotificationService } from './services/notification.service';
 import { RequestService } from './services/request.service';
+
+import { StartupService } from './services/startup.service';
+
+export function startupServiceFactory(startupService: StartupService): Function {
+  return () => startupService.load();
+}
 
 @NgModule({
   declarations: [
@@ -79,7 +85,14 @@ import { RequestService } from './services/request.service';
     AuthService,
     DashboardService,
     NotificationService,
-    RequestService
+    RequestService,
+    StartupService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: startupServiceFactory,
+      deps: [StartupService],
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private dashboardSvc: DashboardService,
     private widgetTemplateSvc: WidgetTemplateService,
-    private orchestratorSvc: OrchestratorService
+    private orchestratorSvc: OrchestratorService,
   ){}
 
   ngOnInit(): void {
