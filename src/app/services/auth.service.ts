@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Broadcaster } from 'sarlacc-angular-client';
 import { Globals } from '../globals';
-import { RequestService } from './request.service';
 
 declare const gapi: any;
 
@@ -18,8 +17,7 @@ export class AuthService {
 
   constructor(
     private http: Http,
-    private broadcaster: Broadcaster,
-    private requestSvc: RequestService
+    private broadcaster: Broadcaster
   ){
     this.getClientId()
     .then((id) => {
@@ -34,9 +32,10 @@ export class AuthService {
       let accessToken = this.getAccessToken();
       let user = this.getUser();
       if (accessToken && user) {
-        this.requestSvc.post(this.verifyTokenUrl + accessToken, {}, null)
-        .then((tokenInfo:any) => {
-    
+        this.http.post(this.verifyTokenUrl + accessToken, {}, null)
+        .toPromise()
+        .then((res:any) => {
+          let tokenInfo = res.json();
           if (!tokenInfo || !tokenInfo.email) {
             console.log('No email in the token info response... rejecting');
             reject();

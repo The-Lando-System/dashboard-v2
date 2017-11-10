@@ -1,13 +1,17 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Http, Headers } from '@angular/http';
+import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class RequestService implements OnInit {
 
   constructor(
     private http: Http,
-    private notificationSvc: NotificationService
+    private router: Router,
+    private notificationSvc: NotificationService,
+    private authSvc: AuthService
   ) {}
 
   ngOnInit(): void {}
@@ -28,7 +32,7 @@ export class RequestService implements OnInit {
         this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
-        this.logErrorResponse(err);
+        this.handleErrorResponse(err);
         this.notificationSvc.loading(false);
         reject(err.json());
       });
@@ -51,7 +55,7 @@ export class RequestService implements OnInit {
         this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
-        this.logErrorResponse(err);
+        this.handleErrorResponse(err);
         this.notificationSvc.loading(false);
         reject(err.json());
       });
@@ -74,7 +78,7 @@ export class RequestService implements OnInit {
         this.notificationSvc.loading(false);
         resolve(res.json());
       }).catch((err:Response) => {
-        this.logErrorResponse(err);
+        this.handleErrorResponse(err);
         this.notificationSvc.loading(false);
         reject(err.json());
       });
@@ -98,14 +102,19 @@ export class RequestService implements OnInit {
         resolve(res.json());
       }).catch((err:Response) => {
         this.notificationSvc.loading(false);
-        this.logErrorResponse(err);
+        this.handleErrorResponse(err);
         reject(err.json());
       });
     });
   }
 
-  private logErrorResponse(err:Response): void {
-    console.error(err.json());
+  private handleErrorResponse(err:Response): void {
+    let error = err.json();
+    console.error(error);
+    if (error.hasOwnProperty('error') || error['error'] === 'invalid_token') {
+      this.authSvc.refreshLogin();
+      this.router.navigate['/'];
+    }
   }
 
 }
