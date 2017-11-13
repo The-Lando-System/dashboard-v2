@@ -29,62 +29,94 @@ export class AuthService {
 
   initUser(): Promise<User> {
     return new Promise<User>((resolve,reject) => {
-      let accessToken = this.getAccessToken();
-      let user = this.getUser();
-      if (accessToken && user) {
+
+      this.getClientId()
+      .then((id) => {
+        Globals.GOOGLE_CLIENT_ID = id;
+        
+        let accessToken = this.getAccessToken();
+        let user = this.getUser();
+
+        if (!user || !accessToken) {
+          console.log('No user or access token saved in local storage... rejecting');
+          this.resetUser();
+          reject();
+          return;
+        }
+
         this.http.post(this.verifyTokenUrl + accessToken, {}, null)
         .toPromise()
         .then((res:any) => {
           let tokenInfo = res.json();
           if (!tokenInfo || !tokenInfo.email) {
             console.log('No email in the token info response... rejecting');
+            this.resetUser();
             reject();
+            return;
           }
 
           if (user.email === tokenInfo.email) {
+            console.log('Successfully verified the token!')
             resolve(user);
             return;
           }
 
           console.log('Unknown error verifying the token...');
+          this.resetUser();
           reject();
+          return;
+        }).catch((error:any) => {
 
-        }).catch((err:any) => {
-          this.refreshOnInvalidToken(err)
-          .then(() => { resolve(user); }).catch(() => { reject(); });
+          let err = error.json();
+
+          console.log('Failed to verify the access token...');
+
+          if (!err.hasOwnProperty('error') || err.error !== 'invalid_token') {
+            console.log('Not attempting to refresh token..  Error was not an invalid token error');
+            this.resetUser();
+            reject();
+            return;
+          }
+          this.refreshLogin()
+          .then(() => {
+            console.log('Successfully refreshed the token');
+            resolve();
+            return;
+          }).catch(() => {
+            console.log('Unknown error occurred during request.. rejecting');
+            this.resetUser();
+            reject();
+          });
         });
-      }
+
+      });
+
     });
   }
 
-  login(): Promise<User> {
-    return new Promise<User>((resolve, reject) => {
+  login(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
 
-      // Make auth request
-      gapi.load('auth2', () => {
-        let auth2 = gapi.auth2.init({
-          client_id: Globals.GOOGLE_CLIENT_ID,
-          cookiepolicy: 'single_host_origin',
-          scope: 'profile email'
-        }).then(()=> {
-          gapi.auth2.getAuthInstance().signIn();
+      // Load the client
+      this.loadGoogleAuth()
+      .then(() => {
+        
+        // Sign in using the Google OAuth page
+        this.signIn();
+        
+        // Callback for signin results
+        this.listenForAuth()
+        .then(() => {
+          resolve();
+        }).catch(() => {
+          reject();
         });
 
-         // Listen for auth response
-        gapi.auth2.getAuthInstance().currentUser.listen((userDetails) => {
-          console.log(userDetails);
-          let profile = userDetails.getBasicProfile();
-          this.user = new User(
-            profile.getName(),
-            profile.getEmail(),
-            profile.getImageUrl(),
-            userDetails.getAuthResponse().access_token
-          );
-          this.storeUserInfo();
-          this.broadcaster.broadcast('USER_LOGIN');
-          resolve(this.user);
-        });
+      // Reject if the client fails to load
+      }).catch(() => {
+        reject();
       });
+
     });
   }
 
@@ -97,7 +129,17 @@ export class AuthService {
     return new Promise<void>((resolve, reject) => {
 
       if (!gapi) {
+        console.log('No GAPI object defined, rejecting the login refresh...');
+        this.resetUser();
         reject();
+        return;
+      }
+
+      if (!this.user) {
+        console.log('No user in local storage, rejecting the login refresh...');
+        this.resetUser();
+        reject();
+        return;
       }
 
       gapi.load('auth2', () => {
@@ -109,7 +151,6 @@ export class AuthService {
           gapi.auth2.getAuthInstance().currentUser.get()
           .reloadAuthResponse().then((authResponse) => {
             this.user.accessToken = authResponse.access_token;
-            this.storeUserInfo();
             resolve();
           });
         });
@@ -134,21 +175,63 @@ export class AuthService {
     });
   }
 
-  private refreshOnInvalidToken(err:any): Promise<void> {
+  private loadGoogleAuth(): Promise<void> {
     return new Promise<void>((resolve,reject) => {
-      if (!err.hasOwnProperty('error') || err.error !== 'invalid_token') {
-        reject();
-        return;
-      }
-      this.refreshLogin()
-      .then(() => {
-        resolve();
-        return;
-      }).catch(() => {
-        console.log('Unknown error occurred during request.. rejecting');
+      gapi.load('auth2', () => {
+        gapi.auth2.init({
+          client_id: Globals.GOOGLE_CLIENT_ID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile email'
+        }).then(() => {
+          resolve();
+        }, (err:any) => {
+          console.log('Error initializing auth2 client!');
+          console.log(err);
+          reject();
+        });
+      }, (err:any) => {
+        console.log('Error loading the auth2 client!');
+        console.log(err);
         reject();
       });
     });
+  }
+
+  private signIn(): void {
+    gapi.auth2.getAuthInstance().signIn();
+  }
+
+  private listenForAuth(): Promise<void> {
+    return new Promise<void>((resolve,reject) => {
+      gapi.auth2.getAuthInstance().currentUser.listen((userDetails) => {
+        if (!userDetails) {
+          console.log('No user details... rejecting')
+          reject();
+        }
+
+        let profile = userDetails.getBasicProfile();
+        if (!userDetails) {
+          console.log('No profile in the user details... rejecting');
+          reject();
+        }
+
+        this.user = new User(
+          profile.getName(),
+          profile.getEmail(),
+          profile.getImageUrl(),
+          userDetails.getAuthResponse().access_token
+        );
+        console.log('Storing user details in local storage!');
+        this.storeUserInfo();
+        this.broadcaster.broadcast('USER_LOGIN');
+        resolve();
+      });
+    });
+  }
+
+  private resetUser(): void {
+    this.user = null;
+    this.clearUserInfo();
   }
 
   private clearUserInfo(): void {

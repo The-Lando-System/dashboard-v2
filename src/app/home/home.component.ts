@@ -26,20 +26,22 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authSvc.getUser();
-    this.dashboardSvc.getDashboards()
-    .then((dashboards:Dashboard[]) => {
-      this.dashboards = dashboards;
-      if (this.dashboards[0]) {
-        this.selectedDashboard = dashboards[0];
-      }
-      this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
-    }).catch(()=>{});
+    if (this.user) {
+      this.dashboardSvc.getDashboards()
+      .then((dashboards:Dashboard[]) => {
+        this.dashboards = dashboards;
+        if (this.dashboards[0]) {
+          this.selectedDashboard = dashboards[0];
+        }
+        this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
+      }).catch(()=>{});
+    }
   }
 
   login(): void {
     this.authSvc.login()
-    .then((user:User) => {
-      this.user = user;
+    .then(() => {
+      this.user = this.authSvc.getUser();
       this.dashboardSvc.getDashboards()
       .then((dashboards:Dashboard[]) => {
         this.dashboards = dashboards;

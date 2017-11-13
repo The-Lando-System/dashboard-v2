@@ -51,8 +51,8 @@ export class SideMenuComponent implements OnInit {
     event.preventDefault();
     this.toggleMenu();
     this.authSvc.login()
-    .then((user:User) => {
-      this.user = user;
+    .then(() => {
+      this.user = this.authSvc.getUser();
     })
   }
 
