@@ -58,6 +58,7 @@ export class HomeComponent implements OnInit {
   }
 
   createDashboard(): void {
+    event.preventDefault();
 
     let newDashboard:Dashboard = new Dashboard();
 

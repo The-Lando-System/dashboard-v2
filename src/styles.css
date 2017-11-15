@@ -1,9 +1,9 @@
 body {
-  background-color: #f7f7f7!important;
+  /* background-color: #f7f7f7!important; */
   overflow-x: hidden;
 }
 
-button {
+button, .clickable {
   cursor: pointer;
 }
 

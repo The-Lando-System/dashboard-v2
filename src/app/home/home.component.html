@@ -12,28 +12,31 @@
       <button class="btn btn-primary" (click)="login()">Sign in with Google</button>
     </div>
 
-    <div *ngIf="user" class="col-md-12">
-      <h2>Manage your dashboards</h2>
-      <hr/>
-    </div>
-
   </div>
 
   <div *ngIf="user" class="row">
+
     <div class="col-md-6">
-      <button class="btn btn-primary" (click)="createDashboard()">Create Dashboard</button>
-      <br/><br/>
-      <ul class="list-group">
-        <li on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1" *ngFor="let dashboard of dashboards; let i=index" class="list-group-item justify-content-between" (click)="selectDashboard(dashboard)">
-          <span class="select-dashboard-text">{{dashboard.name}}</span>
-          <span *ngIf="hvIdx === i" [routerLink]="['/dashboard-editor', dashboard.id]" class="edit-dashboard-icon">
-            <i class="fa fa-wrench" aria-hidden="true"></i>
-          </span>
-        </li>
-      </ul>
-      <br/>
-      <a routerLink="/client-editor" style="margin-left:10px">Manage Clients</a>
+      <div class="box">
+        <ul class="mdc-list">
+          <li class="mdc-list-item">
+            <a href="#" (click)="createDashboard()"><h4>Create Dashboard</h4></a>
+          </li>
+          <hr/>
+          <li *ngFor="let dashboard of dashboards; let i=index" (click)="selectDashboard(dashboard)" on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1" class="mdc-list-item">
+            <span class="clickable">{{dashboard.name}}</span>
+            <a *ngIf="hvIdx === i" [routerLink]="['/dashboard-editor', dashboard.id]" class="mdc-list-item__end-detail material-icons">
+              <i class="fa fa-wrench"></i>
+            </a>
+          </li>
+          <hr/>
+          <li class="mdc-list-item">
+            <a routerLink="/client-editor">Manage Clients</a>
+          </li>
+        </ul>
+      </div>
     </div>
+
     <div *ngIf="selectedDashboard" class="col-md-6">
       <div class="card">
         <div class="card-img-top" style="cursor:pointer" [routerLink]="['/dashboard', selectedDashboard.id]">
