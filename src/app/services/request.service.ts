@@ -110,9 +110,11 @@ export class RequestService implements OnInit {
 
   private handleErrorResponse(err:Response): void {
     let error = err.json();
+    
     console.error(error);
+
     if (error.hasOwnProperty('error') || error['error'] === 'invalid_token') {
-      this.authSvc.refreshLogin();
+      this.authSvc.refreshToken();
       this.router.navigate['/'];
     }
   }

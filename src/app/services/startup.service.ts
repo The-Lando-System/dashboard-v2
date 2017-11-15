@@ -13,11 +13,8 @@ export class StartupService {
 
   load(): Promise<User> {
     return this.authSvc.initUser()
-    .then((user:User) => {
-      return user;
-    }).catch(() => {
-      return null;
-    });
+      .then((user:User) => user)
+      .catch(() => null);
   }
 
   getUser(): User {

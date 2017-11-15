@@ -62,11 +62,6 @@ export class SideMenuComponent implements OnInit {
     this.toggleMenu();
   }
 
-  refreshLogin(): void {
-    event.preventDefault();
-    this.authSvc.refreshLogin();
-  }
-
   toggleMenu(): void {
     event.preventDefault();
     this.menuState = this.menuState === 'in' ? 'out' : 'in';

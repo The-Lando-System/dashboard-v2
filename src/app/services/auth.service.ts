@@ -9,23 +9,26 @@ declare const gapi: any;
 export class AuthService {
 
   private user: User;
+  private accessToken: string;
   private clientIdUrl = Globals.SVC_DOMAIN + '/google/client-id';
-  private logoutUrl =
-    'https://www.google.com/accounts/Logout' + 
-    '?continue=https://appengine.google.com/_ah/logout?continue=' + Globals.THIS_DOMAIN;
+  private logoutUrl = 'https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=' + Globals.THIS_DOMAIN;
   private verifyTokenUrl = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
 
   constructor(
     private http: Http,
     private broadcaster: Broadcaster
   ){
+    this.user = this.getUser();
+    this.accessToken = this.getAccessToken();
     this.getClientId()
     .then((id) => {
       Globals.GOOGLE_CLIENT_ID = id;
       this.user = this.getUser();
-      if (this.user) { this.user.accessToken = this.getAccessToken() };
+      this.accessToken = this.getAccessToken();
     });
   }
+
+  // Public methods ===============================
 
   initUser(): Promise<User> {
     return new Promise<User>((resolve,reject) => {
@@ -33,61 +36,17 @@ export class AuthService {
       this.getClientId()
       .then((id) => {
         Globals.GOOGLE_CLIENT_ID = id;
-        
-        let accessToken = this.getAccessToken();
-        let user = this.getUser();
 
-        if (!user || !accessToken) {
+        if (!this.user || !this.accessToken) {
           console.log('No user or access token saved in local storage... rejecting');
-          this.resetUser();
+          this.clearUser();
           reject();
           return;
         }
 
-        this.http.post(this.verifyTokenUrl + accessToken, {}, null)
-        .toPromise()
-        .then((res:any) => {
-          let tokenInfo = res.json();
-          if (!tokenInfo || !tokenInfo.email) {
-            console.log('No email in the token info response... rejecting');
-            this.resetUser();
-            reject();
-            return;
-          }
-
-          if (user.email === tokenInfo.email) {
-            console.log('Successfully verified the token!')
-            resolve(user);
-            return;
-          }
-
-          console.log('Unknown error verifying the token...');
-          this.resetUser();
-          reject();
-          return;
-        }).catch((error:any) => {
-
-          let err = error.json();
-
-          console.log('Failed to verify the access token...');
-
-          if (!err.hasOwnProperty('error') || err.error !== 'invalid_token') {
-            console.log('Not attempting to refresh token..  Error was not an invalid token error');
-            this.resetUser();
-            reject();
-            return;
-          }
-          this.refreshLogin()
-          .then(() => {
-            console.log('Successfully refreshed the token');
-            resolve();
-            return;
-          }).catch(() => {
-            console.log('Unknown error occurred during request.. rejecting');
-            this.resetUser();
-            reject();
-          });
-        });
+        this.verifyToken(this.accessToken)
+          .then(() => resolve())
+          .catch(() => reject());
 
       });
 
@@ -97,81 +56,127 @@ export class AuthService {
   login(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
 
-      // Load the client
       this.loadGoogleAuth()
       .then(() => {
         
-        // Sign in using the Google OAuth page
         this.signIn();
         
-        // Callback for signin results
         this.listenForAuth()
-        .then(() => {
-          resolve();
-        }).catch(() => {
-          reject();
-        });
+          .then(() => resolve())
+          .catch(() => reject());
 
-      // Reject if the client fails to load
-      }).catch(() => {
-        reject();
-      });
-
+      }).catch(() => reject());
     });
   }
 
   logout(): void {
-    this.clearUserInfo();
+    this.clearUser();
     document.location.href = this.logoutUrl;
   }
 
-  refreshLogin(): Promise<void> {
+  refreshToken(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-
-      if (!gapi) {
-        console.log('No GAPI object defined, rejecting the login refresh...');
-        this.resetUser();
-        reject();
-        return;
-      }
 
       if (!this.user) {
         console.log('No user in local storage, rejecting the login refresh...');
-        this.resetUser();
+        this.clearUser();
         reject();
         return;
       }
 
-      gapi.load('auth2', () => {
-        let auth2 = gapi.auth2.init({
-          client_id: Globals.GOOGLE_CLIENT_ID,
-          cookiepolicy: 'single_host_origin',
-          scope: 'profile email'
-        }).then(()=> {
-          gapi.auth2.getAuthInstance().currentUser.get()
-          .reloadAuthResponse().then((authResponse) => {
-            this.user.accessToken = authResponse.access_token;
-            resolve();
-          });
-        });
-      });
+      this.loadGoogleAuth()
+      .then(() => {
+
+        this.refreshAccessToken()
+          .then(() => resolve())
+          .catch(() => reject());
+
+      }).catch(() => reject());
     });
   }
 
   getUser(): User {
-    return this.user ? this.user : JSON.parse(localStorage.getItem('currentUser'));
+    return this.user || JSON.parse(localStorage.getItem('currentUser'));
   }
 
   getAccessToken(): string {
-    if (this.user && this.user.accessToken)
-      return this.user.accessToken;
-    return localStorage.getItem('access_token');
+    return this.accessToken || localStorage.getItem('access_token');
   }
 
   createAuthHeaders(): Headers {
     return new Headers ({
       'Content-Type'   : 'application/json',
       'x-access-token' : this.getAccessToken()
+    });
+  }
+
+  // Helper methods ===============================
+
+  private refreshAccessToken(): Promise<void> {
+    return new Promise<void>((resolve,reject) => {
+      gapi.auth2.getAuthInstance().currentUser.get()
+      .reloadAuthResponse().then((authResponse) => {
+        this.accessToken = authResponse.access_token;
+        resolve();
+      }, (err:any) => {
+        console.log('Error reloading the auth2 instance!');
+        console.log(err);
+        reject();
+      });
+    });
+  }
+
+  private verifyToken(token:string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.http.post(this.verifyTokenUrl + token, {}, null)
+      .toPromise()
+      .then((res:any) => {
+
+        let tokenInfo = res.json();
+
+        if (!tokenInfo || !tokenInfo.email) {
+          console.log('No email in the token info response... rejecting');
+          this.clearUser();
+          reject();
+          return;
+        }
+
+        if (this.user && this.user.email === tokenInfo.email) {
+          console.log('Successfully verified the token!')
+          resolve();
+          return;
+        }
+
+        console.log('Unknown error verifying the token...');
+        this.clearUser();
+        reject();
+        return;
+
+      }).catch((error:any) => {
+
+        let err = error.json();
+
+        console.log('Failed to verify the access token...');
+
+        if (!err.hasOwnProperty('error') || err.error !== 'invalid_token') {
+          console.log('Not attempting to refresh token..  Error was not an invalid token error');
+          this.clearUser();
+          reject();
+          return;
+        }
+
+        this.refreshToken()
+        .then(() => {
+          console.log('Successfully refreshed the token');
+          resolve();
+          return;
+        }).catch(() => {
+          console.log('Unknown error occurred during request.. rejecting');
+          this.clearUser();
+          reject();
+        });
+
+      });
     });
   }
 
@@ -229,12 +234,8 @@ export class AuthService {
     });
   }
 
-  private resetUser(): void {
+  private clearUser(): void {
     this.user = null;
-    this.clearUserInfo();
-  }
-
-  private clearUserInfo(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('access_token');
   }
@@ -248,7 +249,7 @@ export class AuthService {
         profilePic: this.user.profilePic
       })
     );
-    localStorage.setItem('access_token', this.user.accessToken);
+    localStorage.setItem('access_token', this.accessToken);
   }
 
   private getClientId(): Promise<string> {
@@ -265,12 +266,10 @@ export class User {
   name: string;
   email: string;
   profilePic: string;
-  accessToken: string;
 
   constructor(name:string, email:string, profilePic: string, accessToken:string) {
     this.name = name;
     this.email = email;
     this.profilePic = profilePic;
-    this.accessToken = accessToken;
   }
 }
