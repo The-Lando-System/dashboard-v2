@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Broadcaster } from './broadcaster';
 import { Globals } from '../globals';
+import 'rxjs/add/operator/toPromise';
 
 declare const gapi: any;
 
@@ -220,14 +221,17 @@ export class AuthService {
           reject();
         }
 
+        // Set the user and access token
         this.user = new User(
           profile.getName(),
           profile.getEmail(),
-          profile.getImageUrl(),
-          userDetails.getAuthResponse().access_token
+          profile.getImageUrl()
         );
-        console.log('Storing user details in local storage!');
+        this.accessToken = userDetails.getAuthResponse().access_token;
+        
         this.storeUserInfo();
+
+        console.log('Login success!');
         this.broadcaster.broadcast('USER_LOGIN');
         resolve();
       });
@@ -267,7 +271,7 @@ export class User {
   email: string;
   profilePic: string;
 
-  constructor(name:string, email:string, profilePic: string, accessToken:string) {
+  constructor(name:string, email:string, profilePic: string) {
     this.name = name;
     this.email = email;
     this.profilePic = profilePic;

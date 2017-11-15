@@ -3,6 +3,7 @@ import { Http, Headers } from '@angular/http';
 import { Router } from '@angular/router';
 import { NotificationService } from './notification.service';
 import { AuthService } from './auth.service';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class RequestService implements OnInit {
@@ -110,7 +111,7 @@ export class RequestService implements OnInit {
 
   private handleErrorResponse(err:Response): void {
     let error = err.json();
-    
+
     console.error(error);
 
     if (error.hasOwnProperty('error') || error['error'] === 'invalid_token') {
