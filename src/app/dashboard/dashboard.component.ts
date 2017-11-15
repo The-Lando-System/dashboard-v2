@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from '../services/broadcaster';
 
 import { DashboardService, Dashboard } from '../services/dashboard.service';
 import { WidgetTemplateService, Widget } from '../services/widget-template.service';

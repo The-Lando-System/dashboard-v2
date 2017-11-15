@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from '../../services/broadcaster';
 
 import { TokenService } from '../../services/token.service';
 import { ClientConfigService, ClientConfig, Token, Oauth2Config, ClientHeader } from '../../services/client-config.service';

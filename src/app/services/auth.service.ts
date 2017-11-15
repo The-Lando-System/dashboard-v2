@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from './broadcaster';
 import { Globals } from '../globals';
 
 declare const gapi: any;

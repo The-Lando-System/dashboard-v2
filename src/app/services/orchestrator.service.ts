@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from './broadcaster';
 
 import { Globals } from '../globals';
 

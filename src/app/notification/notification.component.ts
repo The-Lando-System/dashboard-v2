@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from '../services/broadcaster';
 import { Notification } from '../services/notification.service';
 
 @Component({

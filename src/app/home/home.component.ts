@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from '../services/broadcaster';
 import { DashboardService, Dashboard } from '../services/dashboard.service';
 import { AuthService, User } from '../services/auth.service';
 import { Router, ActivatedRoute, Params, ParamMap } from '@angular/router';

@@ -22,8 +22,7 @@
     "angular2-cookie": "1.2.6",
     "core-js": "^2.4.1",
     "rxjs": "^5.4.2",
-    "zone.js": "^0.8.14",
-    "sarlacc-angular-client": "1.0.6"
+    "zone.js": "^0.8.14"
   },
   "devDependencies": {
     "@angular/cli": "1.4.2",

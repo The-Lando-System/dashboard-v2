@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from './broadcaster';
 
 @Injectable()
 export class NotificationService implements OnInit {

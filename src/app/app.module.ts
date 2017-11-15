@@ -5,7 +5,6 @@ import { FormsModule }   from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Broadcaster } from 'sarlacc-angular-client';
 
 import { AppComponent } from './app.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
@@ -19,6 +18,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotificationComponent } from './notification/notification.component';
 import { LoadingBarComponent } from './loading-bar/loading-bar.component';
 
+import { Broadcaster } from './services/broadcaster';
 import { OrchestratorService } from './services/orchestrator.service';
 import { TokenService } from './services/token.service';
 import { WidgetTemplateService } from './services/widget-template.service';

@@ -1,5 +1,5 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Broadcaster } from 'sarlacc-angular-client';
+import { Broadcaster } from './broadcaster';
 import { AuthService } from './auth.service';
 import { RequestService } from './request.service';
 import { NotificationService } from './notification.service';
