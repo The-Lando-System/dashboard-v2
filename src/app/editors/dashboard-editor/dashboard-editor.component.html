@@ -3,53 +3,64 @@
   <h1>Dashboard Editor</h1>
 </div>
   
-<div *ngIf="dashboard" class="content"> 
+<div *ngIf="dashboard" class="content">
+  
   <div class="row">
-    <div class="container">
-      
-      <div class="col-md-12 block">
-        <h4>Editing Dashboard: {{dashboard.name}}</h4>
-      </div>
+    <div class="container box">
+      <ul class="mdc-list">
 
-      <!-- Name -->
-      <div class="col-md-12 block">
-        <div class="input-group">
-          <span class="input-group-addon">Name</span>
-          <input [(ngModel)]="dashboard.name" type="text" class="form-control" placeholder="Name">
-        </div>
-      </div>
+        <li class="mdc-list-item">
+          <h4><strong>{{dashboard.name}}</strong></h4>
+        </li>
 
-      <!-- Preview -->
-      <div class="col-md-12 block">
-        <div class="input-group">
-          <span class="input-group-addon">Preview Image</span>
-          <input [(ngModel)]="dashboard.previewImage" type="text" class="form-control" placeholder="Preview Image URL">
-        </div>
-      </div>
+        <li class="mdc-list-item">
+          <div class="input-group">
+            <span class="input-group-addon">Name</span>
+            <input [(ngModel)]="dashboard.name" type="text" class="form-control" placeholder="Name">
+          </div>
+        </li>
 
-      <!-- Background -->
-      <div class="col-md-12 block">
-        <div class="input-group">
-          <span class="input-group-addon">Background</span>
-          <input [(ngModel)]="dashboard.backgroundImage" type="text" class="form-control" placeholder="Background Image URL">
-        </div>
-      </div>
+        <li class="mdc-list-item">
+          <div class="input-group">
+            <span class="input-group-addon">Preview Image</span>
+            <input [(ngModel)]="dashboard.previewImage" type="text" class="form-control" placeholder="Preview Image URL">
+          </div>
+        </li>
 
-      <!-- Is Primary -->
-      <div class="col-md-12 block">
-        <div class="form-check">
-          <label class="form-check-label">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboard.isPrimary">
-            Primary Dashboard
-          </label>
-        </div>
-      </div>
+        <li class="mdc-list-item">
+          <div class="input-group">
+            <span class="input-group-addon">Background</span>
+            <input [(ngModel)]="dashboard.backgroundImage" type="text" class="form-control" placeholder="Background Image URL">
+          </div>
+        </li>
 
-      <div class="col-md-12 block">
-        <button (click)="saveDashboard()" class="btn btn-primary" style="float:left">Save</button>
-        <button (click)="deleteDashboard()" class="btn btn-danger" style="float:right">Delete</button>
-      </div>
+        <li class="mdc-list-item">
+          <span class="mdc-list-item__start-detail">
+            <div class="mdc-checkbox" style="margin-top:-5px">
+              <input [(ngModel)]="dashboard.isPrimary" type="checkbox" id="my-checkbox" class="mdc-checkbox__native-control"/>
+              <div class="mdc-checkbox__background">
+                <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                  <path class="mdc-checkbox__checkmark__path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                </svg>
+                <div class="mdc-checkbox__mixedmark"></div>
+              </div>
+            </div>
+          </span>
+          <span style="margin-top:5px;">Primary Dashboard</span>
+        </li>
 
+        <li class="mdc-list-item">
+          <span class="mdc-list-item__start-detail">
+            <button (click)="saveDashboard()" class="mdc-button mdc-button--raised">Save</button>
+          </span>
+          <span (click)="deleteDashboard()" class="mdc-list-item__end-detail clickable">
+            <i class="fa fa-2x fa-trash"></i>
+          </span>
+        </li>
+
+
+      </ul>
     </div>
   </div>
+
 </div>
