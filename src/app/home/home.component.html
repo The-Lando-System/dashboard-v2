@@ -4,7 +4,7 @@
 </div>
   
 <div class="content"> 
-  <div class="row" style="margin-bottom:20px">
+  <div class="row">
     
     <div *ngIf="!user" class="col-md-12">
       <h2>Login to begin creating your custom dashboard!</h2>
@@ -16,7 +16,7 @@
 
   <div *ngIf="user" class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-6 top-margin">
       <div class="box">
         <ul class="mdc-list">
           <li class="mdc-list-item">
@@ -37,14 +37,12 @@
       </div>
     </div>
 
-    <div *ngIf="selectedDashboard" class="col-md-6">
-      <div class="card">
-        <div class="card-img-top" style="cursor:pointer" [routerLink]="['/dashboard', selectedDashboard.id]">
-          <img [src]="selectedDashboard.previewImage" style="width: 100%;">
-        </div>
-        <div class="card-block">
-          <h4 class="card-title">{{selectedDashboard.name}}</h4>
-        </div>
+    <div *ngIf="selectedDashboard" class="col-md-6 top-margin">
+      <div class="mdc-card demo-card clickable" [routerLink]="['/dashboard', selectedDashboard.id]">
+        <section class="mdc-card__media dashboard-card-media" [ngStyle]="{'background-image': 'url(' + dashboardPreview + ')'}"></section>
+        <section class="mdc-card__supporting-text">
+          <h4>{{selectedDashboard.name}}</h4>
+        </section>
       </div>
     </div>
   </div>

@@ -16,6 +16,8 @@ export class HomeComponent implements OnInit {
   private user: User;
   private dashboards: Dashboard[] = [];
   private selectedDashboard: Dashboard;
+  private defaultPreview: string = 'assets/default-dashboard-preview.png';
+  private dashboardPreview: string;
 
   constructor(
     private dashboardSvc: DashboardService,
@@ -32,6 +34,10 @@ export class HomeComponent implements OnInit {
         this.dashboards = dashboards;
         if (this.dashboards[0]) {
           this.selectedDashboard = dashboards[0];
+
+          this.dashboardPreview = this.selectedDashboard.previewImage ? 
+            this.selectedDashboard.previewImage :
+            this.defaultPreview;
         }
         this.broadcaster.broadcast('DASHBOARD_SELECTED', '');
       }).catch(()=>{});
@@ -55,6 +61,9 @@ export class HomeComponent implements OnInit {
 
   selectDashboard(dashboard:Dashboard): void {
     this.selectedDashboard = dashboard;
+    this.dashboardPreview = this.selectedDashboard.previewImage ? 
+      this.selectedDashboard.previewImage :
+      this.defaultPreview;
   }
 
   createDashboard(): void {
