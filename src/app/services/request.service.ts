@@ -114,7 +114,8 @@ export class RequestService implements OnInit {
 
     console.error(error);
 
-    if (error.hasOwnProperty('error') || error['error'] === 'invalid_token') {
+    if ((error.hasOwnProperty('error') && error['error'] === 'invalid_token') ||
+        (error.hasOwnProperty('type') && error['type'] === 'NO_TOKEN')) {
       this.authSvc.refreshToken();
       this.router.navigate['/'];
     }
