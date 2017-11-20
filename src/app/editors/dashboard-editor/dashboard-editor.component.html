@@ -12,6 +12,8 @@
 
         <h4><strong>{{dashboard.name}}</strong></h4>
 
+        <hr/>
+
         <mat-form-field>
           <input [(ngModel)]="dashboard.name" matInput placeholder="Name">
         </mat-form-field>
@@ -28,9 +30,10 @@
           Primary Dashboard
         </mat-checkbox>
 
-        <div class="button-row">
+        <hr/>
+
+        <div>
           <button (click)="saveDashboard()" mat-raised-button color="primary">Save</button>
-  
           <button (click)="deleteDashboard()" mat-icon-button id="delete-button">
             <mat-icon>delete</mat-icon>
           </button>

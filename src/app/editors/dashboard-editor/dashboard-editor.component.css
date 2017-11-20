@@ -7,10 +7,6 @@
   width: 100%;
 }
 
-.button-row {
-  margin-top:20px;
-}
-
-.button-row > #delete-button {
+#delete-button {
   float: right;
 }
