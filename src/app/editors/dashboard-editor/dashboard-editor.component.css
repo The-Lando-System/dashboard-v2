@@ -1,4 +1,16 @@
-.block {
-  margin-top: 10px;
-  margin-bottom: 10px;
+.input-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-fields > * {
+  width: 100%;
+}
+
+.button-row {
+  margin-top:20px;
+}
+
+.button-row > #delete-button {
+  float: right;
 }

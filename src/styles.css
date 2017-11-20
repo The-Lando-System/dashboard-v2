@@ -1,9 +1,16 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 body {
   overflow-x: hidden;
 }
 
 button, .clickable {
   cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+  border: 0;
 }
 
 .header {

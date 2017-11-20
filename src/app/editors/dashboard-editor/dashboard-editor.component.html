@@ -7,59 +7,37 @@
   
   <div class="row">
     <div class="container box">
-      <ul class="mdc-list">
 
-        <li class="mdc-list-item">
-          <h4><strong>{{dashboard.name}}</strong></h4>
-        </li>
+      <div class="input-fields">
 
-        <li class="mdc-list-item">
-          <div class="input-group">
-            <span class="input-group-addon">Name</span>
-            <input [(ngModel)]="dashboard.name" type="text" class="form-control" placeholder="Name">
-          </div>
-        </li>
+        <h4><strong>{{dashboard.name}}</strong></h4>
 
-        <li class="mdc-list-item">
-          <div class="input-group">
-            <span class="input-group-addon">Preview Image</span>
-            <input [(ngModel)]="dashboard.previewImage" type="text" class="form-control" placeholder="Preview Image URL">
-          </div>
-        </li>
+        <mat-form-field>
+          <input [(ngModel)]="dashboard.name" matInput placeholder="Name">
+        </mat-form-field>
 
-        <li class="mdc-list-item">
-          <div class="input-group">
-            <span class="input-group-addon">Background</span>
-            <input [(ngModel)]="dashboard.backgroundImage" type="text" class="form-control" placeholder="Background Image URL">
-          </div>
-        </li>
+        <mat-form-field>
+          <input [(ngModel)]="dashboard.previewImage" matInput placeholder="Preview Image URL">
+        </mat-form-field>
 
-        <li class="mdc-list-item">
-          <span class="mdc-list-item__start-detail">
-            <div class="mdc-checkbox" style="margin-top:-5px">
-              <input [(ngModel)]="dashboard.isPrimary" type="checkbox" id="my-checkbox" class="mdc-checkbox__native-control"/>
-              <div class="mdc-checkbox__background">
-                <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                  <path class="mdc-checkbox__checkmark__path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                </svg>
-                <div class="mdc-checkbox__mixedmark"></div>
-              </div>
-            </div>
-          </span>
-          <span style="margin-top:5px;">Primary Dashboard</span>
-        </li>
+        <mat-form-field>
+          <input [(ngModel)]="dashboard.backgroundImage" matInput placeholder="Background Image URL">
+        </mat-form-field>
 
-        <li class="mdc-list-item">
-          <span class="mdc-list-item__start-detail">
-            <button (click)="saveDashboard()" class="mdc-button mdc-button--raised">Save</button>
-          </span>
-          <span (click)="deleteDashboard()" class="mdc-list-item__end-detail clickable">
-            <i class="fa fa-2x fa-trash"></i>
-          </span>
-        </li>
+        <mat-checkbox [(ngModel)]="dashboard.isPrimary" labelPosition="before">
+          Primary Dashboard
+        </mat-checkbox>
 
+        <div class="button-row">
+          <button (click)="saveDashboard()" mat-raised-button color="primary">Save</button>
+  
+          <button (click)="deleteDashboard()" mat-icon-button id="delete-button">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
 
-      </ul>
+      </div>
+
     </div>
   </div>
 
