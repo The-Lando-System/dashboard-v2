@@ -1,24 +1,11 @@
-.edit-dashboard-icon,
-.select-dashboard-text {
-  cursor: pointer;
-}
-
-.card {
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-}
-
-.card-img-top {
-  height: 200px;
-  overflow: hidden;
-}
-
-.dashboard-card-media {
-  background-size: cover;
-  background-repeat: no-repeat;
-  height: 200px;
-  width: 100%;
-}
-
 .top-margin {
   margin-top: 20px;
+}
+
+.item-hover {
+  background-color: rgb(243, 243, 243);
+}
+
+#dashboard-card > img {
+  height: 200px; 
 }

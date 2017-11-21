@@ -4,6 +4,7 @@
 </div>
   
 <div class="content"> 
+
   <div class="row">
     
     <div *ngIf="!user" class="col-md-12">
@@ -18,32 +19,38 @@
 
     <div class="col-md-6 top-margin">
       <div class="box">
-        <ul class="mdc-list">
-          <li class="mdc-list-item">
+        <mat-list>
+          <mat-list-item>
             <a href="#" (click)="createDashboard()"><h4>Create Dashboard</h4></a>
-          </li>
+          </mat-list-item>
           <hr/>
-          <li *ngFor="let dashboard of dashboards; let i=index" (click)="selectDashboard(dashboard)" on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1" class="mdc-list-item">
-            <span class="clickable">{{dashboard.name}}</span>
-            <a *ngIf="hvIdx === i" [routerLink]="['/dashboard-editor', dashboard.id]" class="mdc-list-item__end-detail material-icons">
-              <i class="fa fa-wrench"></i>
-            </a>
-          </li>
+          <mat-list-item
+            *ngFor="let dashboard of dashboards; let i=index"
+            (click)="selectDashboard(dashboard)"
+            [ngClass]="{'item-hover clickable' : i === hvIdx || dashboard.id === selectedDashboard.id}"
+            on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1">
+            <span matLine>{{dashboard.name}}</span>
+            <button mat-icon-button *ngIf="hvIdx === i" [routerLink]="['/dashboard-editor', dashboard.id]">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-list-item>
           <hr/>
-          <li class="mdc-list-item">
+          <mat-list-item>
             <a routerLink="/client-editor">Manage Clients</a>
-          </li>
-        </ul>
+          </mat-list-item>
+        </mat-list>
       </div>
     </div>
 
     <div *ngIf="selectedDashboard" class="col-md-6 top-margin">
-      <div class="mdc-card demo-card clickable" [routerLink]="['/dashboard', selectedDashboard.id]">
-        <section class="mdc-card__media dashboard-card-media" [ngStyle]="{'background-image': 'url(' + dashboardPreview + ')'}"></section>
-        <section class="mdc-card__supporting-text">
+
+      <mat-card id="dashboard-card" class="clickable" [routerLink]="['/dashboard', selectedDashboard.id]">
+        <img mat-card-image [src]="dashboardPreview">
+        <mat-card-content>
           <h4>{{selectedDashboard.name}}</h4>
-        </section>
-      </div>
+        </mat-card-content>
+      </mat-card>
+      
     </div>
   </div>
 </div>
