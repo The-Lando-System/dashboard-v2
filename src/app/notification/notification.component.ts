@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Broadcaster } from '../services/broadcaster';
 import { Notification } from '../services/notification.service';
 
@@ -10,12 +11,12 @@ import { Notification } from '../services/notification.service';
 })
 export class NotificationComponent implements OnInit {
 
-  private type: string;
   private message: string;
   private loading: boolean;
 
   constructor(
-    private broadcaster: Broadcaster
+    private broadcaster: Broadcaster,
+    private snackBar: MatSnackBar
   ){}
 
   ngOnInit(): void {
@@ -27,31 +28,25 @@ export class NotificationComponent implements OnInit {
 
   listenForSuccessNotification(): void {
     this.broadcaster.on(Notification.SUCCESS).subscribe((message:string) => {
-      this.type = 'success';
-      this.message = message;
-      setTimeout(() => {
-        this.reset();
-      },3000);
+      this.snackBar.open(`Success! ${message}`,"ok",{
+        duration: 2000,
+      });
     });
   }
 
   listenForWarnNotification(): void {
     this.broadcaster.on(Notification.WARN).subscribe((message:string) => {
-      this.type = 'warn';
-      this.message = message;
-      setTimeout(() => {
-        this.reset();
-      },3000);
+      this.snackBar.open(`Warning! ${message}`,"ok",{
+        duration: 2000,
+      });
     });
   }
 
   listenForFailNotification(): void {
     this.broadcaster.on(Notification.FAIL).subscribe((message:string) => {
-      this.type = 'fail';
-      this.message = message;
-      setTimeout(() => {
-        this.reset();
-      },3000);
+      this.snackBar.open(`Fail! ${message}`,"ok",{
+        duration: 2000,
+      });
     });
   }
 
@@ -59,11 +54,6 @@ export class NotificationComponent implements OnInit {
     this.broadcaster.on(Notification.LOADING).subscribe((isLoading:boolean) => {
       this.loading = isLoading;
     });
-  }
-
-  private reset(): void {
-    this.type = '';
-    this.message = '';
   }
 
 }

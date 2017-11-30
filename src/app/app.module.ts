@@ -5,7 +5,7 @@ import { FormsModule }   from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatIconModule, MatFormFieldModule, MatGridListModule, MatListModule, MatSidenavModule, MatMenuModule } from '@angular/material';
+import { MatCardModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatIconModule, MatFormFieldModule, MatGridListModule, MatListModule, MatSidenavModule, MatMenuModule, MatSnackBarModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { SideMenuComponent } from './side-menu/side-menu.component';
@@ -63,6 +63,7 @@ export function startupServiceFactory(startupService: StartupService): Function 
     MatCardModule,
     MatSidenavModule,
     MatMenuModule,
+    MatSnackBarModule,
     RouterModule.forRoot([
       {
         path: '',
