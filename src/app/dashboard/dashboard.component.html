@@ -1,9 +1,12 @@
-<div *ngIf="dashboard" class="header">
-  <h1>{{dashboard.name}}</h1>
-</div>
-  
 <div *ngIf="dashboard" style="position:absolute" [ngStyle]="{'background-image': 'url(' + dashboard.backgroundImage + ')'}">
   <div class="content row">
+    <div class="col-md-12">
+      <mat-card>
+        <mat-card-content>
+          <h1>{{dashboard.name}}</h1>
+        </mat-card-content>
+      </mat-card>
+    </div>
     <div *ngFor="let widget of widgets; let i = index;" class="col-md-4 top-margin" [ngClass]="{'drag-over':dragOverWidgetId === widget.id}">
       <mat-card class="widget" on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1"
         draggable="true"
