@@ -57,7 +57,8 @@ export class OrchestratorService {
         let widgetsToUpdate:Widget[] = this.getWidgetsWithClientId(updateMessage.client_id);
 
         for (let widget of widgetsToUpdate) {
-            this.replaceTokensInWidget(updateMessage.parsed_values,widget);
+          console.log(`Updating widget ${widget.name} at ${new Date().toLocaleTimeString('en-US')}`);
+          this.replaceTokensInWidget(updateMessage.parsed_values,widget);
         }
     }
 

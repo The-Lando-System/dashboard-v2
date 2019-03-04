@@ -8,7 +8,7 @@
       </mat-card>
     </div>
     <div *ngFor="let widget of widgets; let i = index;" class="col-md-4 top-margin" [ngClass]="{'drag-over':dragOverWidgetId === widget.id}">
-      <mat-card class="widget" on-mouseover="hvIdx = i" on-mouseleave="hvIdx = -1"
+      <mat-card class="widget"
         draggable="true"
         (dragstart)="onDragStart($event, widget.id)"
         (drop)="onDrop($event, widget.id)"
